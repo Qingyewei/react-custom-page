@@ -1,0 +1,21 @@
+.cf-input {
+  display: flex;
+  align-items: center;
+  .label {
+    width: 30%;
+    padding: 12px;
+    box-sizing: border-box;
+    position: relative;
+    &::after {
+        content: ":";
+        position: relative;
+        margin-block: 0;
+        margin-inline-start: 2px;
+        margin-inline-end: 8px;
+    }
+  }
+
+  .text {
+    flex: 1;
+  }
+}
