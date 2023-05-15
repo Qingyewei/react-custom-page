@@ -1,4 +1,4 @@
 /// <reference types="vite/client" />
 
 declare module "*.svg"
-declare module "*.worker?worker"
+declare module "*./src-noconflict/worker-javascript.js"
