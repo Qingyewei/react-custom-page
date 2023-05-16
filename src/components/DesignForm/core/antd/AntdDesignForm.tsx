@@ -82,6 +82,7 @@ export default function AntdDesignForm() {
           <Tabs
             defaultActiveKey="1"
             centered
+            className="right-sider-tabs"
             style={{ width: "100%" }}
             items={["字段属性", "页面属性", "高级"].map((item, i) => {
               const id = String(i + 1);
