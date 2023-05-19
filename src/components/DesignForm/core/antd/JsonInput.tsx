@@ -57,7 +57,8 @@ const JsonInput = (props: jsonInputType) => {
       ...state,
       defaultValue,
     }));
-    // aceEditorRef.current?.execCommand("beautify");
+    const result = aceEditorRef.current.editor.execCommand('beautify');
+    console.log("格式化结果",result)
   }, [defaultValue]);
   function onLoad() {
     // console.log("i've loaded");

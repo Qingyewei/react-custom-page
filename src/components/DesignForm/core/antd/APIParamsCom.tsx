@@ -121,7 +121,7 @@ interface TableParamsProps {
 const TableParams: React.FC<TableParamsProps> = ({ value = [], onChange }) => {
   const [dataSource, setDataSource] = useState<DataType[]>(value);
 
-  const [count, setCount] = useState(2);
+  const [count, setCount] = useState(value.length + 1);
 
   const handleDelete = (key: React.Key) => {
     const newData = dataSource.filter((item) => item.key !== key);
@@ -261,23 +261,19 @@ const APIParamsCom: React.FC<APIParamsComProps> = ({
   };
 
   const showModal = () => {
-    console.log("打开弹窗转换数据格式", conversionDataFormat());
     setIsModalOpen(true);
   };
 
   const handleOk = () => {
-    const newData: any = {};
+    const key = activeKey === "Header" ? "header" : "params";
+    const newData: any = { ...params };
     const tableData = modelRef.current?.getFieldsValue();
     tableData.data &&
       tableData.data?.forEach((element: DataType) => {
-        newData[element.name] = element.value;
+        newData[key][element.name] = element.value;
       });
 
-    if (activeKey === "Header") {
-      setparams((state) => ({ ...state, header: newData }));
-    } else {
-      setparams((state) => ({ ...state, params: newData }));
-    }
+    setparams(newData);
     setIsModalOpen(false);
   };
 
