@@ -1,19 +1,38 @@
 import { Button, Form, Input, Select, Space } from "antd";
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import Stroe from "@/utils/store";
 import APIParamsCom from "./APIParamsCom";
+import Request from "@/utils/request";
+import type { FormInstance } from "antd/es/form";
 const { Option } = Select;
+
+const AdvancedService = {
+  getDatasource:(data:any)=>{
+    return Request(data)
+  }
+}
 
 export default function AntdAdvancedConfig() {
   const { page } = Stroe.getStateAll();
+  const advancedFormRef = useRef<FormInstance>(null);
   const onValuesChange = (changedValues: any, allValues: any) => {
     Stroe.dispatch({ payload: allValues, type: "page" });
   };
+  const getDatasource = () => {
+    // eslint-disable-next-line no-unsafe-optional-chaining
+    const {method,url,api_options} = advancedFormRef.current?.getFieldsValue()
+    console.log({url,method,...api_options,data:api_options.paramsOrPayload})
+    AdvancedService.getDatasource({url,method,...api_options,data:api_options.paramsOrPayload}).then((res)=>{
+      console.log(res)
+    })
+    
+  }
   return (
     <Form
       name="basic"
       layout="vertical"
       initialValues={page}
+      ref={advancedFormRef}
       autoComplete="off"
       onValuesChange={onValuesChange}
     >
@@ -32,7 +51,7 @@ export default function AntdAdvancedConfig() {
       </Form.Item>
       <Form.Item label="请求接口">
         <Space.Compact style={{ width: "100%" }}>
-          <Form.Item name="api_type" noStyle>
+          <Form.Item name="method" noStyle>
             <Select
               placeholder="请选择请求接口方式"
               allowClear
@@ -42,13 +61,15 @@ export default function AntdAdvancedConfig() {
               <Option value="GET">GET</Option>
             </Select>
           </Form.Item>
-          <Form.Item name="api_url" noStyle>
+          <Form.Item name="url" noStyle>
             <Input />
           </Form.Item>
-          <Button type="primary">运行</Button>
+          <Button type="primary" onClick={getDatasource}>运行</Button>
         </Space.Compact>
+        <Form.Item name="api_options">
+          <APIParamsCom />
+        </Form.Item>
       </Form.Item>
-      <APIParamsCom />
     </Form>
   );
 }

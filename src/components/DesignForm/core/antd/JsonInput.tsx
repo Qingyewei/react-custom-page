@@ -12,18 +12,21 @@ import "ace-builds/src-noconflict/snippets/json";
 import "ace-builds/src-noconflict/theme-github";
 import "ace-builds/src-min-noconflict/ext-searchbox";
 import "ace-builds/src-noconflict/ext-language_tools";
+import "ace-builds/src-noconflict/ext-beautify";
 import workerJavascriptUrl from "ace-builds/src-noconflict/worker-javascript?url";
-import { useEffect, useRef, useState } from "react";
+import { memo, useEffect, useRef, useState } from "react";
 
 ace.config.setModuleUrl("ace/mode/javascript_worker", workerJavascriptUrl);
 // const defaultValue = `function onLoad(editor) {
 //   console.log("i've loaded");
 // }`;
 interface jsonInputType {
-  name:string;
+  name: string;
   mode: "json" | "javascript";
   readOnly?: boolean;
   defaultValue?: string;
+  height?: string;
+  width?: string;
   onFocus?: (event: any) => void;
 }
 const JsonInput = (props: jsonInputType) => {
@@ -32,11 +35,13 @@ const JsonInput = (props: jsonInputType) => {
     mode = "javascript",
     readOnly = true,
     defaultValue = "",
+    height = "150px",
+    width = "100%",
     onFocus,
   } = props;
 
   const [state, setState] = useState({
-    value: defaultValue,
+    value: "",
     placeholder: "Placeholder Text",
     theme: "github",
     mode,
@@ -50,15 +55,21 @@ const JsonInput = (props: jsonInputType) => {
     enableSnippets: false,
     showLineNumbers: true,
   });
-  const aceEditorRef = useRef<any>(null)
+  const aceEditorRef = useRef<any>(null);
   useEffect(() => {
-    console.log("defaultValue 发送改变",defaultValue, name, aceEditorRef)
-    setState((state) => ({
-      ...state,
-      defaultValue,
-    }));
-    const result = aceEditorRef.current.editor.execCommand('beautify');
-    console.log("格式化结果",result)
+    window.ace
+      .require("ace/ext/beautify")
+      .beautify(aceEditorRef.current.editor.session);
+  }, [state.value]);
+
+  useEffect(() => {
+    console.log("defaultValue", "发生了变化");
+    if (state.value !== defaultValue) {
+      setState((state) => ({
+        ...state,
+        value: defaultValue,
+      }));
+    }
   }, [defaultValue]);
   function onLoad() {
     // console.log("i've loaded");
@@ -90,8 +101,8 @@ const JsonInput = (props: jsonInputType) => {
       mode={state.mode}
       theme={state.theme}
       readOnly={state.readOnly}
-      width="100%"
-      height="150px"
+      width={width}
+      height={height}
       name={name}
       onFocus={onChangeFocus}
       onLoad={onLoad}
@@ -99,7 +110,7 @@ const JsonInput = (props: jsonInputType) => {
       onSelectionChange={onSelectionChange}
       onCursorChange={onCursorChange}
       onValidate={onValidate}
-      value={defaultValue}
+      value={state.value}
       fontSize={state.fontSize}
       showPrintMargin={state.showPrintMargin}
       showGutter={state.showGutter}
@@ -112,9 +123,11 @@ const JsonInput = (props: jsonInputType) => {
         enableSnippets: state.enableSnippets,
         showLineNumbers: state.showLineNumbers,
         tabSize: 2,
+        // useSoftTabs: true,
+        // wrap: true,
       }}
     />
   );
 };
 
-export default JsonInput;
+export default memo(JsonInput);

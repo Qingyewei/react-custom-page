@@ -20,9 +20,16 @@ export interface WidgetForm {
   };
   page: {
     showType: "page" | "model" | "tab";
-    type: "detail" | "curd" ;
-    api_type: string;
-    api_url: string;
+    type: "detail" | "curd";
+    method: "POST" | "GET";
+    url: string;
+    api_options: {
+      headers: {
+        Account: string;
+        "Content-Type": string;
+      };
+      paramsOrPayload: any;
+    };
   };
 }
 
@@ -49,8 +56,20 @@ export const widgetForm: WidgetForm = {
   page: {
     showType: "page",
     type: "detail",
-    api_type: 'GET',
-    api_url: location.href,
+    method: "POST",
+    // api_url: location.href,
+    url:
+      "https://times-crmtest.timesgroup.cn:28080/CRMAPIBeta/api/Delivery/GetDeliveryCacheInfo",
+    api_options: {
+      headers: {
+        Account: "beibei",
+        "Content-Type": "application/json;charset=UTF-8",
+      },
+      paramsOrPayload: {
+        StepId: 524496,
+        TaskId: 69000,
+      },
+    },
   },
 };
 

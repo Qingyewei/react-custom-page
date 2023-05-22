@@ -6,6 +6,7 @@ import "./APIParamsCom.less";
 import { CloseCircleOutlined, EditOutlined } from "@ant-design/icons";
 import JsonInput from "./JsonInput";
 import { v4 as uuidv4 } from "uuid";
+import Stroe from "@/utils/store";
 const EditableContext = React.createContext<FormInstance<any> | null>(null);
 
 interface Item {
@@ -225,30 +226,39 @@ const TableParams: React.FC<TableParamsProps> = ({ value = [], onChange }) => {
 };
 
 interface APIParamsComProps {
-  value?: { header: any; params: any };
-  onChange?: (value: { header: any; params: any }) => void;
+  value?: { headers: any; paramsOrPayload: any };
+  onChange?: (value: { headers: any; paramsOrPayload: any }) => void;
 }
+
+const tabList = {
+  POST: ["Header", "Data"],
+  GET: ["Header", "Params"],
+};
 
 const APIParamsCom: React.FC<APIParamsComProps> = ({
   value = {
-    header: {},
-    params: {},
+    headers: {},
+    paramsOrPayload: {},
   },
   onChange,
 }) => {
+  const { page: config } = Stroe.getStateAll();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [activeKey, setActiveKey] = useState("Header");
   const modelRef = useRef<FormInstance>(null);
-  const [params, setparams] = useState(value);
-  const modelDataRef = useRef(null);
+  const [dataSource, setDataSource] = useState(value);
+  useEffect(() => {
+    console.log("获取配置", config);
+  }, []);
 
   useEffect(() => {
-    onChange?.(params);
-  }, [params]);
+    onChange?.(dataSource);
+  }, [dataSource]);
 
   const conversionDataFormat = () => {
     const newList: DataType[] = [];
-    const data = activeKey === "Header" ? params.header : params.params;
+    const data =
+      activeKey === "Header" ? dataSource.headers : dataSource.paramsOrPayload;
     Object.keys(data).forEach((item, index) => {
       newList.push({
         key: `${index}`,
@@ -256,7 +266,6 @@ const APIParamsCom: React.FC<APIParamsComProps> = ({
         value: data[item],
       });
     });
-    console.log(newList);
     return newList;
   };
 
@@ -265,15 +274,15 @@ const APIParamsCom: React.FC<APIParamsComProps> = ({
   };
 
   const handleOk = () => {
-    const key = activeKey === "Header" ? "header" : "params";
-    const newData: any = { ...params };
+    const key = activeKey === "Header" ? "headers" : "paramsOrPayload";
+    const newData: any = { ...dataSource };
     const tableData = modelRef.current?.getFieldsValue();
     tableData.data &&
       tableData.data?.forEach((element: DataType) => {
         newData[key][element.name] = element.value;
       });
 
-    setparams(newData);
+    setDataSource(newData);
     setIsModalOpen(false);
   };
 
@@ -297,7 +306,7 @@ const APIParamsCom: React.FC<APIParamsComProps> = ({
             </Button>
           ),
         }}
-        items={["Header", "Params"].map((item) => {
+        items={tabList[config.method].map((item) => {
           return {
             label: item,
             key: item,
@@ -307,7 +316,9 @@ const APIParamsCom: React.FC<APIParamsComProps> = ({
                 name={item}
                 mode="json"
                 defaultValue={JSON.stringify(
-                  item === "Header" ? params.header : params.params
+                  item === "Header"
+                    ? dataSource.headers
+                    : dataSource.paramsOrPayload
                 )}
               />
             ),
