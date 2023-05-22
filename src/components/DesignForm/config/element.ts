@@ -32,6 +32,7 @@ export interface WidgetForm {
     };
   };
   dataSource?:any
+  widgetFormCurrentSelect?:any;
 }
 
 export const rules: Rules = {

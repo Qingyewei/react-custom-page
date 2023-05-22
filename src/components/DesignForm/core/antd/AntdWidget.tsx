@@ -6,10 +6,13 @@ import { element } from "../../config";
 import Components from "./components";
 
 export default function AntdWidget(props: any) {
+  const {list} = Stroe.getStateAll()
   const [{ isOver }, drop] = useDrop({
     accept: "ITEM",
     drop: (item: any) => {
       let source: any[] = [];
+
+      // 组件类型
       switch (item.source) {
         case "basicComponents":
           source = element.basicComponents;
@@ -21,13 +24,13 @@ export default function AntdWidget(props: any) {
       const data = source.find((s) => s.type === item.id);
       console.log("ssssss", item, data);
       Stroe.dispatch({ type: "list", payload: data });
+      Stroe.dispatch({ type: "widgetFormCurrentSelect", payload: data });
       // return props.onDrop(item.id)
     },
     collect: (monitor) => ({
       isOver: monitor.isOver(),
     }),
   });
-  const { list } = Stroe.getStateAll();
 
   return (
     <div

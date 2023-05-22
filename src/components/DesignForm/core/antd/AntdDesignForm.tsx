@@ -12,6 +12,7 @@ import { element } from "../../config";
 import AntdWidget from "./AntdWidget";
 import AntdAdvancedConfig from "./AntdAdvancedConfig";
 import Store from "@/utils/store";
+import WidgetConfig from "./WidgetConfig";
 
 const { Header, Sider, Content } = Layout;
 
@@ -31,7 +32,7 @@ export default function AntdDesignForm() {
   const getConfigPage = (type: string) => {
     switch (type) {
       case "字段属性":
-        return "字段属性";
+        return <WidgetConfig />;
       case "页面属性":
         return "页面属性";
       case "高级":

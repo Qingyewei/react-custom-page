@@ -3,10 +3,13 @@ import { element } from "../components/DesignForm/config";
 
 function createStore(reducer: (arg0: any, arg1: any) => any) {
   let state: any; // state记录所有状态
-  const listeners: any[] = []; // 保存所有注册的回调
+  let listeners: any[] = []; // 保存所有注册的回调
 
-  function subscribe(callback: any) {
-    listeners.push(callback); // subscribe就是将回调保存下来
+  function subscribe(listener: any) {
+    listeners.push(listener); // subscribe就是将回调保存下来
+    return function unsubscribe() {
+      listeners = listeners.filter((l) => l !== listener);
+    };
   }
 
   // dispatch就是先执行reducer修改state
@@ -28,7 +31,7 @@ function createStore(reducer: (arg0: any, arg1: any) => any) {
   function getStateAll(): WidgetForm {
     return state;
   }
-
+  dispatch({ type: "@@redux/INIT" });
   // store包装一下前面的方法直接返回
   const store = {
     subscribe,
@@ -62,14 +65,19 @@ function reducer(
       data["list"] = [...data["list"], action.payload];
       return data;
     }
+    case "widgetFormCurrentSelect": {
+      const data = { ...state };
+      data["widgetFormCurrentSelect"] = action.payload;
+      return data;
+    }
     default:
       return state;
   }
 }
 const Stroe = createStore(reducer);
-Stroe.dispatch({});
-Stroe.subscribe(() => {
-  console.log("数据发送了变化", Stroe.getStateAll());
-});
-window.Store = Stroe
+// Stroe.dispatch({});
+// Stroe.subscribe(() => {
+//   console.log("数据发送了变化", Stroe.getStateAll());
+// });
+window.Store = Stroe;
 export default Stroe;
