@@ -47,6 +47,11 @@ function reducer(
   switch (action.type) {
     case "change":
       return action.payload;
+    case "dataSource": {
+      const data = { ...state };
+      data["dataSource"] = action.payload;
+      return data;
+    }
     case "page": {
       const data = { ...state };
       data["page"] = action.payload;
@@ -66,4 +71,5 @@ Stroe.dispatch({});
 Stroe.subscribe(() => {
   console.log("数据发送了变化", Stroe.getStateAll());
 });
+window.Store = Stroe
 export default Stroe;

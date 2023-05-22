@@ -31,6 +31,7 @@ export interface WidgetForm {
       paramsOrPayload: any;
     };
   };
+  dataSource?:any
 }
 
 export const rules: Rules = {

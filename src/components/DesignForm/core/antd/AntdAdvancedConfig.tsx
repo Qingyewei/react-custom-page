@@ -1,32 +1,48 @@
-import { Button, Form, Input, Select, Space } from "antd";
+import { Button, Drawer, Form, Input, Select, Space } from "antd";
 import React, { useRef, useState } from "react";
 import Stroe from "@/utils/store";
 import APIParamsCom from "./APIParamsCom";
 import Request from "@/utils/request";
 import type { FormInstance } from "antd/es/form";
+import ViewJson from "./ViewJson";
 const { Option } = Select;
 
 const AdvancedService = {
-  getDatasource:(data:any)=>{
-    return Request(data)
-  }
-}
+  getDatasource: (data: any) => {
+    return Request(data);
+  },
+};
 
 export default function AntdAdvancedConfig() {
   const { page } = Stroe.getStateAll();
   const advancedFormRef = useRef<FormInstance>(null);
+  const [dataSource, setDataSource] = useState<{
+    loading: boolean;
+    data: any;
+    isDrawerStatus: boolean;
+  }>({
+    loading: false,
+    data: null,
+    isDrawerStatus: false,
+  });
   const onValuesChange = (changedValues: any, allValues: any) => {
     Stroe.dispatch({ payload: allValues, type: "page" });
   };
   const getDatasource = () => {
+    setDataSource((state) => ({ ...state, loading: true }));
     // eslint-disable-next-line no-unsafe-optional-chaining
-    const {method,url,api_options} = advancedFormRef.current?.getFieldsValue()
-    console.log({url,method,...api_options,data:api_options.paramsOrPayload})
-    AdvancedService.getDatasource({url,method,...api_options,data:api_options.paramsOrPayload}).then((res)=>{
-      console.log(res)
-    })
-    
-  }
+    const { method, url, api_options } = advancedFormRef.current?.getFieldsValue();
+    AdvancedService.getDatasource({
+      url,
+      method,
+      ...api_options,
+      data: api_options.paramsOrPayload,
+    }).then((res) => {
+      setDataSource((state) => ({ ...state,data:res, loading: false }));
+      Stroe.dispatch({ payload: res, type: "dataSource" });
+    });
+  };
+
   return (
     <Form
       name="basic"
@@ -64,11 +80,38 @@ export default function AntdAdvancedConfig() {
           <Form.Item name="url" noStyle>
             <Input />
           </Form.Item>
-          <Button type="primary" onClick={getDatasource}>运行</Button>
+          <Button type="primary" onClick={getDatasource}>
+            运行
+          </Button>
         </Space.Compact>
         <Form.Item name="api_options">
           <APIParamsCom />
         </Form.Item>
+        <Button
+          type="primary"
+          loading={dataSource.loading}
+          disabled={dataSource.data === null}
+          onClick={() => setDataSource((state) => ({ ...state, isDrawerStatus: true }))}
+        >
+          {dataSource.data !== null ?"查看数据源":'请先运行'}
+        </Button>
+        <Drawer
+          title="Drawer with extra actions"
+          placement="right"
+          width={500}
+          onClose={() => setDataSource((state) => ({ ...state, isDrawerStatus: false }))}
+          open={dataSource.isDrawerStatus}
+          extra={
+            <Space>
+              <Button onClick={() => setDataSource((state) => ({ ...state, isDrawerStatus: false }))}>Cancel</Button>
+              <Button type="primary" onClick={() => setDataSource((state) => ({ ...state, isDrawerStatus: false }))}>
+                OK
+              </Button>
+            </Space>
+          }
+        >
+          <ViewJson value={dataSource.data} />
+        </Drawer>
       </Form.Item>
     </Form>
   );

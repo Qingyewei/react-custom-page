@@ -1,7 +1,6 @@
 /// <reference types="vite/client" />
 
 declare module "*.svg";
-declare module "*./src-noconflict/worker-javascript.js";
 
 declare interface ViteEnv {
   VITE_TITLE: string;
@@ -22,4 +21,5 @@ declare interface Window {
   PUBLICKEY: string;
   PRIVATEKEY: string;
   ace: any;
+  Store:any;
 }
