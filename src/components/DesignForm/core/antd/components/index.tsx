@@ -1,4 +1,4 @@
-import React from "react";
+import React, { memo } from "react";
 import Input from "./Input";
 
 export default function Index(props: any) {

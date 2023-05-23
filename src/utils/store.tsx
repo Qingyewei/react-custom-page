@@ -1,5 +1,6 @@
 import { WidgetForm } from "@/components/DesignForm/config/element";
 import { element } from "../components/DesignForm/config";
+import React from "react";
 
 function createStore(reducer: (arg0: any, arg1: any) => any) {
   let state: any; // state记录所有状态
@@ -62,7 +63,16 @@ function reducer(
     }
     case "list": {
       const data = { ...state };
-      data["list"] = [...data["list"], action.payload];
+      const list =[]
+      for(const i of data.list){
+        console.log("遍历 data.list",i)
+        list.push(i)
+      }
+      list.push(action.payload)
+      data.list = list
+      // console.log(data["list"])
+      // data["list"] = [...data["list"], action.payload];
+      // console.log(data["list"])
       return data;
     }
     case "widgetFormCurrentSelect": {
@@ -74,10 +84,43 @@ function reducer(
       return state;
   }
 }
-const Stroe = createStore(reducer);
-// Stroe.dispatch({});
-// Stroe.subscribe(() => {
-//   console.log("数据发送了变化", Stroe.getStateAll());
+const Store = createStore(reducer);
+export const connect = (mapStateToProps: any, mapDispatchToProps?: any) => {
+  return (WrapedComponent: any) => {
+    class ConnectedComponent extends React.Component {
+      unsubscribe: () => void;
+      constructor(props: any) {
+        super(props);
+        this.unsubscribe = Store.subscribe(() => this.forceUpdate());
+      }
+
+      forceUpdate = () => {
+        console.log("发生变化");
+      };
+
+      componentWillUnmount() {
+        this.unsubscribe();
+      }
+
+      render() {
+        const state = Store.getStateAll();
+        let props = {
+          ...this.props,
+          ...mapStateToProps(state),
+        };
+        if (mapDispatchToProps) {
+          props = { ...props, ...mapDispatchToProps(Store.dispatch) };
+        }
+
+        return <WrapedComponent {...props} />;
+      }
+    }
+    return ConnectedComponent;
+  };
+};
+// Store.dispatch({});
+// Store.subscribe(() => {
+//   console.log("数据发送了变化", Store.getStateAll());
 // });
-window.Store = Stroe;
-export default Stroe;
+window.Store = Store;
+export default Store;

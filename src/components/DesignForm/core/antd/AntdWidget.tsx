@@ -1,12 +1,13 @@
-import React from "react";
+import { useEffect } from "react";
 import { useDrop } from "react-dnd";
 import styles from "./AntdWidget.module.less";
-import Stroe from "@/utils/store";
+import Store from "@/utils/store";
 import { element } from "../../config";
 import Components from "./components";
+import { v4 as uuidv4 } from "uuid";
 
 export default function AntdWidget(props: any) {
-  const {list} = Stroe.getStateAll()
+  const { list } = Store.getStateAll();
   const [{ isOver }, drop] = useDrop({
     accept: "ITEM",
     drop: (item: any) => {
@@ -22,9 +23,13 @@ export default function AntdWidget(props: any) {
       }
 
       const data = source.find((s) => s.type === item.id);
-      console.log("ssssss", item, data);
-      Stroe.dispatch({ type: "list", payload: data });
-      Stroe.dispatch({ type: "widgetFormCurrentSelect", payload: data });
+      data.id = `${item.id}_${uuidv4().substring(0, 8)}`;
+      console.log("z这里执行了", item, data);
+      Store.dispatch({ type: "list", payload: data });
+      Store.dispatch({
+        type: "widgetFormCurrentSelect",
+        payload: data,
+      });
       // return props.onDrop(item.id)
     },
     collect: (monitor) => ({
@@ -32,15 +37,19 @@ export default function AntdWidget(props: any) {
     }),
   });
 
+  useEffect(() => {
+    // console.log("list发生变化", list);
+  }, [list]);
+
   return (
     <div
       ref={drop}
       style={{ backgroundColor: isOver ? "#eee" : "#fff" }}
       className={styles.AntdWidget}
     >
-      {
-        list.map((item,i)=> <Components className="antdWidget-list" key={i} {...item}/>)
-      }
+      {list.map((item,i) => (
+        <Components className="antdWidget-list" key={i} {...item} />
+      ))}
     </div>
   );
 }

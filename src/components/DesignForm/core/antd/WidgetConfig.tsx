@@ -1,37 +1,39 @@
-import Stroe from "@/utils/store";
-import { Form, FormInstance, Input } from "antd";
-import React, { useEffect, useRef, useState } from "react";
+import Store from "@/utils/store";
+import { Form, Input } from "antd";
+import { memo, useEffect } from "react";
 
-export default function WidgetConfig() {
-  const [formData, setFormData] = useState({});
-
-  const widgetRef = useRef<FormInstance>(null);
+function WidgetConfig(props: any) {
+  const [widgetForm] = Form.useForm();
   const onValuesChange = (changedValues: any, allValues: any) => {
-    // Stroe.dispatch({ payload: allValues, type: "page" });
+    Store.dispatch({ payload: allValues, type: "widgetFormCurrentSelect" });
   };
+
   useEffect(() => {
-    const unsubscribe = Stroe.subscribe(() => {
-      const { widgetFormCurrentSelect } = Stroe.getStateAll();
-      console.log("数据发送了变化", widgetFormCurrentSelect);
-      const data = {
-        label: widgetFormCurrentSelect?.label,
-      };
-      setFormData(data);
+    Store.subscribe(() => {
+      const { widgetFormCurrentSelect } = Store.getStateAll();
+      widgetForm.setFieldsValue(
+        widgetFormCurrentSelect
+          ? widgetFormCurrentSelect
+          : {}
+      );
     });
-    return () => unsubscribe();
-  }, []);
+  }, [widgetForm]);
   return (
     <Form
       name="basic"
       layout="vertical"
-      ref={widgetRef}
-      initialValues={formData}
+      form={widgetForm}
       autoComplete="off"
       onValuesChange={onValuesChange}
     >
+      <Form.Item name="id" label="唯一标识符">
+        <Input disabled />
+      </Form.Item>
       <Form.Item name="label" label="标签">
         <Input placeholder="请输入标签" />
       </Form.Item>
     </Form>
   );
 }
+
+export default memo(WidgetConfig);

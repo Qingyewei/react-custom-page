@@ -1,4 +1,3 @@
-import React, { useEffect, useState } from "react";
 import { Button, Drawer, Layout, Tabs } from "antd";
 import styles from "./AntdDesignForm.module.less";
 import ComponentGroup from "./ComponentGroup";
@@ -11,7 +10,6 @@ import useDrwaer from "./useDrwaer";
 import { element } from "../../config";
 import AntdWidget from "./AntdWidget";
 import AntdAdvancedConfig from "./AntdAdvancedConfig";
-import Store from "@/utils/store";
 import WidgetConfig from "./WidgetConfig";
 
 const { Header, Sider, Content } = Layout;
@@ -20,15 +18,6 @@ export default function AntdDesignForm() {
   const { drawOption, openDrawer, handleClose, handleFix, antdDrawRef } =
     useDrwaer();
 
-  const [list1, setList1] = useState(["Item 1", "Item 2", "Item 3"]);
-  const [list2, setList2] = useState<any[]>([]);
-
-  const handleDrop = (id: any) => {
-    const item = list1.find((item) => item === id);
-    setList1(list1.filter((item) => item !== id));
-    setList2([...list2, item]);
-  };
-
   const getConfigPage = (type: string) => {
     switch (type) {
       case "字段属性":
@@ -36,9 +25,7 @@ export default function AntdDesignForm() {
       case "页面属性":
         return "页面属性";
       case "高级":
-        return (
-          <AntdAdvancedConfig />
-        );
+        return <AntdAdvancedConfig />;
     }
   };
 
@@ -50,6 +37,7 @@ export default function AntdDesignForm() {
           <div className="left-sider-btn">
             <UnorderedListOutlined onClick={openDrawer} />
           </div>
+
           <Drawer
             title="Basic Drawer"
             placement="left"

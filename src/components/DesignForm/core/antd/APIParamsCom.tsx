@@ -5,8 +5,7 @@ import type { FormInstance } from "antd/es/form";
 import "./APIParamsCom.less";
 import { CloseCircleOutlined, EditOutlined } from "@ant-design/icons";
 import JsonInput from "./JsonInput";
-import { v4 as uuidv4 } from "uuid";
-import Stroe from "@/utils/store";
+import Store from "@/utils/store";
 const EditableContext = React.createContext<FormInstance<any> | null>(null);
 
 interface Item {
@@ -242,7 +241,7 @@ const APIParamsCom: React.FC<APIParamsComProps> = ({
   },
   onChange,
 }) => {
-  const { page: config } = Stroe.getStateAll();
+  const { page: config } = Store.getStateAll();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [activeKey, setActiveKey] = useState("Header");
   const modelRef = useRef<FormInstance>(null);

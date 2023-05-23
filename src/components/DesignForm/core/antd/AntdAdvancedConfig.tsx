@@ -1,6 +1,6 @@
 import { Button, Drawer, Form, Input, Select, Space } from "antd";
 import React, { useRef, useState } from "react";
-import Stroe from "@/utils/store";
+import Store from "@/utils/store";
 import APIParamsCom from "./APIParamsCom";
 import Request from "@/utils/request";
 import type { FormInstance } from "antd/es/form";
@@ -14,7 +14,7 @@ const AdvancedService = {
 };
 
 export default function AntdAdvancedConfig() {
-  const { page } = Stroe.getStateAll();
+  const { page } = Store.getStateAll();
   const advancedFormRef = useRef<FormInstance>(null);
   const [dataSource, setDataSource] = useState<{
     loading: boolean;
@@ -26,7 +26,7 @@ export default function AntdAdvancedConfig() {
     isDrawerStatus: false,
   });
   const onValuesChange = (changedValues: any, allValues: any) => {
-    Stroe.dispatch({ payload: allValues, type: "page" });
+    Store.dispatch({ payload: allValues, type: "page" });
   };
   const getDatasource = () => {
     setDataSource((state) => ({ ...state, loading: true }));
@@ -39,7 +39,7 @@ export default function AntdAdvancedConfig() {
       data: api_options.paramsOrPayload,
     }).then((res) => {
       setDataSource((state) => ({ ...state,data:res, loading: false }));
-      Stroe.dispatch({ payload: res, type: "dataSource" });
+      Store.dispatch({ payload: res, type: "dataSource" });
     });
   };
 
