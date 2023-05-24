@@ -7,7 +7,7 @@ import { Row, Col } from "antd";
 function ComponentGroupItem(props: any) {
   const { dataSource, type } = props;
   const [{ isDragging }, drag] = useDrag({
-    type: "ITEM",
+    type: "List",
     item: { id: props.id, source: type},
     collect: (monitor) => ({
       isDragging: monitor.isDragging(),

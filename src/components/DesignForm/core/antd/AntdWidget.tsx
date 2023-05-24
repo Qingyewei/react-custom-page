@@ -5,11 +5,12 @@ import Store from "@/utils/store";
 import { element } from "../../config";
 import Components from "./components";
 import { v4 as uuidv4 } from "uuid";
+import SvgIcon from "@@/icons/component/SvgIcon";
 
 export default function AntdWidget(props: any) {
   const [list, setList] = useState<any[]>([]);
   const [{ isOver }, drop] = useDrop({
-    accept: "ITEM",
+    accept: "List",
     drop: (item: any) => {
       let source: any[] = [];
 
@@ -21,7 +22,6 @@ export default function AntdWidget(props: any) {
         default:
           break;
       }
-      const { list: targetList } = Store.getStateAll();
       const draggedCard = source.find((s) => s.type === item.id);
       const newCard = {
         ...draggedCard,
@@ -41,7 +41,6 @@ export default function AntdWidget(props: any) {
   useEffect(() => {
     const unsubscribe = Store.subscribe(() => {
       const { list: targetList = [] } = Store.getStateAll();
-      console.log("targetList",targetList)
       setList(targetList);
     });
     return () => unsubscribe();
@@ -54,7 +53,12 @@ export default function AntdWidget(props: any) {
       className={styles.AntdWidget}
     >
       {list.map((item, i) => (
-        <Components className="antdWidget-list" key={i} {...item} />
+        <div className="antdWidget-list"  key={'antdWidget-list'+i}>
+          <Components className="antdWidget-c" {...item} />
+          <div className="antdWidget-drag">
+            <SvgIcon name="move" class="m-mover" />
+          </div>
+        </div>
       ))}
     </div>
   );
