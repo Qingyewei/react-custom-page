@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useDrop } from "react-dnd";
 import styles from "./AntdWidget.module.less";
 import Store from "@/utils/store";
@@ -7,7 +7,7 @@ import Components from "./components";
 import { v4 as uuidv4 } from "uuid";
 
 export default function AntdWidget(props: any) {
-  const { list } = Store.getStateAll();
+  const [list, setList] = useState<any[]>([]);
   const [{ isOver }, drop] = useDrop({
     accept: "ITEM",
     drop: (item: any) => {
@@ -21,16 +21,17 @@ export default function AntdWidget(props: any) {
         default:
           break;
       }
-
-      const data = source.find((s) => s.type === item.id);
-      data.id = `${item.id}_${uuidv4().substring(0, 8)}`;
-      console.log("z这里执行了", item, data);
-      Store.dispatch({ type: "list", payload: data });
+      const { list: targetList } = Store.getStateAll();
+      const draggedCard = source.find((s) => s.type === item.id);
+      const newCard = {
+        ...draggedCard,
+        id: `${item.id}_${uuidv4().substring(0, 8)}`,
+      };
+      Store.dispatch({ type: "listItem", payload: newCard });
       Store.dispatch({
         type: "widgetFormCurrentSelect",
-        payload: data,
+        payload: newCard,
       });
-      // return props.onDrop(item.id)
     },
     collect: (monitor) => ({
       isOver: monitor.isOver(),
@@ -38,8 +39,13 @@ export default function AntdWidget(props: any) {
   });
 
   useEffect(() => {
-    // console.log("list发生变化", list);
-  }, [list]);
+    const unsubscribe = Store.subscribe(() => {
+      const { list: targetList = [] } = Store.getStateAll();
+      console.log("targetList",targetList)
+      setList(targetList);
+    });
+    return () => unsubscribe();
+  }, []);
 
   return (
     <div
@@ -47,7 +53,7 @@ export default function AntdWidget(props: any) {
       style={{ backgroundColor: isOver ? "#eee" : "#fff" }}
       className={styles.AntdWidget}
     >
-      {list.map((item,i) => (
+      {list.map((item, i) => (
         <Components className="antdWidget-list" key={i} {...item} />
       ))}
     </div>

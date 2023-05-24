@@ -63,16 +63,12 @@ function reducer(
     }
     case "list": {
       const data = { ...state };
-      const list =[]
-      for(const i of data.list){
-        console.log("遍历 data.list",i)
-        list.push(i)
-      }
-      list.push(action.payload)
-      data.list = list
-      // console.log(data["list"])
-      // data["list"] = [...data["list"], action.payload];
-      // console.log(data["list"])
+      data["list"] = action.payload;
+      return data;
+    }
+    case "listItem": {
+      const data = { ...state };
+      data["list"] = [...data["list"], action.payload];
       return data;
     }
     case "widgetFormCurrentSelect": {

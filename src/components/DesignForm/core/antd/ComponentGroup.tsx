@@ -27,13 +27,13 @@ function ComponentGroupItem(props: any) {
 }
 
 export default function ComponentGroup(props: any) {
-  const { title, list, type } = props;
+  const { title, list:sourceList, type } = props;
   return (
     <div className={styles.ComponentGroup}>
       <div className="ComponentGroup-title">{title}</div>
       <div className="ComponentGroup-list">
         <Row gutter={16}>
-          {list.map((item: any) => {
+          {sourceList.map((item: any) => {
             return (
               <Col className="gutter-row" span={8} key={item.type}>
                 <ComponentGroupItem id={item.type} dataSource={item} type={type}/>
