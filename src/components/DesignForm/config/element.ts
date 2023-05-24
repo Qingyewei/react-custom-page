@@ -33,6 +33,7 @@ export interface WidgetForm {
   };
   dataSource?:any
   widgetFormCurrentSelect?:any;
+  widgetFormCurrentSelectIndex?:any;
 }
 
 export const rules: Rules = {

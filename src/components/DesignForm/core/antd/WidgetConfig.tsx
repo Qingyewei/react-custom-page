@@ -8,16 +8,19 @@ function WidgetConfig(props: any) {
     Store.dispatch({ payload: allValues, type: "widgetFormCurrentSelect" });
   };
 
+  const getData = () => {
+    const { widgetFormCurrentSelect } = Store.getStateAll();
+    widgetForm.setFieldsValue(
+      widgetFormCurrentSelect ? widgetFormCurrentSelect : {}
+    );
+  };
+
   useEffect(() => {
-    Store.subscribe(() => {
-      const { widgetFormCurrentSelect } = Store.getStateAll();
-      widgetForm.setFieldsValue(
-        widgetFormCurrentSelect
-          ? widgetFormCurrentSelect
-          : {}
-      );
+    const unsubscribe = Store.subscribe(() => {
+      getData();
     });
-  }, [widgetForm]);
+    return () => unsubscribe();
+  }, []);
   return (
     <Form
       name="basic"

@@ -73,7 +73,13 @@ function reducer(
     }
     case "widgetFormCurrentSelect": {
       const data = { ...state };
-      data["widgetFormCurrentSelect"] = action.payload;
+      data["list"] = data["list"].map((item)=>{
+        if(item.id === action.payload.id){
+          item = {...item,...action.payload}
+        }
+        return item
+      });
+      data["widgetFormCurrentSelect"] = {...data["widgetFormCurrentSelect"],...action.payload};
       return data;
     }
     default:
