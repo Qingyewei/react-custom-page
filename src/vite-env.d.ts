@@ -22,4 +22,5 @@ declare interface Window {
   PRIVATEKEY: string;
   ace: any;
   Store:any;
+  dataSourcePageValue:any;
 }

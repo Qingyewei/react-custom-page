@@ -1,17 +1,18 @@
 import Store from "@/utils/store";
-import React, { memo } from "react";
+import { memo } from "react";
 import { Input as AntdInput } from "antd";
-import "./Input.less"
+import "./Input.less";
+
+import _ from "lodash";
 
 function Input(props: any) {
-  console.log("props Input",props)
-  const { className,label } = props;
+  const { className, label, value, dataSource } = props;
   const { page } = Store.getStateAll();
   const getDeatilRender = () => {
     return (
       <div className={`${className} cf-input`}>
         <div className="label">{label}</div>
-        <div className="text"></div>
+        <div className="text">{_.get(dataSource, value && value.join("."), "")}</div>
       </div>
     );
   };

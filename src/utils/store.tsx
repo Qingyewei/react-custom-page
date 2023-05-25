@@ -93,11 +93,12 @@ export const connect = (mapStateToProps: any, mapDispatchToProps?: any) => {
       unsubscribe: () => void;
       constructor(props: any) {
         super(props);
+        this.state = Store.getStateAll();
         this.unsubscribe = Store.subscribe(() => this.forceUpdate());
       }
 
       forceUpdate = () => {
-        console.log("发生变化");
+        this.setState(Store.getStateAll())
       };
 
       componentWillUnmount() {
@@ -105,10 +106,9 @@ export const connect = (mapStateToProps: any, mapDispatchToProps?: any) => {
       }
 
       render() {
-        const state = Store.getStateAll();
         let props = {
           ...this.props,
-          ...mapStateToProps(state),
+          ...mapStateToProps(this.state),
         };
         if (mapDispatchToProps) {
           props = { ...props, ...mapDispatchToProps(Store.dispatch) };
