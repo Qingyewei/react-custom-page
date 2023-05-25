@@ -4,6 +4,7 @@ import { useDrag, useDrop } from "react-dnd";
 import Components from "./components";
 import SvgIcon from "@@/icons/component/SvgIcon";
 import Store from "@/utils/store";
+import { v4 as uuidv4 } from "uuid";
 
 const style: CSSProperties = {
   border: "1px dashed gray",
@@ -64,23 +65,36 @@ const Card: FC<CardProps> = memo(function Card({
   );
 
   const changeHandleCurrentSelect = () => {
+    console.log("更换当前项");
     Store.dispatch({
       type: "widgetFormCurrentSelect",
       payload: content,
     });
   };
 
-  const opacity = isDragging ? 0.5 : 1;
+  const handleCopyClick = (e:React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+    e.stopPropagation();
+    const newCard = {
+      ...content,
+      id: `${content.type}_${uuidv4().substring(0, 8)}`,
+    };
+    Store.dispatch({ type: "listItemCopy", payload: newCard });
+  };
+  
   return (
     <div
       ref={drop}
-      style={{ ...style, opacity }}
+      style={{ opacity: isDragging ? 0.5 : 1 }}
       className="antdWidget-list"
       onClick={changeHandleCurrentSelect}
     >
       <Components className="antdWidget-c" {...content} />
+      <div className="antdwidgetFormItem-action">
+        <SvgIcon name="copy" className="svg-icon" onClick={handleCopyClick} />
+        <SvgIcon name="delete" className="svg-icon" />
+      </div>
       <div className="antdWidget-drag" ref={drag}>
-        <SvgIcon name="move" class="m-mover" />
+        <SvgIcon name="move" className="svg-icon" />
       </div>
     </div>
   );

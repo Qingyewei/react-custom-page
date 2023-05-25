@@ -3,9 +3,7 @@ import { useDrop } from "react-dnd";
 import styles from "./AntdWidget.module.less";
 import Store from "@/utils/store";
 import { element } from "../../config";
-import Components from "./components";
 import { v4 as uuidv4 } from "uuid";
-import SvgIcon from "@@/icons/component/SvgIcon";
 import Card from "./AntdWidgetCard";
 import _ from "lodash";
 
@@ -43,10 +41,15 @@ export default function AntdWidget(props: any) {
   useEffect(() => {
     const unsubscribe = Store.subscribe(() => {
       const { list: targetList = [] } = Store.getStateAll();
-      setList(targetList);
+      console.log("targetList 发生变化",targetList)
+      setList(()=>([...targetList]));
     });
     return () => unsubscribe();
   }, []);
+
+  useEffect(()=>{
+    console.log("list 发生变化",list)
+  },[list])
 
   const findCard = useCallback(
     (id: string) => {
@@ -93,14 +96,6 @@ export default function AntdWidget(props: any) {
       style={{ backgroundColor: isOver ? "#eee" : "#fff" }}
       className={styles.AntdWidget}
     >
-      {/* {list.map((item, i) => (
-        <div className="antdWidget-list" key={"antdWidget-list" + i}>
-          <Components className="antdWidget-c" {...item} />
-          <div className="antdWidget-drag">
-            <SvgIcon name="move" class="m-mover" />
-          </div>
-        </div>
-      ))} */}
       {list.map((card) => renderCard(card))}
     </div>
   );

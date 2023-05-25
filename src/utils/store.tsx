@@ -73,13 +73,29 @@ function reducer(
     }
     case "widgetFormCurrentSelect": {
       const data = { ...state };
-      data["list"] = data["list"].map((item)=>{
-        if(item.id === action.payload.id){
-          item = {...item,...action.payload}
+      data["list"] = data["list"].map((item) => {
+        if (item.id === action.payload.id) {
+          item = { ...item, ...action.payload };
         }
-        return item
+        return item;
       });
-      data["widgetFormCurrentSelect"] = {...data["widgetFormCurrentSelect"],...action.payload};
+      if (!action.payload) {
+        data["widgetFormCurrentSelect"] = null;
+      } else {
+        data["widgetFormCurrentSelect"] = {
+          ...data["widgetFormCurrentSelect"],
+          ...action.payload,
+        };
+      }
+      return data;
+    }
+    case "listItemCopy": {
+      const data = { ...state };
+      const currentIndex = data["list"].findIndex(
+        (item) => item.id === data["widgetFormCurrentSelect"].id
+      );
+      data["list"].splice(currentIndex + 1, 0, action.payload);
+      // data["widgetFormCurrentSelect"] = { ...action.payload };
       return data;
     }
     default:
@@ -98,7 +114,7 @@ export const connect = (mapStateToProps: any, mapDispatchToProps?: any) => {
       }
 
       forceUpdate = () => {
-        this.setState(Store.getStateAll())
+        this.setState(Store.getStateAll());
       };
 
       componentWillUnmount() {
