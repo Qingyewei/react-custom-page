@@ -41,14 +41,14 @@ export default function AntdWidget(props: any) {
   useEffect(() => {
     const unsubscribe = Store.subscribe(() => {
       const { list: targetList = [] } = Store.getStateAll();
-      console.log("targetList 发生变化",targetList)
+      // console.log("targetList 发生变化",targetList)
       setList(()=>([...targetList]));
     });
     return () => unsubscribe();
   }, []);
 
   useEffect(()=>{
-    console.log("list 发生变化",list)
+    // console.log("list 发生变化",list)
   },[list])
 
   const findCard = useCallback(

@@ -80,7 +80,12 @@ const Card: FC<CardProps> = memo(function Card({
     };
     Store.dispatch({ type: "listItemCopy", payload: newCard });
   };
-  
+
+  const handleDeleteClick = (e:React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+    e.stopPropagation();
+    Store.dispatch({ type: "listItemDelete", payload: content.id });
+  }
+
   return (
     <div
       ref={drop}
@@ -91,7 +96,7 @@ const Card: FC<CardProps> = memo(function Card({
       <Components className="antdWidget-c" {...content} />
       <div className="antdwidgetFormItem-action">
         <SvgIcon name="copy" className="svg-icon" onClick={handleCopyClick} />
-        <SvgIcon name="delete" className="svg-icon" />
+        <SvgIcon name="delete" className="svg-icon" onClick={handleDeleteClick} />
       </div>
       <div className="antdWidget-drag" ref={drag}>
         <SvgIcon name="move" className="svg-icon" />

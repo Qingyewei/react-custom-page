@@ -98,6 +98,22 @@ function reducer(
       // data["widgetFormCurrentSelect"] = { ...action.payload };
       return data;
     }
+    case "listItemDelete": {
+      const data = { ...state };
+      const currentIndex = data["list"].findIndex(
+        (item) => item.id === data["widgetFormCurrentSelect"].id
+      );
+      data["list"] = data["list"].filter((item) => item.id !== action.payload);
+      if (data["widgetFormCurrentSelect"].id === action.payload) {
+        const widgetFormCurrentSelect = data["list"][currentIndex - 1];
+        if (!widgetFormCurrentSelect) {
+          data["widgetFormCurrentSelect"] = null;
+        } else {
+          data["widgetFormCurrentSelect"] = widgetFormCurrentSelect;
+        }
+      }
+      return data;
+    }
     default:
       return state;
   }

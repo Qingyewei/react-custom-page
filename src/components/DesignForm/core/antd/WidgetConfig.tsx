@@ -1,6 +1,6 @@
 import Store, { connect } from "@/utils/store";
 import { Cascader, Form, Input, Select, Space } from "antd";
-import { memo, useEffect } from "react";
+import { memo, useEffect, useState } from "react";
 import { WidgetForm } from "../../config/element";
 const { Option } = Select;
 
@@ -19,18 +19,22 @@ function WidgetConfig(props: any) {
 
   useEffect(() => {
     const { widgetFormCurrentSelect } = props;
-    widgetForm.setFieldsValue(
-      widgetFormCurrentSelect ? widgetFormCurrentSelect : {}
-    );
-  }, [props]);
+
+    if(widgetFormCurrentSelect){
+      widgetForm.setFieldsValue(widgetFormCurrentSelect)
+    }else{
+      widgetForm.resetFields()
+    }
+    widgetForm.setFieldValue("value-type", "dataSource");
+  }, [props, widgetForm]);
 
   function transform(obj: any) {
-    const result:any[] = [];
-    const stack:any[] = [{ obj, result }];
+    const result: any[] = [];
+    const stack: any[] = [{ obj, result }];
     while (stack.length > 0) {
       const { obj, result } = stack.pop();
       for (const key in obj) {
-        const item:any = { label: key, value: key, result:obj[key] };
+        const item: any = { label: key, value: key, result: obj[key] };
         if (typeof obj[key] === "object" && obj[key] !== null) {
           item.children = [];
           stack.push({ obj: obj[key], result: item.children });
@@ -47,10 +51,14 @@ function WidgetConfig(props: any) {
       dataSource = {};
     }
     const options = transform(dataSource);
-    window.dataSourcePageValue = options
+    window.dataSourcePageValue = options;
     return (
       <Form.Item name="value" noStyle>
-        <Cascader style={{ width: "65%" }} options={options} placeholder="请选择标签值" />
+        <Cascader
+          style={{ width: "65%" }}
+          options={options}
+          placeholder="请选择标签值"
+        />
       </Form.Item>
     );
   };
@@ -68,7 +76,7 @@ function WidgetConfig(props: any) {
           </Form.Item>
         );
       default: {
-        widgetForm.setFieldValue("value-type", "dataSource");
+        
         return dataSourcePage();
       }
     }
