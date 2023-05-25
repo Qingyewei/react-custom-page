@@ -50,7 +50,7 @@ function WidgetConfig(props: any) {
     window.dataSourcePageValue = options
     return (
       <Form.Item name="value" noStyle>
-        <Cascader style={{ width: "60%" }} options={options} placeholder="Please select" />
+        <Cascader style={{ width: "65%" }} options={options} placeholder="请选择标签值" />
       </Form.Item>
     );
   };
@@ -93,7 +93,7 @@ function WidgetConfig(props: any) {
             <Select
               placeholder="请选择默认方式"
               allowClear
-              style={{ width: "40%" }}
+              style={{ width: "35%" }}
             >
               <Option value="dataSource">数据源</Option>
               <Option value="custom">自定义</Option>

@@ -63,7 +63,6 @@ const JsonInput = (props: jsonInputType) => {
   }, [state.value]);
 
   useEffect(() => {
-    console.log("defaultValue", "发生了变化");
     if (state.value !== defaultValue) {
       setState((state) => ({
         ...state,
@@ -75,7 +74,7 @@ const JsonInput = (props: jsonInputType) => {
     // console.log("i've loaded");
   }
   function onChange(newValue: any) {
-    console.log("change", newValue);
+    // console.log("change", newValue);
   }
   function onSelectionChange(newValue: any, event: any) {
     // console.log("select-change", newValue);

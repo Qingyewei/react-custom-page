@@ -70,7 +70,7 @@ const EditableCell: React.FC<EditableCellProps> = ({
       toggleEdit();
       handleSave({ ...record, ...values });
     } catch (errInfo) {
-      console.log("Save failed:", errInfo);
+      console.error("Save failed:", errInfo);
     }
   };
 
@@ -246,9 +246,6 @@ const APIParamsCom: React.FC<APIParamsComProps> = ({
   const [activeKey, setActiveKey] = useState("Header");
   const modelRef = useRef<FormInstance>(null);
   const [dataSource, setDataSource] = useState(value);
-  useEffect(() => {
-    console.log("获取配置", config);
-  }, []);
 
   useEffect(() => {
     onChange?.(dataSource);

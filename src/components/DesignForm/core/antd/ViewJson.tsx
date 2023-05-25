@@ -31,7 +31,6 @@ export function ViewJson(props: ViewJsonProps) {
   const [jsonData, setJsonData] = useState({});
 
   useEffect(() => {
-    console.log("传入值发生变化", value);
     setJsonData(value);
   }, [value]);
 
