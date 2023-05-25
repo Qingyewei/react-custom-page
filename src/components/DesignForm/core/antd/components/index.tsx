@@ -18,4 +18,5 @@ function Index(props: any) {
 
 export default connect((state: WidgetForm) => ({
   dataSource: state.dataSource,
+  page:state.page
 }))(Index);

@@ -65,7 +65,6 @@ const Card: FC<CardProps> = memo(function Card({
   );
 
   const changeHandleCurrentSelect = () => {
-    console.log("更换当前项");
     Store.dispatch({
       type: "widgetFormCurrentSelect",
       payload: content,

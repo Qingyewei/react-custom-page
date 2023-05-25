@@ -1,13 +1,17 @@
-import { useCallback, useEffect, useState } from "react";
+import { memo, useCallback, useEffect, useState } from "react";
 import { useDrop } from "react-dnd";
 import styles from "./AntdWidget.module.less";
-import Store from "@/utils/store";
+import Store, { connect } from "@/utils/store";
 import { element } from "../../config";
 import { v4 as uuidv4 } from "uuid";
 import Card from "./AntdWidgetCard";
 import _ from "lodash";
+import { Form } from "antd";
+import { WidgetForm } from "../../config/element";
 
-export default function AntdWidget(props: any) {
+function AntdWidget(props: any) {
+  const { page } = props;
+  const [antdWidgetForm] = Form.useForm();
   const [list, setList] = useState<any[]>([]);
   const [{ isOver }, drop] = useDrop({
     accept: "List",
@@ -42,14 +46,14 @@ export default function AntdWidget(props: any) {
     const unsubscribe = Store.subscribe(() => {
       const { list: targetList = [] } = Store.getStateAll();
       // console.log("targetList 发生变化",targetList)
-      setList(()=>([...targetList]));
+      setList(() => [...targetList]);
     });
     return () => unsubscribe();
   }, []);
 
-  useEffect(()=>{
+  useEffect(() => {
     // console.log("list 发生变化",list)
-  },[list])
+  }, [list]);
 
   const findCard = useCallback(
     (id: string) => {
@@ -96,7 +100,17 @@ export default function AntdWidget(props: any) {
       style={{ backgroundColor: isOver ? "#eee" : "#fff" }}
       className={styles.AntdWidget}
     >
-      {list.map((card) => renderCard(card))}
+      {page.type === "detail" ? (
+        list.map((card) => renderCard(card))
+      ) : (
+        <Form name="AntdWidget" form={antdWidgetForm} autoComplete="off">
+          {list.map((card) => renderCard(card))}
+        </Form>
+      )}
     </div>
   );
 }
+
+export default connect((state: WidgetForm) => ({
+  page: state.page,
+}))(memo(AntdWidget));

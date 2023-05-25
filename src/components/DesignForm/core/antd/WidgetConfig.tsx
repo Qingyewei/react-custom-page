@@ -20,10 +20,10 @@ function WidgetConfig(props: any) {
   useEffect(() => {
     const { widgetFormCurrentSelect } = props;
 
-    if(widgetFormCurrentSelect){
-      widgetForm.setFieldsValue(widgetFormCurrentSelect)
-    }else{
-      widgetForm.resetFields()
+    if (widgetFormCurrentSelect) {
+      widgetForm.setFieldsValue(widgetFormCurrentSelect);
+    } else {
+      widgetForm.resetFields();
     }
     widgetForm.setFieldValue("value-type", "dataSource");
   }, [props, widgetForm]);
@@ -76,7 +76,6 @@ function WidgetConfig(props: any) {
           </Form.Item>
         );
       default: {
-        
         return dataSourcePage();
       }
     }
@@ -95,21 +94,27 @@ function WidgetConfig(props: any) {
       <Form.Item name="label" label="标签">
         <Input placeholder="请输入标签" />
       </Form.Item>
-      <Form.Item label="默认值">
-        <Space.Compact style={{ width: "100%" }}>
-          <Form.Item name="value-type" noStyle>
-            <Select
-              placeholder="请选择默认方式"
-              allowClear
-              style={{ width: "35%" }}
-            >
-              <Option value="dataSource">数据源</Option>
-              <Option value="custom">自定义</Option>
-            </Select>
-          </Form.Item>
-          {getValueTypePage()}
-        </Space.Compact>
-      </Form.Item>
+      {props.page.type === "detail" ? (
+        <Form.Item label="默认值">
+          <Space.Compact style={{ width: "100%" }}>
+            <Form.Item name="value-type" noStyle>
+              <Select
+                placeholder="请选择默认方式"
+                allowClear
+                style={{ width: "35%" }}
+              >
+                <Option value="dataSource">数据源</Option>
+                <Option value="custom">自定义</Option>
+              </Select>
+            </Form.Item>
+            {getValueTypePage()}
+          </Space.Compact>
+        </Form.Item>
+      ) : (
+        <Form.Item name="name" label="标签名称">
+          <Input placeholder="请输入标签名称" />
+        </Form.Item>
+      )}
     </Form>
   );
 }
@@ -117,4 +122,5 @@ function WidgetConfig(props: any) {
 export default connect((state: WidgetForm) => ({
   widgetFormCurrentSelect: state.widgetFormCurrentSelect,
   dataSource: state.dataSource,
+  page: state.page,
 }))(memo(WidgetConfig));
