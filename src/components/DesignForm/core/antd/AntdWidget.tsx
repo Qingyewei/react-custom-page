@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useDrop } from "react-dnd";
 import styles from "./AntdWidget.module.less";
 import Store from "@/utils/store";
@@ -6,6 +6,8 @@ import { element } from "../../config";
 import Components from "./components";
 import { v4 as uuidv4 } from "uuid";
 import SvgIcon from "@@/icons/component/SvgIcon";
+import Card from "./AntdWidgetCard";
+import _ from "lodash";
 
 export default function AntdWidget(props: any) {
   const [list, setList] = useState<any[]>([]);
@@ -46,20 +48,60 @@ export default function AntdWidget(props: any) {
     return () => unsubscribe();
   }, []);
 
+  const findCard = useCallback(
+    (id: string) => {
+      const card = list.filter((c) => `${c.id}` === id)[0];
+      return {
+        card,
+        index: list.indexOf(card),
+      };
+    },
+    [list]
+  );
+
+  const moveCard = useCallback(
+    (id: string, hoverIndex: number) => {
+      const newList = _.cloneDeep(list);
+      const { index: dragIndex } = findCard(id);
+      let temp = newList[dragIndex];
+      newList[dragIndex] = newList[hoverIndex];
+      newList[hoverIndex] = temp;
+      temp = null;
+      setList(newList);
+    },
+    [list]
+  );
+
+  const renderCard = useCallback(
+    (card: { id: string }) => {
+      return (
+        <Card
+          key={card.id}
+          id={card.id}
+          content={card}
+          moveCard={moveCard}
+          findCard={findCard}
+        />
+      );
+    },
+    [list]
+  );
+
   return (
     <div
       ref={drop}
       style={{ backgroundColor: isOver ? "#eee" : "#fff" }}
       className={styles.AntdWidget}
     >
-      {list.map((item, i) => (
-        <div className="antdWidget-list"  key={'antdWidget-list'+i}>
+      {/* {list.map((item, i) => (
+        <div className="antdWidget-list" key={"antdWidget-list" + i}>
           <Components className="antdWidget-c" {...item} />
           <div className="antdWidget-drag">
             <SvgIcon name="move" class="m-mover" />
           </div>
         </div>
-      ))}
+      ))} */}
+      {list.map((card) => renderCard(card))}
     </div>
   );
 }
