@@ -7,7 +7,7 @@ import { v4 as uuidv4 } from "uuid";
 import Card from "./AntdWidgetCard";
 import _ from "lodash";
 import { Form } from "antd";
-import { WidgetForm } from "../../config/element";
+import { WidgetForm, basicComponents } from "../../config/element";
 
 function AntdWidget(props: any) {
   const { page } = props;
@@ -42,10 +42,19 @@ function AntdWidget(props: any) {
     }),
   });
 
+  const getInitFormValues = (list: any) => {
+    const data: any = {};
+    for (const i of list) {
+      data[i.name || i.id] = _.get(i, "options.defaultValue");
+    }
+    antdWidgetForm.setFieldsValue(data)
+  };
+
   useEffect(() => {
     const unsubscribe = Store.subscribe(() => {
       const { list: targetList = [] } = Store.getStateAll();
       // console.log("targetList 发生变化",targetList)
+      getInitFormValues(targetList)
       setList(() => [...targetList]);
     });
     return () => unsubscribe();

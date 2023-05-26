@@ -127,6 +127,9 @@ function WidgetConfig(props: any) {
           <Form.Item name={['options', 'placeholder']} label="占位文本">
             <Input placeholder="请输入占位文本" />
           </Form.Item>
+          <Form.Item name={['options', 'defaultValue']} label="默认值">
+            <Input placeholder="请输入默认值" />
+          </Form.Item>
         </>
       )}
     </Form>
