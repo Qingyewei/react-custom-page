@@ -20,7 +20,7 @@ export interface WidgetForm {
   };
   page: {
     showType: "page" | "model" | "tab";
-    type: "detail" | "curd";
+    type: "detail" | "crud";
     method: "POST" | "GET";
     url: string;
     api_options: {
@@ -58,7 +58,7 @@ export const widgetForm: WidgetForm = {
   },
   page: {
     showType: "page",
-    type: "detail",
+    type: "crud",
     method: "POST",
     // api_url: location.href,
     url:

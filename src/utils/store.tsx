@@ -1,6 +1,7 @@
 import { WidgetForm } from "@/components/DesignForm/config/element";
 import { element } from "../components/DesignForm/config";
 import React from "react";
+import _ from "lodash";
 
 function createStore(reducer: (arg0: any, arg1: any) => any) {
   let state: any; // state记录所有状态
@@ -73,19 +74,16 @@ function reducer(
     }
     case "widgetFormCurrentSelect": {
       const data = { ...state };
+
       data["list"] = data["list"].map((item) => {
-        if (item.id === action.payload.id) {
-          item = { ...item, ...action.payload };
+        if (item.id === _.get(action,'payload.id')) {
+          item = _.defaultsDeep(action.payload,item)
+          data["widgetFormCurrentSelect"] = item
         }
         return item;
       });
       if (!action.payload) {
         data["widgetFormCurrentSelect"] = null;
-      } else {
-        data["widgetFormCurrentSelect"] = {
-          ...data["widgetFormCurrentSelect"],
-          ...action.payload,
-        };
       }
       return data;
     }

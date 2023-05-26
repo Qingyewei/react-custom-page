@@ -18,14 +18,23 @@ function WidgetConfig(props: any) {
   };
 
   useEffect(() => {
-    const { widgetFormCurrentSelect } = props;
+    const { widgetFormCurrentSelect, page } = props;
+    if (
+      page.type === "crud" &&
+      widgetFormCurrentSelect &&
+      !widgetFormCurrentSelect.name
+    ) {
+      widgetFormCurrentSelect.name = widgetFormCurrentSelect.id;
+    }
 
     if (widgetFormCurrentSelect) {
       widgetForm.setFieldsValue(widgetFormCurrentSelect);
     } else {
       widgetForm.resetFields();
+      if (page.type === "detail") {
+        widgetForm.setFieldValue("value-type", "dataSource");
+      }
     }
-    widgetForm.setFieldValue("value-type", "dataSource");
   }, [props, widgetForm]);
 
   function transform(obj: any) {
@@ -91,8 +100,8 @@ function WidgetConfig(props: any) {
       <Form.Item name="id" label="唯一标识符">
         <Input disabled />
       </Form.Item>
-      <Form.Item name="label" label="标签">
-        <Input placeholder="请输入标签" />
+      <Form.Item name="label" label="标签文本">
+        <Input placeholder="请输入标签文本" />
       </Form.Item>
       {props.page.type === "detail" ? (
         <Form.Item label="默认值">
@@ -111,9 +120,14 @@ function WidgetConfig(props: any) {
           </Space.Compact>
         </Form.Item>
       ) : (
-        <Form.Item name="name" label="标签名称">
-          <Input placeholder="请输入标签名称" />
-        </Form.Item>
+        <>
+          <Form.Item name="name" label="字段名">
+            <Input placeholder="请输入字段名" />
+          </Form.Item>
+          <Form.Item name={['options', 'placeholder']} label="占位文本">
+            <Input placeholder="请输入占位文本" />
+          </Form.Item>
+        </>
       )}
     </Form>
   );

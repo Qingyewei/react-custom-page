@@ -103,7 +103,14 @@ function AntdWidget(props: any) {
       {page.type === "detail" ? (
         list.map((card) => renderCard(card))
       ) : (
-        <Form name="AntdWidget" form={antdWidgetForm} autoComplete="off">
+        <Form
+          name="AntdWidget"
+          form={antdWidgetForm}
+          labelCol={{ span: 8 }}
+          wrapperCol={{ span: 16 }}
+          style={{ maxWidth: 600 }}
+          autoComplete="off"
+        >
           {list.map((card) => renderCard(card))}
         </Form>
       )}
