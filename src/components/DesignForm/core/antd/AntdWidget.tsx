@@ -47,22 +47,15 @@ function AntdWidget(props: any) {
     for (const i of list) {
       data[i.name || i.id] = _.get(i, "options.defaultValue");
     }
-    antdWidgetForm.setFieldsValue(data)
+    antdWidgetForm.setFieldsValue(data);
   };
 
   useEffect(() => {
-    const unsubscribe = Store.subscribe(() => {
-      const { list: targetList = [] } = Store.getStateAll();
-      // console.log("targetList 发生变化",targetList)
-      getInitFormValues(targetList)
-      setList(() => [...targetList]);
-    });
-    return () => unsubscribe();
-  }, []);
-
-  useEffect(() => {
-    // console.log("list 发生变化",list)
-  }, [list]);
+    const { list: targetList = [] } = props;
+    // console.log("list 发生变化", targetList);
+    getInitFormValues(targetList);
+    setList(() => [...targetList]);
+  }, [props.list]);
 
   const findCard = useCallback(
     (id: string) => {
@@ -85,7 +78,7 @@ function AntdWidget(props: any) {
       temp = null;
       setList(newList);
     },
-    [list]
+    [findCard, list]
   );
 
   const renderCard = useCallback(
@@ -100,7 +93,7 @@ function AntdWidget(props: any) {
         />
       );
     },
-    [list]
+    [findCard, moveCard]
   );
 
   return (
@@ -129,4 +122,5 @@ function AntdWidget(props: any) {
 
 export default connect((state: WidgetForm) => ({
   page: state.page,
+  list: state.list,
 }))(memo(AntdWidget));
