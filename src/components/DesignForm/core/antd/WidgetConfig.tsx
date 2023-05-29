@@ -1,5 +1,5 @@
 import Store, { connect } from "@/utils/store";
-import { Cascader, Form, Input, Select, Space } from "antd";
+import { Cascader, Form, Input, Select, Space, Switch } from "antd";
 import { memo, useEffect, useState } from "react";
 import { WidgetForm } from "../../config/element";
 const { Option } = Select;
@@ -89,51 +89,62 @@ function WidgetConfig(props: any) {
       }
     }
   };
-  return (
-    <Form
-      name="basic"
-      layout="vertical"
-      form={widgetForm}
-      autoComplete="off"
-      onValuesChange={onValuesChange}
-    >
-      <Form.Item name="id" label="唯一标识符">
-        <Input disabled />
-      </Form.Item>
-      <Form.Item name="label" label="标签文本">
-        <Input placeholder="请输入标签文本" />
-      </Form.Item>
-      {props.page.type === "detail" ? (
-        <Form.Item label="默认值">
-          <Space.Compact style={{ width: "100%" }}>
-            <Form.Item name="value-type" noStyle>
-              <Select
-                placeholder="请选择默认方式"
-                allowClear
-                style={{ width: "35%" }}
-              >
-                <Option value="dataSource">数据源</Option>
-                <Option value="custom">自定义</Option>
-              </Select>
-            </Form.Item>
-            {getValueTypePage()}
-          </Space.Compact>
+
+  const getFormPage = () => {
+    return (
+      <Form
+        name="basic"
+        layout="vertical"
+        form={widgetForm}
+        autoComplete="off"
+        onValuesChange={onValuesChange}
+      >
+        <Form.Item name="id" label="唯一标识符">
+          <Input disabled />
         </Form.Item>
-      ) : (
-        <>
-          <Form.Item name="name" label="字段名">
-            <Input placeholder="请输入字段名" />
+        <Form.Item name="label" label="标签文本">
+          <Input placeholder="请输入标签文本" />
+        </Form.Item>
+        {props.page.type === "detail" ? (
+          <Form.Item label="默认值">
+            <Space.Compact style={{ width: "100%" }}>
+              <Form.Item name="value-type" noStyle>
+                <Select
+                  placeholder="请选择默认方式"
+                  allowClear
+                  style={{ width: "35%" }}
+                >
+                  <Option value="dataSource">数据源</Option>
+                  <Option value="custom">自定义</Option>
+                </Select>
+              </Form.Item>
+              {getValueTypePage()}
+            </Space.Compact>
           </Form.Item>
-          <Form.Item name={['options', 'placeholder']} label="占位文本">
-            <Input placeholder="请输入占位文本" />
-          </Form.Item>
-          <Form.Item name={['options', 'defaultValue']} label="默认值">
-            <Input placeholder="请输入默认值" />
-          </Form.Item>
-        </>
-      )}
-    </Form>
-  );
+        ) : (
+          <>
+            <Form.Item name="name" label="字段名">
+              <Input placeholder="请输入字段名" />
+            </Form.Item>
+            <Form.Item name={["options", "placeholder"]} label="占位文本">
+              <Input placeholder="请输入占位文本" />
+            </Form.Item>
+            <Form.Item name={["options", "defaultValue"]} label="默认值">
+              <Input placeholder="请输入默认值" />
+            </Form.Item>
+            <Form.Item
+              name={["options", "rules", "required"]}
+              label="是否为必填项"
+              valuePropName="checked"
+            >
+              <Switch />
+            </Form.Item>
+          </>
+        )}
+      </Form>
+    );
+  };
+  return props.widgetFormCurrentSelect ? getFormPage() : <>从左侧拖拽来添加字段</>;
 }
 
 export default connect((state: WidgetForm) => ({
