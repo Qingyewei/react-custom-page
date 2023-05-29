@@ -1,14 +1,5 @@
-export interface Rules {
-  trigger: string;
-  enum: string;
-  len?: number;
-  max?: number;
-  message: string;
-  min?: number;
-  pattern: string;
-  required: boolean;
-  type: string;
-}
+import { RuleObject, Rule } from "antd/es/form";
+
 
 export interface WidgetForm {
   list: any[];
@@ -36,17 +27,6 @@ export interface WidgetForm {
   widgetFormCurrentSelectIndex?:any;
 }
 
-export const rules: Rules = {
-  trigger: "blur",
-  enum: "",
-  len: undefined,
-  max: undefined,
-  message: "",
-  min: undefined,
-  pattern: "",
-  required: false,
-  type: "any",
-};
 
 export const widgetForm: WidgetForm = {
   list: [],
@@ -75,11 +55,37 @@ export const widgetForm: WidgetForm = {
     },
   },
 };
-
-type basicComponents = typeof basicComponents;
 export interface WidgetFormItem extends basicComponents {
   [x: string]: any;
   key?: string;
+}
+
+export const rules: Rule = {
+  len: undefined,
+  max: undefined,
+  message: "",
+  min: undefined,
+  required: false,
+};
+
+interface basicComponentsOptions {
+  width:string |number,
+  defaultValue:string,
+  placeholder:string,
+  maxlength:null | string;
+  prefix: string,
+      suffix: string,
+      prepend: string,
+      append: string,
+      disabled: boolean,
+      clearable: boolean,
+      readonly: boolean,
+      rules:RuleObject,
+}
+interface basicComponents {
+  label:string;
+  type:"input",
+  options:basicComponentsOptions
 }
 
 export const basicComponents = [

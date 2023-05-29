@@ -1,6 +1,14 @@
 import Store, { connect } from "@/utils/store";
-import { Cascader, Form, Input, Select, Space, Switch } from "antd";
-import { memo, useEffect, useState } from "react";
+import {
+  Cascader,
+  Form,
+  FormInstance,
+  Input,
+  Select,
+  Space,
+  Switch,
+} from "antd";
+import { memo, useEffect, useRef, useState } from "react";
 import { WidgetForm } from "../../config/element";
 const { Option } = Select;
 
@@ -13,6 +21,7 @@ interface stackType {
 
 function WidgetConfig(props: any) {
   const [widgetForm] = Form.useForm();
+  const widgetFormRef = useRef<FormInstance>(null);
   const onValuesChange = (changedValues: any, allValues: any) => {
     Store.dispatch({ payload: allValues, type: "widgetFormCurrentSelect" });
   };
@@ -26,13 +35,14 @@ function WidgetConfig(props: any) {
     ) {
       widgetFormCurrentSelect.name = widgetFormCurrentSelect.id;
     }
-
-    if (widgetFormCurrentSelect) {
-      widgetForm.setFieldsValue(widgetFormCurrentSelect);
-    } else {
-      widgetForm.resetFields();
-      if (page.type === "detail") {
-        widgetForm.setFieldValue("value-type", "dataSource");
+    if (widgetFormRef.current) {
+      if (widgetFormCurrentSelect) {
+        widgetForm.setFieldsValue(widgetFormCurrentSelect);
+      } else {
+        widgetForm.resetFields();
+        if (page.type === "detail") {
+          widgetForm.setFieldValue("value-type", "dataSource");
+        }
       }
     }
   }, [props, widgetForm]);
@@ -73,7 +83,7 @@ function WidgetConfig(props: any) {
   };
 
   const getValueTypePage = () => {
-    const type = widgetForm.getFieldValue("value-type");
+    const type = widgetFormRef.current && widgetForm.getFieldValue("value-type");
 
     switch (type) {
       case "dataSource":
@@ -96,6 +106,7 @@ function WidgetConfig(props: any) {
         name="basic"
         layout="vertical"
         form={widgetForm}
+        ref={widgetFormRef}
         autoComplete="off"
         onValuesChange={onValuesChange}
       >
@@ -144,7 +155,11 @@ function WidgetConfig(props: any) {
       </Form>
     );
   };
-  return props.widgetFormCurrentSelect ? getFormPage() : <>从左侧拖拽来添加字段</>;
+  return props.widgetFormCurrentSelect ? (
+    getFormPage()
+  ) : (
+    <>从左侧拖拽来添加字段</>
+  );
 }
 
 export default connect((state: WidgetForm) => ({

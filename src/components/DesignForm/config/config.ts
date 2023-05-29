@@ -1,5 +1,3 @@
-import { rules } from "./element";
-
 export const advancedConfig = [
   {
     label: "页面展示类型",
@@ -28,7 +26,6 @@ export const advancedConfig = [
           value: "tab",
         },
       ],
-      rules,
     },
   },
   {
@@ -54,7 +51,6 @@ export const advancedConfig = [
           value: "crud",
         },
       ],
-      rules,
     },
   },
 ];

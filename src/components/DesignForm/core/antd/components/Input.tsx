@@ -6,6 +6,7 @@ import _ from "lodash";
 
 function Input(props: any) {
   const { className, label, name, value, options, dataSource, page, id } = props;
+  console.log("Input", {id,options})
   const getDeatilRender = () => {
     return (
       <div className={`${className} cf-input`}>
@@ -17,7 +18,7 @@ function Input(props: any) {
     );
   };
   const getFormRender = () => (
-    <Form.Item name={name} label={label}>
+    <Form.Item name={name} label={label} rules={[options.rules]}>
       <AntdInput placeholder={_.get(options,'placeholder','请输入')} disabled />
     </Form.Item>
   );
