@@ -39,4 +39,7 @@ export default defineConfig({
       "@@": path.resolve(__dirname, "./src/components/DesignForm"),
     },
   },
+  server:{
+    port:8888
+  }
 });
