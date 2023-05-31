@@ -101,8 +101,6 @@ function withErrorBoundary<Props extends object>(
   component: ComponentType<Props>,
   errorBoundaryProps: any
 ): ForwardRefExoticComponent<PropsWithoutRef<Props> & RefAttributes<any>> {
-  console.log("withErrorBoundary",component)
-  const Component = () => <div>水水水水水</div>
   const Wrapped = forwardRef<ComponentType<Props>, Props>(
     (props: Props, ref: ForwardedRef<ComponentType<Props>>) =>
       createElement(

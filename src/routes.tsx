@@ -1,21 +1,16 @@
-import { RouteObject, useRoutes } from "react-router-dom";
-import AntdDesignForm from "./components/DesignForm/core/antd/AntdDesignForm";
-import { DndProvider } from "react-dnd";
-import { HTML5Backend } from "react-dnd-html5-backend";
-import PreviewMode from "./components/DesignForm/core/antd/PreviewMode";
+import { RouteObject } from "react-router-dom";
 import React from "react";
 import lazyLoad from "./components/error_boundary/lazyLoad";
-const MyCom = lazyLoad(React.lazy(() => import('@@/core/antd/PreviewMode')))
+const PreviewMode = lazyLoad(React.lazy(() => import('@@/core/antd/PreviewMode')))
+const AntdDesignForm = lazyLoad(React.lazy(() => import('@@/core/antd/AntdDesignForm')))
 const Routes: RouteObject[] = [
   {
     path: "/",
-    element: <DndProvider backend={HTML5Backend}>
-    <AntdDesignForm></AntdDesignForm>
-  </DndProvider>,
+    element: <AntdDesignForm />,
   },
   {
     path: "/preview-model",
-    element: <MyCom />,
+    element: <PreviewMode />,
   },
 ];
 

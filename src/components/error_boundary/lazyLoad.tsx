@@ -9,7 +9,6 @@ import { withErrorBoundary } from './index';
  */
 function LazyLoad(moduleName: string | React.LazyExoticComponent<any>): any {
   const LazyComponent = moduleName;
-  console.log("LazyComponent",LazyComponent)
   return function (props?:any) {
     return (
       <Suspense
@@ -38,5 +37,4 @@ export default (props:React.LazyExoticComponent<any>):any =>{
       window.console.log(componentStack);
     },
   })
-  // return LazyLoad(props)()
 };
