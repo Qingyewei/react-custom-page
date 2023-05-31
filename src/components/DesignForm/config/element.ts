@@ -63,7 +63,7 @@ export interface WidgetFormItem extends basicComponents {
 export const rules: Rule = {
   len: undefined,
   max: undefined,
-  message: "",
+  message: "请输入",
   min: undefined,
   required: false,
 };

@@ -19,7 +19,7 @@ function Input(props: any) {
   };
   const getFormRender = () => (
     <Form.Item name={name} label={label} rules={[options.rules]}>
-      <AntdInput placeholder={_.get(options,'placeholder','请输入')} disabled />
+      <AntdInput placeholder={_.get(options,'placeholder','请输入')} />
     </Form.Item>
   );
   return <>{page.type === "detail" ? getDeatilRender() : getFormRender()}</>;
