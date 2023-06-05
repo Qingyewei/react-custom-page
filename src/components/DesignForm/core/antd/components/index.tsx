@@ -3,6 +3,10 @@ import Input from "./Input";
 import { WidgetForm } from "@/components/DesignForm/config/element";
 import { connect } from "@/utils/store";
 
+function titleCase(str: string) {
+  return str.slice(0, 1).toUpperCase() + str.slice(1).toLowerCase();
+}
+
 function Index(props: any) {
   const { type } = props;
   const getComponentsItem = () => {
@@ -10,7 +14,7 @@ function Index(props: any) {
       case "input":
         return <Input {...props} />;
       default:
-        return <>当前组件未定义，请及时联系工作人员</>;
+        return <>{titleCase(type)}组件未定义，请及时联系工作人员</>;
     }
   };
   return getComponentsItem();
@@ -18,5 +22,5 @@ function Index(props: any) {
 
 export default connect((state: WidgetForm) => ({
   dataSource: state.dataSource,
-  page:state.page
+  page: state.page,
 }))(Index);

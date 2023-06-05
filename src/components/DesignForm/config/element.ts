@@ -337,6 +337,10 @@ export const basicComponents = [
   },
 ];
 
+export const findBasicComponents = (type:string) => {
+  return basicComponents.find(item=>item.type === type)
+}
+
 export const advanceComponents = [
   {
     label: "图片",

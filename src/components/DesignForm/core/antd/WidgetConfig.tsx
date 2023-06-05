@@ -8,8 +8,9 @@ import {
   Space,
   Switch,
 } from "antd";
-import { memo, useEffect, useRef, useState } from "react";
+import { memo, useEffect, useRef } from "react";
 import { WidgetForm } from "../../config/element";
+import Components from "./components";
 const { Option } = Select;
 
 interface stackType {
@@ -18,6 +19,41 @@ interface stackType {
   label: string;
   value: string;
 }
+
+const crudFormItem:any[] = [
+  {
+    name: "name",
+    label: "字段名",
+    type: "input",
+    options:{
+      placeholder: "请输入字段名",
+    }
+  },
+  {
+    name: ["options", "placeholder"],
+    label: "占位文本",
+    type: "input",
+    options:{
+      placeholder: "请输入占位文本",
+    }
+  },
+  {
+    name: ["options", "defaultValue"],
+    label: "默认值",
+    type: "input",
+    options:{
+      placeholder: "请输入默认值",
+    }
+  },
+  {
+    name: ["options", "rules", "required"],
+    label: "是否为必填项",
+    type: "switch",
+    options:{
+      valuePropName: "checked",
+    }
+  },
+];
 
 function WidgetConfig(props: any) {
   const [widgetForm] = Form.useForm();
@@ -83,7 +119,8 @@ function WidgetConfig(props: any) {
   };
 
   const getValueTypePage = () => {
-    const type = widgetFormRef.current && widgetForm.getFieldValue("value-type");
+    const type =
+      widgetFormRef.current && widgetForm.getFieldValue("value-type");
 
     switch (type) {
       case "dataSource":
@@ -103,7 +140,7 @@ function WidgetConfig(props: any) {
   const getFormPage = () => {
     return (
       <Form
-        name="basic"
+        name="widgetConfig"
         layout="vertical"
         form={widgetForm}
         ref={widgetFormRef}
@@ -134,7 +171,14 @@ function WidgetConfig(props: any) {
           </Form.Item>
         ) : (
           <>
-            <Form.Item name="name" label="字段名">
+            {crudFormItem.map((content, index) => {
+              return <Components
+                key={index}
+                className="viewForm-c"
+                {...content}
+              />
+            })}
+            {/* <Form.Item name="name" label="字段名">
               <Input placeholder="请输入字段名" />
             </Form.Item>
             <Form.Item name={["options", "placeholder"]} label="占位文本">
@@ -149,7 +193,7 @@ function WidgetConfig(props: any) {
               valuePropName="checked"
             >
               <Switch />
-            </Form.Item>
+            </Form.Item> */}
           </>
         )}
       </Form>
