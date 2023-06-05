@@ -49,9 +49,7 @@ const crudFormItem:any[] = [
     name: ["options", "rules", "required"],
     label: "是否为必填项",
     type: "switch",
-    options:{
-      valuePropName: "checked",
-    }
+    valuePropName: "checked",
   },
 ];
 
