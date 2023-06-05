@@ -8,9 +8,10 @@ import {
   Space,
   Switch,
 } from "antd";
-import { memo, useEffect, useRef } from "react";
+import { memo, useEffect, useRef, useState } from "react";
 import { WidgetForm } from "../../config/element";
 import Components from "./components";
+import { v4 as uuidv4 } from "uuid";
 const { Option } = Select;
 
 interface stackType {
@@ -59,6 +60,15 @@ function WidgetConfig(props: any) {
   const onValuesChange = (changedValues: any, allValues: any) => {
     Store.dispatch({ payload: allValues, type: "widgetFormCurrentSelect" });
   };
+  const [crudFormList,setCrudFormList] = useState<any[]>([]);
+
+  useEffect(()=>{
+    const list = crudFormItem.map((item)=>{
+      item.id = `${item.type}_${uuidv4().substring(0, 8)}`
+      return item;
+    })
+    setCrudFormList(list);
+  },[])
 
   useEffect(() => {
     const { widgetFormCurrentSelect, page } = props;
@@ -169,7 +179,7 @@ function WidgetConfig(props: any) {
           </Form.Item>
         ) : (
           <>
-            {crudFormItem.map((content, index) => {
+            {crudFormList.map((content, index) => {
               return <Components
                 key={index}
                 className="viewForm-c"

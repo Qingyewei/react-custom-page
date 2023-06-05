@@ -21,8 +21,9 @@ const ComponentPage = memo((props: any) => {
     id,
     children,
     valuePropName,
+    type
   } = props;
-  console.log("Input", { id, options });
+  console.log(type, { id, options });
   const getDeatilRender = () => {
     return (
       <div className={`${className} cf-input`}>
@@ -75,4 +76,4 @@ function Index(props: any) {
 export default connect((state: WidgetForm) => ({
   dataSource: state.dataSource,
   page: state.page,
-}))(Index);
+}))(memo(Index));
