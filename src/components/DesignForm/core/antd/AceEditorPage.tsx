@@ -9,6 +9,9 @@ import "ace-builds/src-noconflict/snippets/javascript";
 import "ace-builds/src-noconflict/mode-json";
 import "ace-builds/src-noconflict/snippets/json";
 
+import "ace-builds/src-noconflict/mode-tsx";
+import "ace-builds/src-noconflict/snippets/tsx";
+
 import "ace-builds/src-noconflict/theme-github";
 import "ace-builds/src-min-noconflict/ext-searchbox";
 import "ace-builds/src-noconflict/ext-language_tools";
@@ -22,14 +25,14 @@ ace.config.setModuleUrl("ace/mode/javascript_worker", workerJavascriptUrl);
 // }`;
 interface jsonInputType {
   name: string;
-  mode: "json" | "javascript";
+  mode: "json" | "javascript" | "tsx";
   readOnly?: boolean;
   defaultValue?: string;
   height?: string;
   width?: string;
   onFocus?: (event: any) => void;
 }
-const JsonInput = (props: jsonInputType) => {
+const AceEditorPage = (props: jsonInputType) => {
   const {
     name,
     mode = "javascript",
@@ -129,4 +132,4 @@ const JsonInput = (props: jsonInputType) => {
   );
 };
 
-export default memo(JsonInput);
+export default memo(AceEditorPage);

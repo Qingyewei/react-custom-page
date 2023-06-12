@@ -108,6 +108,7 @@ function PreviewMode({ page, list }: Pick<WidgetForm, "page" | "list">) {
         break;
     }
   };
+  
   return (
     <>
       <Button type="primary" onClick={showModal}>

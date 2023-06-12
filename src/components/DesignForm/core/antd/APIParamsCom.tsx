@@ -4,7 +4,7 @@ import { Button, Form, Input, Popconfirm, Table } from "antd";
 import type { FormInstance } from "antd/es/form";
 import "./APIParamsCom.less";
 import { CloseCircleOutlined, EditOutlined } from "@ant-design/icons";
-import JsonInput from "./JsonInput";
+import AceEditorPage from "./AceEditorPage";
 import Store from "@/utils/store";
 const EditableContext = React.createContext<FormInstance<any> | null>(null);
 
@@ -307,7 +307,7 @@ const APIParamsCom: React.FC<APIParamsComProps> = ({
             label: item,
             key: item,
             children: (
-              <JsonInput
+              <AceEditorPage
                 key={item}
                 name={item}
                 mode="json"
