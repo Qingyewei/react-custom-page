@@ -12,12 +12,18 @@ import "ace-builds/src-noconflict/snippets/json";
 import "ace-builds/src-noconflict/mode-tsx";
 import "ace-builds/src-noconflict/snippets/tsx";
 
+import "ace-builds/src-noconflict/mode-jsx";
+import "ace-builds/src-noconflict/snippets/jsx";
+
+import "ace-builds/src-noconflict/theme-monokai";
 import "ace-builds/src-noconflict/theme-github";
 import "ace-builds/src-min-noconflict/ext-searchbox";
 import "ace-builds/src-noconflict/ext-language_tools";
 import "ace-builds/src-noconflict/ext-beautify";
 import workerJavascriptUrl from "ace-builds/src-noconflict/worker-javascript?url";
 import { memo, useEffect, useRef, useState } from "react";
+import prettier from "prettier/standalone";
+import parserBabel from "prettier/parser-babel";
 
 ace.config.setModuleUrl("ace/mode/javascript_worker", workerJavascriptUrl);
 // const defaultValue = `function onLoad(editor) {
@@ -25,11 +31,13 @@ ace.config.setModuleUrl("ace/mode/javascript_worker", workerJavascriptUrl);
 // }`;
 interface jsonInputType {
   name: string;
-  mode: "json" | "javascript" | "tsx";
+  mode: "json" | "javascript" | "tsx" | "jsx";
   readOnly?: boolean;
   defaultValue?: string;
   height?: string;
   width?: string;
+  theme?: "monokai" | "github";
+  getRef?: (ref: any) => void;
   onFocus?: (event: any) => void;
 }
 const AceEditorPage = (props: jsonInputType) => {
@@ -40,6 +48,8 @@ const AceEditorPage = (props: jsonInputType) => {
     defaultValue = "",
     height = "150px",
     width = "100%",
+    theme = "github",
+    getRef,
     onFocus,
   } = props;
 
@@ -58,21 +68,40 @@ const AceEditorPage = (props: jsonInputType) => {
     enableSnippets: false,
     showLineNumbers: true,
   });
-  const aceEditorRef = useRef<any>(null);
+  const aceEditorRef = useRef<AceEditor>(null);
   useEffect(() => {
-    window.ace
-      .require("ace/ext/beautify")
-      .beautify(aceEditorRef.current.editor.session);
+    if (mode !== "tsx" && mode !== "jsx") {
+      window.ace
+        .require("ace/ext/beautify")
+        .beautify(aceEditorRef.current?.editor.session);
+    }
   }, [state.value]);
 
   useEffect(() => {
     if (state.value !== defaultValue) {
+      let formattedCode = defaultValue;
+      if (mode === "tsx" || mode === "jsx") {
+        formattedCode = prettier.format(defaultValue, {
+          parser: "babel",
+          plugins: [parserBabel],
+        });
+      }
       setState((state) => ({
         ...state,
-        value: defaultValue,
+        value: formattedCode,
       }));
     }
-  }, [defaultValue]);
+    if (state.theme !== theme) {
+      setState((state) => ({
+        ...state,
+        theme: theme,
+      }));
+    }
+  }, [defaultValue, theme]);
+
+  useEffect(() => {
+    getRef && getRef(aceEditorRef.current);
+  }, [aceEditorRef]);
   function onLoad() {
     // console.log("i've loaded");
   }
