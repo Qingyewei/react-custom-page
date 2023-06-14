@@ -48,7 +48,7 @@ function getAntdComponentStr(props: any) {
 
   let componentPropsStr = '';
   for (const f of Object.entries(componentProps)) {
-    if (f[1] && f[0] !== 'rules') {
+    if (f[1] && !['valuePropName','rules'].includes(f[0] )) {
       componentPropsStr += `${f[0]}=${JSON.stringify(f[1])} `;
     }
   }
