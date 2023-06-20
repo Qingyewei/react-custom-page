@@ -145,7 +145,7 @@ export const basicComponents = [
   },
   {
     label: "计数器",
-    type: "number",
+    type: "InputNumber",
     options: {
       width: "",
       defaultValue: 0,

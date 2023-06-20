@@ -2,7 +2,7 @@ import React, { memo } from "react";
 // import Input from "./Input";
 import { WidgetForm } from "@/components/DesignForm/config/element";
 import { connect } from "@/utils/store";
-import { Form, Input, Switch } from "antd";
+import { Form, Input, InputNumber, Switch } from "antd";
 import _ from "lodash";
 
 function titleCase(str: string) {
@@ -48,7 +48,6 @@ const ComponentPage = memo((props: any) => {
 
 function Index(props: any) {
   const { type, label } = props;
-  console.log("ssss",props)
 
   const getComponentsItem = () => {
     switch (type) {
@@ -76,6 +75,12 @@ function Index(props: any) {
         return (
           <ComponentPage {...props}>
             <Input.TextArea placeholder={_.get(props, "options.placeholder", "请输入")} />
+          </ComponentPage>
+        );
+      case "InputNumber":
+        return (
+          <ComponentPage {...props}>
+            <InputNumber />
           </ComponentPage>
         );
       default:

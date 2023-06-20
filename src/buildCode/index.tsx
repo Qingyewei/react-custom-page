@@ -52,7 +52,6 @@ function getAntdComponentStr(props: any) {
   }
 
   let componentPropsStr = '';
-  console.log('componentProps',componentProps);
   for (const f of Object.entries(componentProps)) {
     if (f[1] && !['valuePropName','rules'].includes(f[0] )) {
       if(!isString(f[1])){
