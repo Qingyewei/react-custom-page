@@ -128,13 +128,13 @@ export const basicComponents = [
   },
   {
     label: "多行文本",
-    type: "textarea",
+    type: "Input.TextArea",
     options: {
       width: "100%",
       defaultValue: "",
       placeholder: "",
       maxlength: null,
-      rows: 4,
+      // rows: 4,
       autosize: false,
       showWordLimit: false,
       disabled: false,

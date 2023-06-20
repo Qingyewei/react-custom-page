@@ -72,6 +72,12 @@ function Index(props: any) {
             <Input.Password placeholder={_.get(props, "options.placeholder", "请输入")} />
           </ComponentPage>
         );
+      case "Input.TextArea":
+        return (
+          <ComponentPage {...props}>
+            <Input.TextArea placeholder={_.get(props, "options.placeholder", "请输入")} />
+          </ComponentPage>
+        );
       default:
         return <>{label}-{titleCase(type)}组件未定义，请及时联系工作人员</>;
     }
