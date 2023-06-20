@@ -10,7 +10,7 @@ import { Form } from "antd";
 import { WidgetForm, basicComponents } from "../../config/element";
 
 function AntdWidget(props: any) {
-  const { page } = props;
+  const { page, widgetFormCurrentSelect } = props;
   const [antdWidgetForm] = Form.useForm();
   const [list, setList] = useState<any[]>([]);
   const [{ isOver }, drop] = useDrop({
@@ -96,6 +96,16 @@ function AntdWidget(props: any) {
     [findCard, moveCard]
   );
 
+  const onValuesChange = (changedValues:any, allValues:any)=>{
+    for(const i of Object.keys(changedValues)){
+      if(i === widgetFormCurrentSelect.name){
+        const newWidgetFormCurrentSelect = _.cloneDeep(widgetFormCurrentSelect);
+        newWidgetFormCurrentSelect.options.defaultValue = changedValues[i];
+        Store.dispatch({ payload: newWidgetFormCurrentSelect, type: "widgetFormCurrentSelect" });
+      }
+    }
+  }
+
   return (
     <div
       ref={drop}
@@ -112,6 +122,7 @@ function AntdWidget(props: any) {
           wrapperCol={{ span: 16 }}
           style={{ maxWidth: 600 }}
           autoComplete="off"
+          onValuesChange={onValuesChange}
         >
           {list.map((card) => renderCard(card))}
         </Form>
@@ -121,6 +132,7 @@ function AntdWidget(props: any) {
 }
 
 export default connect((state: WidgetForm) => ({
+  widgetFormCurrentSelect: state.widgetFormCurrentSelect,
   page: state.page,
   list: state.list,
 }))(memo(AntdWidget));

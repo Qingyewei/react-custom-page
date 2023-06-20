@@ -1,4 +1,5 @@
 import Store from "@/utils/store";
+import { isBoolean } from "lodash";
 
 // 首个字母大写
 function capitalizeFirstLetter(str: string) {
@@ -7,7 +8,11 @@ function capitalizeFirstLetter(str: string) {
 
 function getAntdComonpentName(list: any[]) {
   const names = list.map((item) => {
-    return capitalizeFirstLetter(item.type);
+    let name = capitalizeFirstLetter(item.type)
+    if(name === 'Input.Password'){
+      name = 'Input'
+    }
+    return name;
   });
   return names;
 }
@@ -47,9 +52,14 @@ function getAntdComponentStr(props: any) {
   }
 
   let componentPropsStr = '';
+  console.log('componentProps',componentProps);
   for (const f of Object.entries(componentProps)) {
     if (f[1] && !['valuePropName','rules'].includes(f[0] )) {
-      componentPropsStr += `${f[0]}=${JSON.stringify(f[1])} `;
+      if(isBoolean(f[1])){
+        componentPropsStr += `${f[0]}={${JSON.stringify(f[1])}}`;
+      }else{
+        componentPropsStr += `${f[0]}=${JSON.stringify(f[1])} `;
+      }
     }
   }
   const componentName = capitalizeFirstLetter(type)

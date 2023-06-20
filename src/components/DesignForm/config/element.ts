@@ -109,7 +109,7 @@ export const basicComponents = [
   },
   {
     label: "密码框",
-    type: "password",
+    type: "Input.Password",
     options: {
       width: "100%",
       defaultValue: "",
@@ -119,7 +119,7 @@ export const basicComponents = [
       suffix: "",
       prepend: "",
       append: "",
-      showPassword: true,
+      visibilityToggle: true,
       disabled: false,
       clearable: false,
       readonly: false,

@@ -23,7 +23,6 @@ const ComponentPage = memo((props: any) => {
     valuePropName,
     type
   } = props;
-  console.log(type, { id, options });
   const getDeatilRender = () => {
     return (
       <div className={`${className} cf-input`}>
@@ -48,7 +47,8 @@ const ComponentPage = memo((props: any) => {
 });
 
 function Index(props: any) {
-  const { type } = props;
+  const { type, label } = props;
+  console.log("ssss",props)
 
   const getComponentsItem = () => {
     switch (type) {
@@ -66,8 +66,14 @@ function Index(props: any) {
             <Switch />
           </ComponentPage>
         );
+      case "Input.Password":
+        return (
+          <ComponentPage {...props}>
+            <Input.Password placeholder={_.get(props, "options.placeholder", "请输入")} />
+          </ComponentPage>
+        );
       default:
-        return <>{titleCase(type)}组件未定义，请及时联系工作人员</>;
+        return <>{label}-{titleCase(type)}组件未定义，请及时联系工作人员</>;
     }
   };
   return getComponentsItem();
