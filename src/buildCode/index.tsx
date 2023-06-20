@@ -1,4 +1,5 @@
 import Store from "@/utils/store";
+import _ from "lodash";
 import { isString } from "lodash";
 
 // 首个字母大写
@@ -8,24 +9,13 @@ function capitalizeFirstLetter(str: string) {
 
 function getAntdComonpentName(list: any[]) {
   const names = list.map((item) => {
-    let name = capitalizeFirstLetter(item.type)
-    if(name === 'Input.Password' || name === 'Input.TextArea'){
-      name = 'Input'
+    let name = capitalizeFirstLetter(item.type);
+    if (name === "Input.Password" || name === "Input.TextArea") {
+      name = "Input";
     }
     return name;
   });
   return names;
-}
-
-{
-  /* <Form.Item
-      name={name}
-      label={label}
-      rules={[options.rules]}
-      valuePropName={valuePropName}
-    >
-      {children}
-    </Form.Item> */
 }
 
 function getAntdComponentStr(props: any) {
@@ -39,45 +29,65 @@ function getAntdComponentStr(props: any) {
   let formPropsStr = "";
   for (const f of Object.entries(formProps)) {
     if (f[1]) {
-      if(f[0] === 'rules'){
+      if (f[0] === "rules") {
         formPropsStr += `${f[0]}={[${JSON.stringify(f[1])}]} `;
-      }else{
+      } else {
         formPropsStr += `${f[0]}=${JSON.stringify(f[1])} `;
       }
     }
   }
 
   const componentProps = {
-    ...options
-  }
+    ...options,
+  };
 
-  let componentPropsStr = '';
+  let componentPropsStr = "";
   for (const f of Object.entries(componentProps)) {
-    if (f[1] && !['valuePropName','rules'].includes(f[0] )) {
-      if(!isString(f[1])){
+    if (f[1] && !["valuePropName", "rules"].includes(f[0])) {
+      if (!isString(f[1])) {
         componentPropsStr += `${f[0]}={${JSON.stringify(f[1])}}`;
-      }else{
+      } else {
         componentPropsStr += `${f[0]}=${JSON.stringify(f[1])} `;
       }
     }
   }
-  const componentName = capitalizeFirstLetter(type)
-      return `<Form.Item
+  const componentName = capitalizeFirstLetter(type);
+
+  if (componentName === "Radio") {
+    const strs = _.get(props, "options.options", []).map(
+      (item: any, index: any) => {
+        return `<Radio key="${index}" value="${item.value}">
+          ${item.label}
+        </Radio>`;
+      }
+    );
+    return `<Form.Item
+      ${formPropsStr}
+    >
+    <Radio.Group ${componentPropsStr}>
+      ${strs.join("")}
+    </Radio.Group>
+    </Form.Item>`;
+  } else {
+    return `<Form.Item
       ${formPropsStr}
     >
       <${componentName} ${componentPropsStr}/>
-    </Form.Item>`
+    </Form.Item>`;
+  }
 }
 
 function buildCode() {
   const { list } = Store.getStateAll();
   const componentNames = getAntdComonpentName(list);
-  let listStr = ''
+  let listStr = "";
   list.forEach((item) => {
     listStr += getAntdComponentStr(item);
   });
 
-  return `import { Button, Form, Space, ${componentNames.join(', ')} } from 'antd';
+  return `import { Button, Form, Space, ${componentNames.join(
+    ", "
+  )} } from 'antd';
   import React from 'react';
   
   const Index: React.FC = () => {
@@ -116,7 +126,7 @@ function buildCode() {
     );
   };
   
-  export default Index;`
+  export default Index;`;
 }
 
 export default buildCode;

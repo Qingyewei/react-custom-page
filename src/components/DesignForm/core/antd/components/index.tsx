@@ -2,7 +2,7 @@ import React, { memo } from "react";
 // import Input from "./Input";
 import { WidgetForm } from "@/components/DesignForm/config/element";
 import { connect } from "@/utils/store";
-import { Form, Input, InputNumber, Switch } from "antd";
+import { Form, Input, InputNumber, Radio, Switch } from "antd";
 import _ from "lodash";
 
 function titleCase(str: string) {
@@ -15,13 +15,13 @@ const ComponentPage = memo((props: any) => {
     label,
     name,
     value,
-    options={},
+    options = {},
     dataSource,
     page,
     id,
     children,
     valuePropName,
-    type
+    type,
   } = props;
   const getDeatilRender = () => {
     return (
@@ -48,7 +48,7 @@ const ComponentPage = memo((props: any) => {
 
 function Index(props: any) {
   const { type, label } = props;
-
+  console.log("getComponentsItem", props);
   const getComponentsItem = () => {
     switch (type) {
       case "input":
@@ -68,13 +68,17 @@ function Index(props: any) {
       case "Input.Password":
         return (
           <ComponentPage {...props}>
-            <Input.Password placeholder={_.get(props, "options.placeholder", "请输入")} />
+            <Input.Password
+              placeholder={_.get(props, "options.placeholder", "请输入")}
+            />
           </ComponentPage>
         );
       case "Input.TextArea":
         return (
           <ComponentPage {...props}>
-            <Input.TextArea placeholder={_.get(props, "options.placeholder", "请输入")} />
+            <Input.TextArea
+              placeholder={_.get(props, "options.placeholder", "请输入")}
+            />
           </ComponentPage>
         );
       case "InputNumber":
@@ -83,8 +87,27 @@ function Index(props: any) {
             <InputNumber />
           </ComponentPage>
         );
+      case "Radio": {
+        const options = _.get(props, "options.options", []);
+        return (
+          <ComponentPage {...props}>
+            <Radio.Group>
+              {options.map((item: any, index: any) => (
+                <Radio key={index} value={item.value}>
+                  {item.label}
+                </Radio>
+              ))}
+            </Radio.Group>
+          </ComponentPage>
+        );
+      }
+
       default:
-        return <>{label}-{titleCase(type)}组件未定义，请及时联系工作人员</>;
+        return (
+          <>
+            {label}-{titleCase(type)}组件未定义，请及时联系工作人员
+          </>
+        );
     }
   };
   return getComponentsItem();

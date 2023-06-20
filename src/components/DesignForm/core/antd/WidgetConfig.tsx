@@ -52,6 +52,13 @@ const crudFormItem:any[] = [
     type: "switch",
     valuePropName: "checked",
   },
+  {
+    name: ["options", "rules", "required"],
+    label: "是否为必填项-hidden",
+    isHidden:"{{ 1 === 0 ? true : false}}",
+    type: "switch",
+    valuePropName: "checked",
+  },
 ];
 
 function WidgetConfig(props: any) {
@@ -64,6 +71,9 @@ function WidgetConfig(props: any) {
 
   useEffect(()=>{
     const list = crudFormItem.map((item)=>{
+      if(item.isHidden){
+        console.log(`${item.isHidden}`);
+      }
       item.id = `${item.type}_${uuidv4().substring(0, 8)}`
       return item;
     })
