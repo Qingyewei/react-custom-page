@@ -82,9 +82,10 @@ interface basicComponentsOptions {
       readonly: boolean,
       rules:RuleObject,
 }
-interface basicComponents {
+export interface basicComponents {
   label:string;
-  type:"input",
+  type:"input" | "Radio",
+  name:string;
   options:basicComponentsOptions
 }
 

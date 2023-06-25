@@ -9,9 +9,11 @@ import {
   Switch,
 } from "antd";
 import { memo, useEffect, useRef, useState } from "react";
-import { WidgetForm } from "../../config/element";
+import { WidgetForm, basicComponents } from "../../config/element";
 import Components from "./components";
 import { v4 as uuidv4 } from "uuid";
+import _ from "lodash";
+import RadioOptions from "./components/RadioOptions";
 const { Option } = Select;
 
 interface stackType {
@@ -21,30 +23,30 @@ interface stackType {
   value: string;
 }
 
-const crudFormItem:any[] = [
+const crudFormItem: any[] = [
   {
     name: "name",
     label: "字段名",
     type: "input",
-    options:{
+    options: {
       placeholder: "请输入字段名",
-    }
+    },
   },
   {
     name: ["options", "placeholder"],
     label: "占位文本",
     type: "input",
-    options:{
+    options: {
       placeholder: "请输入占位文本",
-    }
+    },
   },
   {
     name: ["options", "defaultValue"],
     label: "默认值",
     type: "input",
-    options:{
+    options: {
       placeholder: "请输入默认值",
-    }
+    },
   },
   {
     name: ["options", "rules", "required"],
@@ -54,10 +56,24 @@ const crudFormItem:any[] = [
   },
   {
     name: ["options", "rules", "required"],
-    label: "是否为必填项-hidden",
-    isHidden:"{{ 1 === 0 ? true : false}}",
+    label: "是否隐藏-hidden",
+    isHidden: "{{ 1 === 0 ? true : false}}",
     type: "switch",
     valuePropName: "checked",
+  },
+  {
+    name: ["options", "options"],
+    label: "选项设置",
+    options: {
+      options: _.get(
+        _.find(
+          basicComponents,
+          (item: basicComponents) => item.type == "Radio"
+        ),
+        "options.options"
+      ),
+    },
+    render: RadioOptions,
   },
 ];
 
@@ -67,18 +83,18 @@ function WidgetConfig(props: any) {
   const onValuesChange = (changedValues: any, allValues: any) => {
     Store.dispatch({ payload: allValues, type: "widgetFormCurrentSelect" });
   };
-  const [crudFormList,setCrudFormList] = useState<any[]>([]);
+  const [crudFormList, setCrudFormList] = useState<any[]>([]);
 
-  useEffect(()=>{
-    const list = crudFormItem.map((item)=>{
-      if(item.isHidden){
+  useEffect(() => {
+    const list = crudFormItem.map((item) => {
+      if (item.isHidden) {
         console.log(`${item.isHidden}`);
       }
-      item.id = `${item.type}_${uuidv4().substring(0, 8)}`
+      item.id = `${item.type}_${uuidv4().substring(0, 8)}`;
       return item;
-    })
+    });
     setCrudFormList(list);
-  },[])
+  }, []);
 
   useEffect(() => {
     const { widgetFormCurrentSelect, page } = props;
@@ -190,11 +206,14 @@ function WidgetConfig(props: any) {
         ) : (
           <>
             {crudFormList.map((content, index) => {
-              return <Components
-                key={index}
-                className="viewForm-c"
-                {...content}
-              />
+              return (
+                <Components
+                  key={index}
+                  className="viewForm-c"
+                  {...content}
+                  form={widgetForm}
+                />
+              );
             })}
             {/* <Form.Item name="name" label="字段名">
               <Input placeholder="请输入字段名" />

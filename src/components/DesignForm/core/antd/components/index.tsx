@@ -47,8 +47,11 @@ const ComponentPage = memo((props: any) => {
 });
 
 function Index(props: any) {
-  const { type, label } = props;
+  const { type, label, render } = props;
   console.log("getComponentsItem", props);
+  if(render){
+    return render(props)
+  }
   const getComponentsItem = () => {
     switch (type) {
       case "input":
