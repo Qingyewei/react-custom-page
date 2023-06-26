@@ -77,7 +77,7 @@ function reducer(
 
       data["list"] = data["list"].map((item) => {
         if (item.id === _.get(action,'payload.id')) {
-          item = _.defaultsDeep(action.payload,item)
+          item = _.defaults(action.payload,item)
           data["widgetFormCurrentSelect"] = item
         }
         return item;

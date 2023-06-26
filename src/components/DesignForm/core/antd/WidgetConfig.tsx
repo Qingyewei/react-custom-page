@@ -64,7 +64,7 @@ const crudFormItem: any[] = [
   {
     name: ["options", "options"],
     label: "选项设置",
-    type:"Radio",
+    type: "Radio",
     options: {
       options: _.get(
         _.find(
@@ -75,8 +75,8 @@ const crudFormItem: any[] = [
       ),
     },
     render: (props: any) => {
-      console.log("render",props)
-      return <RadioOptions {...props} />
+      console.log("render", props);
+      return <RadioOptions {...props} />;
     },
   },
 ];
@@ -84,11 +84,16 @@ const crudFormItem: any[] = [
 function WidgetConfig(props: any) {
   const [widgetForm] = Form.useForm();
   const widgetFormRef = useRef<FormInstance>(null);
-  const onValuesChange = (changedValues: any, allValues: any) => {
-    console.log("onValuesChange",changedValues,allValues)
-    Store.dispatch({ payload: allValues, type: "widgetFormCurrentSelect" });
-  };
+
   const [crudFormList, setCrudFormList] = useState<any[]>([]);
+
+  const onValuesChange = (changedValues: any, allValues: any) => {
+    console.log("onValuesChange", changedValues, allValues);
+    Store.dispatch({
+      payload: _.cloneDeep(allValues),
+      type: "widgetFormCurrentSelect",
+    });
+  };
 
   useEffect(() => {
     const list = crudFormItem.map((item) => {
@@ -113,7 +118,7 @@ function WidgetConfig(props: any) {
     if (widgetFormRef.current) {
       if (widgetFormCurrentSelect) {
         widgetForm.setFieldsValue(widgetFormCurrentSelect);
-        console.log("字段属性组件更新了")
+        console.log("字段属性组件更新了", props);
       } else {
         widgetForm.resetFields();
         if (page.type === "detail") {
@@ -212,6 +217,7 @@ function WidgetConfig(props: any) {
         ) : (
           <>
             {crudFormList.map((content, index) => {
+              console.log("sss个性滚")
               return (
                 <Components
                   key={index}

@@ -46,10 +46,23 @@ function RadioOptions(props: any) {
                       key={"FormListRadio_" + field.key}
                       align="baseline"
                     >
+                      
                       <Radio
                         // className={styles.formListRadio}
                         value={_.get(options, `${field.name}.value`, "")}
                       ></Radio>
+                      <Button>
+                        {"ss"+_.get(options, `${field.name}.value`, "")}
+                      </Button>
+                      
+                      {/* <Radio
+                        // className={styles.formListRadio}
+                        value={_.get(
+                          props,
+                          `widgetFormCurrentSelect.options.options.${field.name}.value`,
+                          ""
+                        )}
+                      ></Radio> */}
                       <Form.Item
                         name={[field.name, "value"]}
                         rules={[{ required: true, message: "Missing sight" }]}
