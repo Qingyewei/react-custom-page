@@ -49,8 +49,8 @@ const ComponentPage = memo((props: any) => {
 function Index(props: any) {
   const { type, label, render } = props;
   console.log("getComponentsItem", props);
-  if(render){
-    return render(props)
+  if (render) {
+    return render(props);
   }
   const getComponentsItem = () => {
     switch (type) {
@@ -95,11 +95,14 @@ function Index(props: any) {
         return (
           <ComponentPage {...props}>
             <Radio.Group>
-              {options.map((item: any, index: any) => (
-                <Radio key={index} value={item.value}>
-                  {item.label}
-                </Radio>
-              ))}
+              {options.map(
+                (item: any, index: any) =>
+                  item && (
+                    <Radio key={index} value={item.value}>
+                      {item.label}
+                    </Radio>
+                  )
+              )}
             </Radio.Group>
           </ComponentPage>
         );

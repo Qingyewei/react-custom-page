@@ -56,7 +56,7 @@ function getAntdComponentStr(props: any) {
   if (componentName === "Radio") {
     const strs = _.get(props, "options.options", []).map(
       (item: any, index: any) => {
-        return `<Radio key="${index}" value="${item.value}">
+        return item && `<Radio key="${index}" value="${item.value}">
           ${item.label}
         </Radio>`;
       }

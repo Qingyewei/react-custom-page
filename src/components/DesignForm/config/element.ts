@@ -161,7 +161,7 @@ export const basicComponents = [
     label: "单选框组",
     type: "Radio",
     options: {
-      defaultValue: "",
+      defaultValue: "Option 1",
       width: "",
       remote: false,
       showLabel: false,
