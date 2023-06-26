@@ -78,7 +78,11 @@ export default defineConfig({
   build: {
     rollupOptions: {
       // 不打包依赖
-      external: ["antd", "react", "react-dom"],
+      external: [
+        "antd", 
+        "react", 
+        "react-dom"
+      ],
       plugins: [
         // 不打包依赖映射的对象
         externalGlobals({

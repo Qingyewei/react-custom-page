@@ -22,38 +22,52 @@ function RadioOptions(props: any) {
     console.log("更新了", props);
   }, [props]);
 
+  const onRemove = (event: any, index: number) => {
+    event.stopPropagation();
+    const new_options = form
+      .getFieldValue(props.name)
+      .filter((item: any, i: any) => i !== index);
+    form.setFieldValue(props.name, new_options);
+    console.log(new_options);
+  };
+
   return (
     <Form.Item name={["options", "defaultValue"]} label={props.label}>
       <Radio.Group>
         <Form.List name={props.name}>
           {(fields, { add, remove }) => {
-            console.log("fields",fields)
+            console.log("fields", fields);
             return (
               <>
                 {fields.map((field) => {
                   return (
-                    <Radio
+                    <Space
+                      size={8}
                       key={"FormListRadio_" + field.key}
-                      className={styles.formListRadio}
-                      value={_.get(options, `${field.name}.value`, "")}
+                      align="baseline"
                     >
-                      <Space align="baseline">
-                        <Form.Item
-                          name={[field.name, "value"]}
-                          rules={[{ required: true, message: "Missing sight" }]}
-                        >
-                          <Input />
-                        </Form.Item>
-                        <Form.Item
-                          name={[field.name, "label"]}
-                          rules={[{ required: true, message: "Missing price" }]}
-                        >
-                          <Input />
-                        </Form.Item>
-  
-                        <MinusCircleOutlined onClick={() => remove(field.name)} />
-                      </Space>
-                    </Radio>
+                      <Radio
+                        // className={styles.formListRadio}
+                        value={_.get(options, `${field.name}.value`, "")}
+                      ></Radio>
+                      <Form.Item
+                        name={[field.name, "value"]}
+                        rules={[{ required: true, message: "Missing sight" }]}
+                      >
+                        <Input />
+                      </Form.Item>
+                      <Form.Item
+                        name={[field.name, "label"]}
+                        rules={[{ required: true, message: "Missing price" }]}
+                      >
+                        <Input />
+                      </Form.Item>
+                      <Form.Item>
+                        <MinusCircleOutlined
+                          onClick={(e) => remove(field.name)}
+                        />
+                      </Form.Item>
+                    </Space>
                   );
                 })}
                 <Form.Item>
@@ -75,7 +89,7 @@ function RadioOptions(props: any) {
                   </Button>
                 </Form.Item>
               </>
-            )
+            );
           }}
         </Form.List>
       </Radio.Group>
