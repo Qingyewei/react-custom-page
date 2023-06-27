@@ -44,9 +44,9 @@ function RadioOptions(props: any) {
                         // className={styles.formListRadio}
                         value={_.get(options, `${field.name}.value`, "")}
                       ></Radio>
-                      <Button>
+                      {/* <Button>
                         {"ss" + _.get(options, `${field.name}.value`, "")}
-                      </Button>
+                      </Button> */}
 
                       {/* <Radio
                         // className={styles.formListRadio}

@@ -95,17 +95,6 @@ function WidgetConfig(props: any) {
   };
 
   useEffect(() => {
-    const list = crudFormItem.map((item) => {
-      if (item.isHidden) {
-        console.log(`${item.isHidden}`);
-      }
-      item.id = `${item.type}_${uuidv4().substring(0, 8)}`;
-      return item;
-    });
-    setCrudFormList(list);
-  }, []);
-
-  useEffect(() => {
     const { widgetFormCurrentSelect, page } = props;
     if (
       page.type === "crud" &&
@@ -116,6 +105,28 @@ function WidgetConfig(props: any) {
     }
     if (widgetFormRef.current) {
       if (widgetFormCurrentSelect) {
+        const list = crudFormItem.map((item) => {
+          if (item.isHidden) {
+            console.log(`${item.isHidden}`);
+          }
+          if (
+            widgetFormCurrentSelect?.type === "Radio" &&
+            item.label === "默认值"
+          ) {
+            item.type = "Select";
+            item.options = {};
+            item.options.options = _.get(
+              widgetFormCurrentSelect,
+              "options.options",
+              {}
+            );
+          }
+          if (!item.id) {
+            item.id = `${item.type}_${uuidv4().substring(0, 8)}`;
+          }
+          return item;
+        });
+        setCrudFormList(list);
         widgetForm.setFieldsValue(widgetFormCurrentSelect);
       } else {
         widgetForm.resetFields();

@@ -2,7 +2,7 @@ import React, { memo } from "react";
 // import Input from "./Input";
 import { WidgetForm } from "@/components/DesignForm/config/element";
 import { connect } from "@/utils/store";
-import { Form, Input, InputNumber, Radio, Switch } from "antd";
+import { Form, Input, InputNumber, Radio, Select, Switch } from "antd";
 import _ from "lodash";
 
 function titleCase(str: string) {
@@ -103,6 +103,16 @@ function Index(props: any) {
                   )
               )}
             </Radio.Group>
+          </ComponentPage>
+        );
+      }
+      case "Select": {
+        const options = _.get(props, "options.options", []);
+        return (
+          <ComponentPage {...props}>
+            <Select
+              options={options}
+            />
           </ComponentPage>
         );
       }
