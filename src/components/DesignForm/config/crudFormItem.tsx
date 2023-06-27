@@ -64,6 +64,15 @@ const crudFormItem: CrudFormItem[] = [
   },
   {
     name: ["options", "defaultValue"],
+    label: "默认值-DatePicker",
+    type: "DatePicker",
+    isHidden: "{{ formData.type !== 'DatePicker'",
+    options: {
+      placeholder: "请选择默认日期",
+    },
+  },
+  {
+    name: ["options", "defaultValue"],
     label: "默认值-Radio",
     type: "Select",
     isHidden: "{{ formData.type !== 'Radio'",

@@ -4,6 +4,7 @@ import { WidgetForm } from "@/components/DesignForm/config/element";
 import { connect } from "@/utils/store";
 import {
   Checkbox,
+  DatePicker,
   Form,
   Input,
   InputNumber,
@@ -146,6 +147,18 @@ const Index: React.FC<any> = (props: any) => {
         return (
           <ComponentPage {...props}>
             <TimePicker placeholder={placeholder} />
+          </ComponentPage>
+        );
+      }
+      case "DatePicker": {
+        const placeholder = _.get(
+          props,
+          "options.placeholder",
+          "请选择默认日期"
+        );
+        return (
+          <ComponentPage {...props}>
+            <DatePicker placeholder={placeholder} />
           </ComponentPage>
         );
       }

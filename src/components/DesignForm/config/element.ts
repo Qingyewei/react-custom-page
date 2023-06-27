@@ -232,7 +232,7 @@ export const basicComponents = [
   },
   {
     label: "日期选择器",
-    type: "date",
+    type: "DatePicker",
     options: {
       defaultValue: "",
       width: "",
