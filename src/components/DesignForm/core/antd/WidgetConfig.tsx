@@ -15,112 +15,15 @@ import { v4 as uuidv4 } from "uuid";
 import _ from "lodash";
 import RadioOptions from "./components/RadioOptions";
 import { parseExpression } from "../../utils";
+import crudFormItem, { CrudFormItem } from "../../config/crudFormItem";
 const { Option } = Select;
 
-interface CrudFormItem {
-  id?: string;
-  name: string | string[];
-  label: string;
-  type: string;
-  options?: {
-    placeholder?: string;
-    defaultValue?: string;
-    options?: {
-      label: string;
-      value: string;
-    }[];
-    mode?: string;
-    allowClear?: boolean;
-  };
-  valuePropName?: string;
-  isHidden?: string;
-  render?: (props: any) => any;
-}
-
-const crudFormItem: CrudFormItem[] = [
-  {
-    name: "name",
-    label: "字段名",
-    type: "input",
-    options: {
-      placeholder: "请输入字段名",
-    },
-  },
-  {
-    name: ["options", "placeholder"],
-    label: "占位文本",
-    type: "input",
-    options: {
-      placeholder: "请输入占位文本",
-    },
-  },
-  {
-    name: ["options", "defaultValue"],
-    label: "默认值",
-    type: "input",
-    options: {
-      placeholder: "请输入默认值",
-    },
-  },
-  {
-    name: ["options", "rules", "required"],
-    label: "是否为必填项",
-    type: "switch",
-    valuePropName: "checked",
-  },
-  {
-    name: ["options", "rules", "required"],
-    label: "是否隐藏-hidden",
-    isHidden: "{{ 1 === 0 ? true : false}}",
-    type: "switch",
-    valuePropName: "checked",
-  },
-  {
-    name: ["options", "options"],
-    label: "选项设置",
-    type: "Radio",
-    isHidden: "{{formData.type !== 'Radio'}}",
-    options: {
-      options: _.get(
-        _.find(
-          basicComponents,
-          (item: basicComponents) => item.type == "Radio"
-        ),
-        "options.options"
-      ),
-    },
-    render: (props: any) => {
-      return <RadioOptions {...props} />;
-    },
-  },
-  {
-    name: ["options", "options"],
-    label: "选项设置",
-    type: "CheckboxOptions",
-    isHidden: "{{formData.type !== 'Checkbox'}}",
-    options: {
-      options: _.get(
-        _.find(
-          basicComponents,
-          (item: basicComponents) => item.type == "Checkbox"
-        ),
-        "options.options"
-      ),
-    },
-  },
-];
-
-// type AddcrudFormItemId<T extends any[]> = {
-//   [K in keyof T]: T[K] & { id?: string; valuePropName?: string };
-// };
-// type crudFormItemId = AddcrudFormItemId<typeof crudFormItem>;
 
 function WidgetConfig(props: any) {
   const [widgetForm] = Form.useForm<any>();
   const widgetFormRef = useRef<FormInstance>(null);
 
-  const [crudFormList, setCrudFormList] =
-    useState<CrudFormItem[]>(crudFormItem);
+  const [crudFormList, setCrudFormList] = useState<CrudFormItem[]>();
 
   const onValuesChange = (changedValues: any, allValues: any) => {
     console.log("onValuesChange", changedValues, allValues);
@@ -138,7 +41,7 @@ function WidgetConfig(props: any) {
     // console.log("initList", initList)
     const list: CrudFormItem[] = [];
     crudFormItem.forEach((item) => {
-      const currentItem = crudFormList.find(
+      const currentItem = crudFormList?.find(
         (c) => c.type === item.type && c.label === item.label
       );
       let newItem = _.cloneDeep(item);
@@ -154,37 +57,33 @@ function WidgetConfig(props: any) {
           parseExpression(newItem.isHidden, widgetFormCurrentSelect, "")
         );
       }
-
-      if (newItem.label === "默认值") {
-        newItem = {
-          ...newItem,
-          type: "input",
-          options: {
-            placeholder: "请输入默认值",
-          },
-        };
-      }
-      if (
-        ["Radio", "Checkbox"].includes(widgetFormCurrentSelect?.type) &&
-        newItem.label === "默认值"
-      ) {
-        newItem.type = "Select";
-        if (!newItem.options) {
-          newItem.options = {};
-        }
-        newItem.options.options = _.get(
-          widgetFormCurrentSelect,
-          "options.options",
-          {}
-        );
-        if (widgetFormCurrentSelect?.type === "Checkbox") {
-          newItem.options = {
-            ...newItem.options,
-            mode: "multiple",
-            allowClear: true,
-          };
+      if (_.isFunction(_.get(newItem, "options.options"))) {
+        const optionsFun: any = _.get(newItem, "options.options", null);
+        if (_.get(newItem, "options.options", "") && optionsFun) {
+          newItem.options!.options = optionsFun?.(widgetFormCurrentSelect);
         }
       }
+      // if (
+      //   ["Radio", "Checkbox"].includes(widgetFormCurrentSelect?.type) &&
+      //   newItem.label === "默认值"
+      // ) {
+      //   newItem.type = "Select";
+      //   if (!newItem.options) {
+      //     newItem.options = {};
+      //   }
+      //   newItem.options.options = _.get(
+      //     widgetFormCurrentSelect,
+      //     "options.options",
+      //     {}
+      //   );
+      //   if (widgetFormCurrentSelect?.type === "Checkbox") {
+      //     newItem.options = {
+      //       ...newItem.options,
+      //       mode: "multiple",
+      //       allowClear: true,
+      //     };
+      //   }
+      // }
       if (!newItem.id) {
         newItem.id = `${newItem.type}_${uuidv4().substring(0, 8)}`;
       }
@@ -306,7 +205,7 @@ function WidgetConfig(props: any) {
           </Form.Item>
         ) : (
           <>
-            {crudFormList.map((content, index) => {
+            {crudFormList?.map((content, index) => {
               return (
                 <Components
                   key={index}

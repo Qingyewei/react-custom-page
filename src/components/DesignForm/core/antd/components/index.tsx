@@ -10,6 +10,7 @@ import {
   Radio,
   Select,
   Switch,
+  TimePicker,
 } from "antd";
 import _ from "lodash";
 import CheckboxOptions from "./CheckboxOptions";
@@ -117,11 +118,11 @@ const Index: React.FC<any> = (props: any) => {
       }
       case "Select": {
         const options = _.get(props, "options.options", []);
-        const mode = _.get(props, "options.mode", '');
+        const mode = _.get(props, "options.mode", "");
         const allowClear = _.get(props, "options.allowClear", true);
         return (
           <ComponentPage {...props}>
-            <Select options={options} mode={mode} allowClear={allowClear}/>
+            <Select options={options} mode={mode} allowClear={allowClear} />
           </ComponentPage>
         );
       }
@@ -135,6 +136,18 @@ const Index: React.FC<any> = (props: any) => {
       }
       case "CheckboxOptions": {
         return <CheckboxOptions {...props} />;
+      }
+      case "TimePicker": {
+        const placeholder = _.get(
+          props,
+          "options.placeholder",
+          "请选择默认时间"
+        );
+        return (
+          <ComponentPage {...props}>
+            <TimePicker placeholder={placeholder} />
+          </ComponentPage>
+        );
       }
 
       default:

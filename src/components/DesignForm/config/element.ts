@@ -216,7 +216,7 @@ export const basicComponents = [
   },
   {
     label: "时间选择器",
-    type: "time",
+    type: "TimePicker",
     options: {
       defaultValue: "",
       width: "",
