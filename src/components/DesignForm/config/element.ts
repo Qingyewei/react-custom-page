@@ -84,7 +84,7 @@ interface basicComponentsOptions {
 }
 export interface basicComponents {
   label:string;
-  type:"input" | "Radio",
+  type:"input" | "Radio" | "Checkbox",
   name:string;
   options:basicComponentsOptions
 }
@@ -182,20 +182,17 @@ export const basicComponents = [
         },
       ],
       remoteOptions: [],
-      value: '',
       disabled: false,
       rules,
     },
   },
   {
     label: "多选框组",
-    type: "checkbox",
+    type: "Checkbox",
     options: {
       defaultValue: [],
       width: "",
-      inline: true,
       remote: false,
-      showLabel: false,
       remoteFunc:
         "https://raw.githubusercontent.com/fuchengwei/vue-form-create/master/mock/mock.json",
       options: [
@@ -213,10 +210,6 @@ export const basicComponents = [
         },
       ],
       remoteOptions: [],
-      props: {
-        value: "value",
-        label: "label",
-      },
       disabled: false,
       rules,
     },

@@ -2,8 +2,17 @@ import React, { memo } from "react";
 // import Input from "./Input";
 import { WidgetForm } from "@/components/DesignForm/config/element";
 import { connect } from "@/utils/store";
-import { Form, Input, InputNumber, Radio, Select, Switch } from "antd";
+import {
+  Checkbox,
+  Form,
+  Input,
+  InputNumber,
+  Radio,
+  Select,
+  Switch,
+} from "antd";
 import _ from "lodash";
+import CheckboxOptions from "./CheckboxOptions";
 
 function titleCase(str: string) {
   return str.slice(0, 1).toUpperCase() + str.slice(1).toLowerCase();
@@ -108,11 +117,24 @@ const Index: React.FC<any> = (props: any) => {
       }
       case "Select": {
         const options = _.get(props, "options.options", []);
+        const mode = _.get(props, "options.mode", '');
+        const allowClear = _.get(props, "options.allowClear", true);
         return (
           <ComponentPage {...props}>
-            <Select options={options} />
+            <Select options={options} mode={mode} allowClear={allowClear}/>
           </ComponentPage>
         );
+      }
+      case "Checkbox": {
+        const options = _.get(props, "options.options", []);
+        return (
+          <ComponentPage {...props}>
+            <Checkbox.Group options={options} />
+          </ComponentPage>
+        );
+      }
+      case "CheckboxOptions": {
+        return <CheckboxOptions {...props} />;
       }
 
       default:

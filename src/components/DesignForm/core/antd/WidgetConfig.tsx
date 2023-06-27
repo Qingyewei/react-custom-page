@@ -29,6 +29,8 @@ interface CrudFormItem {
       label: string;
       value: string;
     }[];
+    mode?: string;
+    allowClear?: boolean;
   };
   valuePropName?: string;
   isHidden?: string;
@@ -91,6 +93,21 @@ const crudFormItem: CrudFormItem[] = [
       return <RadioOptions {...props} />;
     },
   },
+  {
+    name: ["options", "options"],
+    label: "选项设置",
+    type: "CheckboxOptions",
+    isHidden: "{{formData.type !== 'Checkbox'}}",
+    options: {
+      options: _.get(
+        _.find(
+          basicComponents,
+          (item: basicComponents) => item.type == "Checkbox"
+        ),
+        "options.options"
+      ),
+    },
+  },
 ];
 
 // type AddcrudFormItemId<T extends any[]> = {
@@ -115,48 +132,66 @@ function WidgetConfig(props: any) {
 
   const formatCrudFormList = () => {
     const { widgetFormCurrentSelect } = props;
-    console.log("filterCrudFormList", widgetFormCurrentSelect);
     // 这里可能会出现ID丢失问题
-    const initList: CrudFormItem[] = _.defaultsDeep(crudFormList, crudFormItem);
-    const list = initList
-      .map((item) => {
-        if (item.isHidden) {
-          // item.isHidden = parseExpression(item.isHidden,widgetFormCurrentSelect,'')
-          console.log(
-            `${item.isHidden}`,
-            parseExpression(item.isHidden, widgetFormCurrentSelect, "")
-          );
-        }
+    // 慎用 defaultsDeep
+    // const initList: CrudFormItem[] = _.defaultsDeep(crudFormList, crudFormItem);
+    // console.log("initList", initList)
+    const list: CrudFormItem[] = [];
+    crudFormItem.forEach((item) => {
+      const currentItem = crudFormList.find(
+        (c) => c.type === item.type && c.label === item.label
+      );
+      let newItem = _.cloneDeep(item);
+      if (currentItem) {
+        newItem = _.cloneDeep(_.defaultsDeep(currentItem, newItem));
+      }
 
-        if (item.label === "默认值") {
-          item = {
-            ...item,
-            type: "input",
-            options: {
-              placeholder: "请输入默认值",
-            },
+      if (newItem.isHidden) {
+        // newItem.isHidden = parseExpression(newItem.isHidden,widgetFormCurrentSelect,'')
+        console.log(
+          `${newItem.isHidden}`,
+          widgetFormCurrentSelect?.type,
+          parseExpression(newItem.isHidden, widgetFormCurrentSelect, "")
+        );
+      }
+
+      if (newItem.label === "默认值") {
+        newItem = {
+          ...newItem,
+          type: "input",
+          options: {
+            placeholder: "请输入默认值",
+          },
+        };
+      }
+      if (
+        ["Radio", "Checkbox"].includes(widgetFormCurrentSelect?.type) &&
+        newItem.label === "默认值"
+      ) {
+        newItem.type = "Select";
+        if (!newItem.options) {
+          newItem.options = {};
+        }
+        newItem.options.options = _.get(
+          widgetFormCurrentSelect,
+          "options.options",
+          {}
+        );
+        if (widgetFormCurrentSelect?.type === "Checkbox") {
+          newItem.options = {
+            ...newItem.options,
+            mode: "multiple",
+            allowClear: true,
           };
         }
-        if (
-          widgetFormCurrentSelect?.type === "Radio" &&
-          item.label === "默认值"
-        ) {
-          item.type = "Select";
-          item.options = {};
-          item.options.options = _.get(
-            widgetFormCurrentSelect,
-            "options.options",
-            {}
-          );
-        }
-        if (!item.id) {
-          item.id = `${item.type}_${uuidv4().substring(0, 8)}`;
-        }
-        return item;
-      })
-      .filter(
-        (item) => !parseExpression(item.isHidden, widgetFormCurrentSelect, "")
-      );
+      }
+      if (!newItem.id) {
+        newItem.id = `${newItem.type}_${uuidv4().substring(0, 8)}`;
+      }
+      if (!parseExpression(newItem.isHidden, widgetFormCurrentSelect, "")) {
+        list.push(newItem);
+      }
+    });
     console.log("最后输出的结果", list);
     setCrudFormList(list);
   };
