@@ -75,7 +75,6 @@ const crudFormItem: any[] = [
       ),
     },
     render: (props: any) => {
-      console.log("render", props);
       return <RadioOptions {...props} />;
     },
   },
@@ -118,7 +117,6 @@ function WidgetConfig(props: any) {
     if (widgetFormRef.current) {
       if (widgetFormCurrentSelect) {
         widgetForm.setFieldsValue(widgetFormCurrentSelect);
-        console.log("字段属性组件更新了", props);
       } else {
         widgetForm.resetFields();
         if (page.type === "detail") {
@@ -217,7 +215,6 @@ function WidgetConfig(props: any) {
         ) : (
           <>
             {crudFormList.map((content, index) => {
-              console.log("sss个性滚")
               return (
                 <Components
                   key={index}

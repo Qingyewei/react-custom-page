@@ -1,5 +1,5 @@
 import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
-import { Space, Input, Button, Form, Radio } from "antd";
+import { Space, Input, Button, Form, Radio, FormInstance } from "antd";
 import React, { memo, useEffect } from "react";
 import styles from "./RadioOptions.module.less";
 import _ from "lodash";
@@ -14,13 +14,7 @@ function RadioOptions(props: any) {
   // console.log("过滤了", props);
   const {
     form,
-    options: { options },
-  } = props;
-  console.log("当前页面的options", options);
-
-  useEffect(() => {
-    console.log("更新了", props);
-  }, [props]);
+  }:{form:FormInstance} = props;
 
   const onRemove = (event: any, index: number) => {
     event.stopPropagation();
@@ -36,7 +30,7 @@ function RadioOptions(props: any) {
       <Radio.Group>
         <Form.List name={props.name}>
           {(fields, { add, remove }) => {
-            console.log("fields", fields);
+            const options = form.getFieldValue(props.name)
             return (
               <>
                 {fields.map((field) => {
@@ -46,15 +40,14 @@ function RadioOptions(props: any) {
                       key={"FormListRadio_" + field.key}
                       align="baseline"
                     >
-                      
                       <Radio
                         // className={styles.formListRadio}
                         value={_.get(options, `${field.name}.value`, "")}
                       ></Radio>
                       <Button>
-                        {"ss"+_.get(options, `${field.name}.value`, "")}
+                        {"ss" + _.get(options, `${field.name}.value`, "")}
                       </Button>
-                      
+
                       {/* <Radio
                         // className={styles.formListRadio}
                         value={_.get(
