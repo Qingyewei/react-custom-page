@@ -119,7 +119,7 @@ function reducer(
 const Store = createStore(reducer);
 export const connect = (mapStateToProps: any, mapDispatchToProps?: any) => {
   return (WrapedComponent: any) => {
-    class ConnectedComponent extends React.Component {
+    class ConnectedComponent extends React.Component<any> {
       unsubscribe: () => void;
       constructor(props: any) {
         super(props);

@@ -46,7 +46,7 @@ const ComponentPage = memo((props: any) => {
   return <>{page.type === "detail" ? getDeatilRender() : getFormRender()}</>;
 });
 
-function Index(props: any) {
+const Index: React.FC<any> = (props: any) => {
   const { type, label, render } = props;
   if (render) {
     return render(props);
@@ -110,9 +110,7 @@ function Index(props: any) {
         const options = _.get(props, "options.options", []);
         return (
           <ComponentPage {...props}>
-            <Select
-              options={options}
-            />
+            <Select options={options} />
           </ComponentPage>
         );
       }
@@ -126,7 +124,7 @@ function Index(props: any) {
     }
   };
   return getComponentsItem();
-}
+};
 
 export default connect((state: WidgetForm) => ({
   dataSource: state.dataSource,

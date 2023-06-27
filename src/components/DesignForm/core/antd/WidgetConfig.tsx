@@ -14,16 +14,28 @@ import Components from "./components";
 import { v4 as uuidv4 } from "uuid";
 import _ from "lodash";
 import RadioOptions from "./components/RadioOptions";
+import { parseExpression } from "../../utils";
 const { Option } = Select;
 
-interface stackType {
-  node: any;
-  parent: any;
+interface CrudFormItem {
+  id?: string;
+  name: string | string[];
   label: string;
-  value: string;
+  type: string;
+  options?: {
+    placeholder?: string;
+    defaultValue?: string;
+    options?: {
+      label: string;
+      value: string;
+    }[];
+  };
+  valuePropName?: string;
+  isHidden?: string;
+  render?: (props: any) => any;
 }
 
-const crudFormItem: any[] = [
+const crudFormItem: CrudFormItem[] = [
   {
     name: "name",
     label: "字段名",
@@ -65,6 +77,7 @@ const crudFormItem: any[] = [
     name: ["options", "options"],
     label: "选项设置",
     type: "Radio",
+    isHidden: "{{formData.type !== 'Radio'}}",
     options: {
       options: _.get(
         _.find(
@@ -80,11 +93,17 @@ const crudFormItem: any[] = [
   },
 ];
 
+// type AddcrudFormItemId<T extends any[]> = {
+//   [K in keyof T]: T[K] & { id?: string; valuePropName?: string };
+// };
+// type crudFormItemId = AddcrudFormItemId<typeof crudFormItem>;
+
 function WidgetConfig(props: any) {
-  const [widgetForm] = Form.useForm();
+  const [widgetForm] = Form.useForm<any>();
   const widgetFormRef = useRef<FormInstance>(null);
 
-  const [crudFormList, setCrudFormList] = useState<any[]>([]);
+  const [crudFormList, setCrudFormList] =
+    useState<CrudFormItem[]>(crudFormItem);
 
   const onValuesChange = (changedValues: any, allValues: any) => {
     console.log("onValuesChange", changedValues, allValues);
@@ -92,6 +111,54 @@ function WidgetConfig(props: any) {
       payload: _.cloneDeep(allValues),
       type: "widgetFormCurrentSelect",
     });
+  };
+
+  const formatCrudFormList = () => {
+    const { widgetFormCurrentSelect } = props;
+    console.log("filterCrudFormList", widgetFormCurrentSelect);
+    // 这里可能会出现ID丢失问题
+    const initList: CrudFormItem[] = _.defaultsDeep(crudFormList, crudFormItem);
+    const list = initList
+      .map((item) => {
+        if (item.isHidden) {
+          // item.isHidden = parseExpression(item.isHidden,widgetFormCurrentSelect,'')
+          console.log(
+            `${item.isHidden}`,
+            parseExpression(item.isHidden, widgetFormCurrentSelect, "")
+          );
+        }
+
+        if (item.label === "默认值") {
+          item = {
+            ...item,
+            type: "input",
+            options: {
+              placeholder: "请输入默认值",
+            },
+          };
+        }
+        if (
+          widgetFormCurrentSelect?.type === "Radio" &&
+          item.label === "默认值"
+        ) {
+          item.type = "Select";
+          item.options = {};
+          item.options.options = _.get(
+            widgetFormCurrentSelect,
+            "options.options",
+            {}
+          );
+        }
+        if (!item.id) {
+          item.id = `${item.type}_${uuidv4().substring(0, 8)}`;
+        }
+        return item;
+      })
+      .filter(
+        (item) => !parseExpression(item.isHidden, widgetFormCurrentSelect, "")
+      );
+    console.log("最后输出的结果", list);
+    setCrudFormList(list);
   };
 
   useEffect(() => {
@@ -105,28 +172,7 @@ function WidgetConfig(props: any) {
     }
     if (widgetFormRef.current) {
       if (widgetFormCurrentSelect) {
-        const list = crudFormItem.map((item) => {
-          if (item.isHidden) {
-            console.log(`${item.isHidden}`);
-          }
-          if (
-            widgetFormCurrentSelect?.type === "Radio" &&
-            item.label === "默认值"
-          ) {
-            item.type = "Select";
-            item.options = {};
-            item.options.options = _.get(
-              widgetFormCurrentSelect,
-              "options.options",
-              {}
-            );
-          }
-          if (!item.id) {
-            item.id = `${item.type}_${uuidv4().substring(0, 8)}`;
-          }
-          return item;
-        });
-        setCrudFormList(list);
+        formatCrudFormList();
         widgetForm.setFieldsValue(widgetFormCurrentSelect);
       } else {
         widgetForm.resetFields();
