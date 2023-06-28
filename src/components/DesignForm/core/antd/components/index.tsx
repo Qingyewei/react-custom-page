@@ -144,9 +144,16 @@ const Index: React.FC<any> = (props: any) => {
           "options.placeholder",
           "请选择默认时间"
         );
+        const isRangePicker =
+          _.get(props, "options.isRangePicker", false) ||
+          _.get(props, "widgetFormCurrentSelect.options.isRangePicker", false);
         return (
           <ComponentPage {...props}>
-            <TimePicker placeholder={placeholder} />
+            {isRangePicker ? (
+              <TimePicker.RangePicker />
+            ) : (
+              <TimePicker placeholder={placeholder} />
+            )}
           </ComponentPage>
         );
       }
@@ -156,9 +163,16 @@ const Index: React.FC<any> = (props: any) => {
           "options.placeholder",
           "请选择默认日期"
         );
+        const isRangePicker =
+          _.get(props, "options.isRangePicker", false) ||
+          _.get(props, "widgetFormCurrentSelect.options.isRangePicker", false);
         return (
           <ComponentPage {...props}>
-            <DatePicker placeholder={placeholder} />
+            {isRangePicker ? (
+              <DatePicker.RangePicker />
+            ) : (
+              <DatePicker placeholder={placeholder} />
+            )}
           </ComponentPage>
         );
       }
@@ -175,6 +189,7 @@ const Index: React.FC<any> = (props: any) => {
 };
 
 export default connect((state: WidgetForm) => ({
+  widgetFormCurrentSelect: state.widgetFormCurrentSelect,
   dataSource: state.dataSource,
   page: state.page,
 }))(memo(Index));

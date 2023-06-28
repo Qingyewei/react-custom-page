@@ -51,11 +51,11 @@ function WidgetConfig(props: any) {
 
       if (newItem.isHidden) {
         // newItem.isHidden = parseExpression(newItem.isHidden,widgetFormCurrentSelect,'')
-        console.log(
-          `${newItem.isHidden}`,
-          widgetFormCurrentSelect?.type,
-          parseExpression(newItem.isHidden, widgetFormCurrentSelect, "")
-        );
+        // console.log(
+        //   `${newItem.isHidden}`,
+        //   widgetFormCurrentSelect?.type,
+        //   parseExpression(newItem.isHidden, widgetFormCurrentSelect, "")
+        // );
       }
       if (_.isFunction(_.get(newItem, "options.options"))) {
         const optionsFun: any = _.get(newItem, "options.options", null);
@@ -91,7 +91,7 @@ function WidgetConfig(props: any) {
         list.push(newItem);
       }
     });
-    console.log("最后输出的结果", list);
+    // console.log("最后输出的结果", list);
     setCrudFormList(list);
   };
 

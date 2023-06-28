@@ -245,20 +245,20 @@ export const basicComponents = [
       rules,
     },
   },
-  {
-    label: "评分",
-    type: "rate",
-    options: {
-      defaultValue: 0,
-      max: 5,
-      allowHalf: false,
-      disabled: false,
-      rules,
-    },
-  },
+  // {
+  //   label: "评分",
+  //   type: "rate",
+  //   options: {
+  //     defaultValue: 0,
+  //     max: 5,
+  //     allowHalf: false,
+  //     disabled: false,
+  //     rules,
+  //   },
+  // },
   {
     label: "下拉选择框",
-    type: "select",
+    type: "Select",
     options: {
       defaultValue: "",
       width: "200px",

@@ -48,7 +48,7 @@ const crudFormItem: CrudFormItem[] = [
     name: ["options", "defaultValue"],
     label: "默认值",
     type: "input",
-    isHidden: "{{ formData.type !== 'input'",
+    isHidden: "{{ formData.type !== 'input'}}",
     options: {
       placeholder: "请输入默认值",
     },
@@ -57,7 +57,7 @@ const crudFormItem: CrudFormItem[] = [
     name: ["options", "defaultValue"],
     label: "默认值-TimePicker",
     type: "TimePicker",
-    isHidden: "{{ formData.type !== 'TimePicker'",
+    isHidden: "{{ formData.type !== 'TimePicker' }}",
     options: {
       placeholder: "请选择默认时间",
     },
@@ -70,6 +70,16 @@ const crudFormItem: CrudFormItem[] = [
     options: {
       placeholder: "请选择默认日期",
     },
+  },
+  {
+    name: ["options", "isRangePicker"],
+    label: "是否为范围选择器",
+    isHidden: "{{ formData.type !== 'TimePicker' && formData.type !== 'DatePicker'}}",
+    options: {
+      placeholder: "请选择默认时间范围",
+    },
+    type: "switch",
+    valuePropName: "checked",
   },
   {
     name: ["options", "defaultValue"],
