@@ -7,6 +7,7 @@ export interface CrudFormItem {
   name: string | string[];
   label: string;
   type: string;
+  dependenciesName?: string | string[];
   options?: {
     placeholder?: string;
     defaultValue?: string;
@@ -74,7 +75,8 @@ const crudFormItem: CrudFormItem[] = [
   {
     name: ["options", "isRangePicker"],
     label: "是否为范围选择器",
-    isHidden: "{{ formData.type !== 'TimePicker' && formData.type !== 'DatePicker'}}",
+    isHidden:
+      "{{ formData.type !== 'TimePicker' && formData.type !== 'DatePicker'}}",
     options: {
       placeholder: "请选择默认时间范围",
     },
@@ -88,13 +90,7 @@ const crudFormItem: CrudFormItem[] = [
     isHidden: "{{ formData.type !== 'Radio'}}",
     options: {
       placeholder: "请选择默认值",
-      options: _.get(
-        _.find(
-          basicComponents,
-          (item: basicComponents) => item.type == "Radio"
-        ),
-        "options.options"
-      ),
+      options: (formData) => _.get(formData, "options.options", []),
     },
   },
   {
@@ -106,13 +102,7 @@ const crudFormItem: CrudFormItem[] = [
       placeholder: "请选择默认值",
       mode: "multiple",
       allowClear: true,
-      options: _.get(
-        _.find(
-          basicComponents,
-          (item: basicComponents) => item.type == "Checkbox"
-        ),
-        "options.options"
-      ),
+      options: (formData) => _.get(formData, "options.options", []),
     },
   },
   {
@@ -166,6 +156,7 @@ const crudFormItem: CrudFormItem[] = [
     label: "默认值-Select",
     type: "Select",
     isHidden: "{{ formData.type !== 'Select'}}",
+    dependenciesName: ["options", "options"],
     options: {
       placeholder: "请选择默认值",
       options: _.get(
@@ -177,29 +168,29 @@ const crudFormItem: CrudFormItem[] = [
       ),
     },
   },
-  // {
-  //   name: ["options", "mode"],
-  //   label: "模式",
-  //   type: "Select",
-  //   isHidden: "{{ formData.type !== 'Select'}}",
-  //   options: {
-  //     placeholder: "请选择默认值",
-  //     options: [
-  //       {
-  //         label:"单选",
-  //         value:"",
-  //       },
-  //       {
-  //         label:"多选",
-  //         value:"multiple",
-  //       },
-  //       {
-  //         label:"标签",
-  //         value:"tags",
-  //       },
-  //     ],
-  //   },
-  // },
+  {
+    name: ["options", "modes"],
+    label: "模式",
+    type: "Select",
+    isHidden: "{{ formData.type !== 'Select'}}",
+    options: {
+      placeholder: "请选择默认值",
+      options: [
+        {
+          label: "单选",
+          value: "",
+        },
+        {
+          label: "多选",
+          value: "multiple",
+        },
+        {
+          label: "标签",
+          value: "tags",
+        },
+      ],
+    },
+  },
   {
     name: ["options", "options"],
     label: "选项设置",

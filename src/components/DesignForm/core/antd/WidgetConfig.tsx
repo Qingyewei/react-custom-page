@@ -12,7 +12,7 @@ import { memo, useEffect, useRef, useState } from "react";
 import { WidgetForm, basicComponents } from "../../config/element";
 import Components from "./components";
 import { v4 as uuidv4 } from "uuid";
-import _ from "lodash";
+import _, { isArray } from "lodash";
 import RadioOptions from "./components/RadioOptions";
 import { parseExpression } from "../../utils";
 import crudFormItem, { CrudFormItem } from "../../config/crudFormItem";
@@ -26,8 +26,12 @@ function WidgetConfig(props: any) {
 
   const onValuesChange = (changedValues: any, allValues: any) => {
     console.log("onValuesChange", changedValues, allValues);
+    const newAllValues = _.cloneDeep(allValues);
+    if (_.get(newAllValues, "options.mode")) {
+      console.log("当前模式", _.get(newAllValues, "options.mode"));
+    }
     Store.dispatch({
-      payload: _.cloneDeep(allValues),
+      payload: newAllValues,
       type: "widgetFormCurrentSelect",
     });
   };
@@ -54,32 +58,39 @@ function WidgetConfig(props: any) {
         (c) => c.type === item.type && c.label === item.label
       );
       let newItem = _.cloneDeep(item);
-      if (currentItem) {
-        newItem = _.cloneDeep(_.defaultsDeep(currentItem, newItem));
-        if (_.get(newItem, "options.options", "")) {
-          newItem.options!.options = _.get(
-            widgetFormCurrentSelect,
-            "options.options");
+
+      if (_.isFunction(_.get(newItem, "options.options"))) {
+        const optionsFun: any = _.get(newItem, "options.options", null);
+        if (_.get(newItem, "options.options", "") && optionsFun) {
+          console.log(
+            "optionsFun",
+            newItem,
+            optionsFun?.(widgetFormCurrentSelect)
+          );
+          newItem.options!.options = optionsFun?.(widgetFormCurrentSelect);
         }
       }
 
-      // if (_.isFunction(_.get(newItem, "options.options"))) {
-      //   const optionsFun: any = _.get(newItem, "options.options", null);
-      //   if (_.get(newItem, "options.options", "") && optionsFun) {
-      //     console.log(
-      //       "optionsFun",
-      //       newItem,
-      //       optionsFun?.(widgetFormCurrentSelect)
-      //     );
-      //     newItem.options!.options = optionsFun?.(widgetFormCurrentSelect);
-      //   }
-      // }
+      if (currentItem) {
+        newItem = _.cloneDeep(_.defaultsDeep(currentItem, newItem));
+        if (_.get(newItem, "dependenciesName", "")) {
+          let dependenciesName = _.get(newItem, "dependenciesName", "");
+          if (isArray(dependenciesName)) {
+            dependenciesName = dependenciesName.join(".");
+          }
+          newItem.options!.options = _.get(
+            widgetFormCurrentSelect,
+            dependenciesName
+          );
+        }
+      }
+
       if (!newItem.id) {
         newItem.id = `${newItem.type}_${uuidv4().substring(0, 8)}`;
       }
       list.push(newItem);
     });
-    console.log("最后输出的结果", list);
+    // console.log("最后输出的结果", list);
     setCrudFormList(list);
   };
 
