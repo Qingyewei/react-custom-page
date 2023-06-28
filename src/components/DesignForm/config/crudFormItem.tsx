@@ -198,6 +198,7 @@ const crudFormItem: CrudFormItem[] = [
     type: "SelectOptions",
     isHidden: "{{formData.type !== 'Select'}}",
     options: {
+      mode: (formData) => _.get(formData, "options.mode", ""),
       options: _.get(
         _.find(
           basicComponents,
