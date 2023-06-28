@@ -15,9 +15,34 @@ import {
 } from "antd";
 import _ from "lodash";
 import CheckboxOptions from "./CheckboxOptions";
+import RadioOptions from "./RadioOptions";
 
 function titleCase(str: string) {
   return str.slice(0, 1).toUpperCase() + str.slice(1).toLowerCase();
+}
+
+function separatePropsByType(props: any) {
+  const formProps: any = {};
+  const controlProps: any = {};
+
+  for (const propName in props) {
+    if (isFormProp(propName)) {
+      formProps[propName] = props[propName];
+    } else {
+      controlProps[propName] = props[propName];
+    }
+  }
+
+  return {
+    formProps,
+    controlProps,
+  };
+}
+
+function isFormProp(propName: string) {
+  // 在这里根据属性的特征判断它是表单属性还是控件属性
+  // 返回 true 表示是表单属性，返回 false 表示是控件属性
+  return ["name", "label", "valuePropName", "rules"].includes(propName);
 }
 
 const ComponentPage = memo((props: any) => {
@@ -59,6 +84,8 @@ const ComponentPage = memo((props: any) => {
 
 const Index: React.FC<any> = (props: any) => {
   const { type, label, render } = props;
+  // const { formProps, controlProps } = separatePropsByType(props);
+  // console.log('{ formProps, controlProps }',{ formProps, controlProps })
   if (render) {
     return render(props);
   }
@@ -121,6 +148,11 @@ const Index: React.FC<any> = (props: any) => {
         const options = _.get(props, "options.options", []);
         const mode = _.get(props, "options.mode", "");
         const allowClear = _.get(props, "options.allowClear", true);
+        const { formProps } = separatePropsByType(props);
+        // console.log("formProps",formProps)
+        if(formProps && formProps.label === "默认值-Select"){
+          console.log("选择控件的",props)
+        }
         return (
           <ComponentPage {...props}>
             <Select options={options} mode={mode} allowClear={allowClear} />
@@ -175,6 +207,11 @@ const Index: React.FC<any> = (props: any) => {
             )}
           </ComponentPage>
         );
+      }
+
+      case "SelectOptions": {
+        // console.log("SelectOptions", props);
+        return <RadioOptions {...props} />;
       }
 
       default:

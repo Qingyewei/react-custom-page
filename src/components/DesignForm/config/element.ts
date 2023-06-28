@@ -1,6 +1,5 @@
 import { RuleObject, Rule } from "antd/es/form";
 
-
 export interface WidgetForm {
   list: any[];
   config: {
@@ -22,11 +21,10 @@ export interface WidgetForm {
       paramsOrPayload: any;
     };
   };
-  dataSource?:any
-  widgetFormCurrentSelect?:any;
-  widgetFormCurrentSelectIndex?:any;
+  dataSource?: any;
+  widgetFormCurrentSelect?: any;
+  widgetFormCurrentSelectIndex?: any;
 }
-
 
 export const widgetForm: WidgetForm = {
   list: [],
@@ -41,8 +39,7 @@ export const widgetForm: WidgetForm = {
     type: "crud",
     method: "POST",
     // api_url: location.href,
-    url:
-      "https://times-crmtest.timesgroup.cn:28080/CRMAPIBeta/api/Delivery/GetDeliveryCacheInfo",
+    url: "https://times-crmtest.timesgroup.cn:28080/CRMAPIBeta/api/Delivery/GetDeliveryCacheInfo",
     api_options: {
       headers: {
         Account: "beibei",
@@ -69,24 +66,24 @@ export const rules: Rule = {
 };
 
 interface basicComponentsOptions {
-  width:string |number,
-  defaultValue:string,
-  placeholder:string,
-  maxlength:null | string;
-  prefix: string,
-      suffix: string,
-      prepend: string,
-      append: string,
-      disabled: boolean,
-      clearable: boolean,
-      readonly: boolean,
-      rules:RuleObject,
+  width: string | number;
+  defaultValue: string;
+  placeholder: string;
+  maxlength: null | string;
+  prefix: string;
+  suffix: string;
+  prepend: string;
+  append: string;
+  disabled: boolean;
+  clearable: boolean;
+  readonly: boolean;
+  rules: RuleObject;
 }
 export interface basicComponents {
-  label:string;
-  type:"input" | "Radio" | "Checkbox",
-  name:string;
-  options:basicComponentsOptions
+  label: string;
+  type: "input" | "Radio" | "Checkbox" | "Select";
+  name: string;
+  options: basicComponentsOptions;
 }
 
 export const basicComponents = [
@@ -223,11 +220,12 @@ export const basicComponents = [
       placeholder: "请选择时间",
       format: "HH:mm:ss",
       valueFormat: "HH:mm:ss",
-      readonly: false,
-      editable: true,
-      clearable: true,
       disabled: false,
-      rules,
+      rules: {
+        type: "object" as const,
+        required: false,
+        message: "请选择时间",
+      },
     },
   },
   {
@@ -236,13 +234,14 @@ export const basicComponents = [
     options: {
       defaultValue: "",
       width: "",
-      placeholder: "请选择时间",
+      placeholder: "请选择日期",
       format: "YYYY-MM-DD",
-      readonly: false,
-      editable: true,
-      clearable: true,
       disabled: false,
-      rules,
+      rules: {
+        type: "object" as const,
+        required: false,
+        message: "请选择日期",
+      },
     },
   },
   // {
@@ -262,17 +261,9 @@ export const basicComponents = [
     options: {
       defaultValue: "",
       width: "200px",
-      multiple: false,
-      placeholder: "",
+      mode: "",
+      placeholder: "请选择",
       remote: false,
-      showLabel: false,
-      filterable: false,
-      clearable: false,
-      disabled: false,
-      props: {
-        label: "label",
-        value: "value",
-      },
       options: [
         {
           label: "Option 1",
@@ -327,9 +318,9 @@ export const basicComponents = [
   },
 ];
 
-export const findBasicComponents = (type:string) => {
-  return basicComponents.find(item=>item.type === type)
-}
+export const findBasicComponents = (type: string) => {
+  return basicComponents.find((item) => item.type === type);
+};
 
 export const advanceComponents = [
   {

@@ -74,7 +74,6 @@ function reducer(
     }
     case "widgetFormCurrentSelect": {
       const data = { ...state };
-
       data["list"] = data["list"].map((item) => {
         if (item.id === _.get(action,'payload.id')) {
           item = _.defaults(action.payload,item)

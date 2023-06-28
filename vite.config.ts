@@ -17,54 +17,54 @@ export default defineConfig({
       // 指定symbolId格式
       symbolId: "icon-[name]",
     }),
-    createHtmlPlugin({
-      template: "./index.html",
-      inject: {
-        tags: [
-          {
-            injectTo: "head",
-            tag: "script",
-            attrs: {
-              src: "https://unpkg.com/react@18.2.0/umd/react.development.js",
-              crossorigin: true,
-            },
-          },
-          {
-            injectTo: "head",
-            tag: "script",
-            attrs: {
-              src: "https://unpkg.com/react-dom@18.2.0/umd/react-dom.development.js",
-              crossorigin: true,
-            },
-          },
-          {
-            injectTo: "head",
-            tag: "script",
-            attrs: {
-              src: "https://cdnjs.cloudflare.com/ajax/libs/dayjs/1.11.8/dayjs.min.js",
-              crossorigin: true,
-            },
-          },
-          {
-            injectTo: "head",
-            tag: "script",
-            attrs: {
-              src: "https://cdnjs.cloudflare.com/ajax/libs/antd/5.6.3/antd.min.js",
-              // defer: true,
-              crossorigin: true,
-            },
-          },
-          {
-            injectTo: "head",
-            tag: "link",
-            attrs: {
-              src: "https://cdnjs.cloudflare.com/ajax/libs/antd/5.6.3/reset.min.css",
-              rel: "stylesheet",
-            },
-          },
-        ],
-      },
-    }),
+    // createHtmlPlugin({
+    //   template: "./index.html",
+    //   inject: {
+    //     tags: [
+    //       {
+    //         injectTo: "head",
+    //         tag: "script",
+    //         attrs: {
+    //           src: "https://unpkg.com/react@18.2.0/umd/react.development.js",
+    //           crossorigin: true,
+    //         },
+    //       },
+    //       {
+    //         injectTo: "head",
+    //         tag: "script",
+    //         attrs: {
+    //           src: "https://unpkg.com/react-dom@18.2.0/umd/react-dom.development.js",
+    //           crossorigin: true,
+    //         },
+    //       },
+    //       {
+    //         injectTo: "head",
+    //         tag: "script",
+    //         attrs: {
+    //           src: "https://cdnjs.cloudflare.com/ajax/libs/dayjs/1.11.8/dayjs.min.js",
+    //           crossorigin: true,
+    //         },
+    //       },
+    //       {
+    //         injectTo: "head",
+    //         tag: "script",
+    //         attrs: {
+    //           src: "https://cdnjs.cloudflare.com/ajax/libs/antd/5.6.3/antd.min.js",
+    //           // defer: true,
+    //           crossorigin: true,
+    //         },
+    //       },
+    //       {
+    //         injectTo: "head",
+    //         tag: "link",
+    //         attrs: {
+    //           src: "https://cdnjs.cloudflare.com/ajax/libs/antd/5.6.3/reset.min.css",
+    //           rel: "stylesheet",
+    //         },
+    //       },
+    //     ],
+    //   },
+    // }),
   ],
   resolve: {
     alias: {
@@ -75,23 +75,23 @@ export default defineConfig({
   server: {
     port: 8888,
   },
-  build: {
-    rollupOptions: {
-      // 不打包依赖
-      external: [
-        "antd", 
-        "react", 
-        "react-dom"
-      ],
-      plugins: [
-        // 不打包依赖映射的对象
-        externalGlobals({
-          react: "React",
-          "react-dom": "ReactDOM",
-          antd: "antd",
-          dayjs: "dayjs",
-        }),
-      ],
-    },
-  },
+  // build: {
+  //   rollupOptions: {
+  //     // 不打包依赖
+  //     external: [
+  //       "antd", 
+  //       "react", 
+  //       "react-dom"
+  //     ],
+  //     plugins: [
+  //       // 不打包依赖映射的对象
+  //       externalGlobals({
+  //         react: "React",
+  //         "react-dom": "ReactDOM",
+  //         antd: "antd",
+  //         dayjs: "dayjs",
+  //       }),
+  //     ],
+  //   },
+  // },
 });

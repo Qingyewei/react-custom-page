@@ -3,8 +3,10 @@ import { memo } from "react";
 import { useDrag, useDrop } from "react-dnd";
 import Components from "./components";
 import SvgIcon from "@@/icons/component/SvgIcon";
-import Store from "@/utils/store";
+import Store, { connect } from "@/utils/store";
 import { v4 as uuidv4 } from "uuid";
+import _ from "lodash";
+import { WidgetForm, basicComponents } from "../../config/element";
 
 const style: CSSProperties = {
   border: "1px dashed gray",
@@ -19,6 +21,7 @@ export interface CardProps {
   content: any;
   moveCard: (id: string, to: number) => void;
   findCard: (id: string) => { index: number };
+  widgetFormCurrentSelect: basicComponents & { id: string };
 }
 
 interface Item {
@@ -31,6 +34,7 @@ const Card: FC<CardProps> = memo(function Card({
   content,
   moveCard,
   findCard,
+  widgetFormCurrentSelect,
 }) {
   const originalIndex = findCard(id).index;
   const [{ isDragging }, drag] = useDrag(
@@ -65,13 +69,25 @@ const Card: FC<CardProps> = memo(function Card({
   );
 
   const changeHandleCurrentSelect = () => {
-    Store.dispatch({
-      type: "widgetFormCurrentSelect",
-      payload: content,
-    });
+    // 这里有问题，content是在闭包内的，值没有去更新还是旧的值
+    // 导致像select、TimerPicker这类的组件，再点击选择时
+    // 会冒泡执行到这个方法，导致值无法时最新的
+    // 暂时只想到利用Store中的widgetFormCurrentSelect与这里的content比较
+    // 如果时同一个就不去替换，不是同一个采取执行该方法
+    if (widgetFormCurrentSelect.id !== content.id) {
+      console.log("changeHandleCurrentSelect", {
+        a: widgetFormCurrentSelect.id,
+        b: content.id,
+        C: content.options.defaultValue,
+      });
+      Store.dispatch({
+        type: "widgetFormCurrentSelect",
+        payload: _.cloneDeep(content),
+      });
+    }
   };
 
-  const handleCopyClick = (e:React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+  const handleCopyClick = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     e.stopPropagation();
     const newCard = {
       ...content,
@@ -80,10 +96,12 @@ const Card: FC<CardProps> = memo(function Card({
     Store.dispatch({ type: "listItemCopy", payload: newCard });
   };
 
-  const handleDeleteClick = (e:React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+  const handleDeleteClick = (
+    e: React.MouseEvent<HTMLDivElement, MouseEvent>
+  ) => {
     e.stopPropagation();
     Store.dispatch({ type: "listItemDelete", payload: content.id });
-  }
+  };
 
   return (
     <div
@@ -95,7 +113,11 @@ const Card: FC<CardProps> = memo(function Card({
       <Components className="antdWidget-c" {...content} />
       <div className="antdwidgetFormItem-action">
         <SvgIcon name="copy" className="svg-icon" onClick={handleCopyClick} />
-        <SvgIcon name="delete" className="svg-icon" onClick={handleDeleteClick} />
+        <SvgIcon
+          name="delete"
+          className="svg-icon"
+          onClick={handleDeleteClick}
+        />
       </div>
       <div className="antdWidget-drag" ref={drag}>
         <SvgIcon name="move" className="svg-icon" />
@@ -103,5 +125,7 @@ const Card: FC<CardProps> = memo(function Card({
     </div>
   );
 });
-
-export default Card;
+export default connect((state: WidgetForm) => ({
+  widgetFormCurrentSelect: state.widgetFormCurrentSelect,
+}))(Card);
+// export default Card;

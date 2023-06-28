@@ -18,7 +18,6 @@ import { parseExpression } from "../../utils";
 import crudFormItem, { CrudFormItem } from "../../config/crudFormItem";
 const { Option } = Select;
 
-
 function WidgetConfig(props: any) {
   const [widgetForm] = Form.useForm<any>();
   const widgetFormRef = useRef<FormInstance>(null);
@@ -35,63 +34,52 @@ function WidgetConfig(props: any) {
 
   const formatCrudFormList = () => {
     const { widgetFormCurrentSelect } = props;
+    // 后续可以考虑直接将widgetFormCurrentSelect转换成所需要的crudFormList
     // 这里可能会出现ID丢失问题
     // 慎用 defaultsDeep
     // const initList: CrudFormItem[] = _.defaultsDeep(crudFormList, crudFormItem);
     // console.log("initList", initList)
     const list: CrudFormItem[] = [];
     crudFormItem.forEach((item) => {
-      const currentItem = crudFormList?.find(
-        (c) => c.type === item.type && c.label === item.label
-      );
-      let newItem = _.cloneDeep(item);
-      if (currentItem) {
-        newItem = _.cloneDeep(_.defaultsDeep(currentItem, newItem));
-      }
-
-      if (newItem.isHidden) {
+      if (parseExpression(item.isHidden, widgetFormCurrentSelect, "")) {
         // newItem.isHidden = parseExpression(newItem.isHidden,widgetFormCurrentSelect,'')
         // console.log(
         //   `${newItem.isHidden}`,
         //   widgetFormCurrentSelect?.type,
         //   parseExpression(newItem.isHidden, widgetFormCurrentSelect, "")
         // );
+        return;
       }
-      if (_.isFunction(_.get(newItem, "options.options"))) {
-        const optionsFun: any = _.get(newItem, "options.options", null);
-        if (_.get(newItem, "options.options", "") && optionsFun) {
-          newItem.options!.options = optionsFun?.(widgetFormCurrentSelect);
+      const currentItem = crudFormList?.find(
+        (c) => c.type === item.type && c.label === item.label
+      );
+      let newItem = _.cloneDeep(item);
+      if (currentItem) {
+        newItem = _.cloneDeep(_.defaultsDeep(currentItem, newItem));
+        if (_.get(newItem, "options.options", "")) {
+          newItem.options!.options = _.get(
+            widgetFormCurrentSelect,
+            "options.options");
         }
       }
-      // if (
-      //   ["Radio", "Checkbox"].includes(widgetFormCurrentSelect?.type) &&
-      //   newItem.label === "默认值"
-      // ) {
-      //   newItem.type = "Select";
-      //   if (!newItem.options) {
-      //     newItem.options = {};
-      //   }
-      //   newItem.options.options = _.get(
-      //     widgetFormCurrentSelect,
-      //     "options.options",
-      //     {}
-      //   );
-      //   if (widgetFormCurrentSelect?.type === "Checkbox") {
-      //     newItem.options = {
-      //       ...newItem.options,
-      //       mode: "multiple",
-      //       allowClear: true,
-      //     };
+
+      // if (_.isFunction(_.get(newItem, "options.options"))) {
+      //   const optionsFun: any = _.get(newItem, "options.options", null);
+      //   if (_.get(newItem, "options.options", "") && optionsFun) {
+      //     console.log(
+      //       "optionsFun",
+      //       newItem,
+      //       optionsFun?.(widgetFormCurrentSelect)
+      //     );
+      //     newItem.options!.options = optionsFun?.(widgetFormCurrentSelect);
       //   }
       // }
       if (!newItem.id) {
         newItem.id = `${newItem.type}_${uuidv4().substring(0, 8)}`;
       }
-      if (!parseExpression(newItem.isHidden, widgetFormCurrentSelect, "")) {
-        list.push(newItem);
-      }
+      list.push(newItem);
     });
-    // console.log("最后输出的结果", list);
+    console.log("最后输出的结果", list);
     setCrudFormList(list);
   };
 

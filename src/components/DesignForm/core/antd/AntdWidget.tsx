@@ -96,15 +96,29 @@ function AntdWidget(props: any) {
     [findCard, moveCard]
   );
 
-  const onValuesChange = (changedValues:any, allValues:any)=>{
-    for(const i of Object.keys(changedValues)){
-      if(i === widgetFormCurrentSelect.name){
+  const onValuesChange = (changedValues: any, allValues: any) => {
+    for (const i of Object.keys(changedValues)) {
+      if (i === widgetFormCurrentSelect.name) {
+        console.log("onValuesChange", {
+          changedValues,
+          allValues,
+          widgetFormCurrentSelect,
+        });
         const newWidgetFormCurrentSelect = _.cloneDeep(widgetFormCurrentSelect);
         newWidgetFormCurrentSelect.options.defaultValue = changedValues[i];
-        Store.dispatch({ payload: newWidgetFormCurrentSelect, type: "widgetFormCurrentSelect" });
+        Store.dispatch({
+          payload: newWidgetFormCurrentSelect,
+          type: "widgetFormCurrentSelect",
+        });
       }
     }
-  }
+  };
+  const onFinish = (fieldsValue: any) => {
+    console.log("Received values of form: ", fieldsValue);
+  };
+  const onFinishFailed = ({ values, errorFields, outOfDate }: any) => {
+    console.log("onFinishFailed: ", { values, errorFields, outOfDate });
+  };
 
   return (
     <div
@@ -122,6 +136,8 @@ function AntdWidget(props: any) {
           wrapperCol={{ span: 16 }}
           style={{ maxWidth: 600 }}
           autoComplete="off"
+          onFinish={onFinish}
+          onFinishFailed={onFinishFailed}
           onValuesChange={onValuesChange}
         >
           {list.map((card) => renderCard(card))}
