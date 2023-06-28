@@ -10,12 +10,14 @@ import {
   InputNumber,
   Radio,
   Select,
+  Slider,
   Switch,
   TimePicker,
 } from "antd";
 import _ from "lodash";
 import CheckboxOptions from "./CheckboxOptions";
 import RadioOptions from "./RadioOptions";
+import "./Input.less";
 
 function titleCase(str: string) {
   return str.slice(0, 1).toUpperCase() + str.slice(1).toLowerCase();
@@ -150,8 +152,8 @@ const Index: React.FC<any> = (props: any) => {
         const allowClear = _.get(props, "options.allowClear", true);
         const { formProps } = separatePropsByType(props);
         // console.log("formProps",formProps)
-        if(formProps && formProps.label === "默认值-Select"){
-          console.log("选择控件的",props)
+        if (formProps && formProps.label === "默认值-Select") {
+          console.log("选择控件的", props);
         }
         return (
           <ComponentPage {...props}>
@@ -213,7 +215,24 @@ const Index: React.FC<any> = (props: any) => {
         // console.log("SelectOptions", props);
         return <RadioOptions {...props} />;
       }
-
+      case "Slider":
+        return (
+          <ComponentPage {...props}>
+            <Slider />
+          </ComponentPage>
+        );
+      case "Text": {
+        const { className, options } = props;
+        console.log("默认值",props)
+        return (
+          <div className={`${className} cf-input`}>
+            <div className="label">{label}</div>
+            <div className="text">
+              {_.get(options, 'defaultValue', "")}
+            </div>
+          </div>
+        );
+      }
       default:
         return (
           <>

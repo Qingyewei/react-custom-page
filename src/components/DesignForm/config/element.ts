@@ -287,17 +287,16 @@ export const basicComponents = [
   {
     label: "开关",
     type: "switch",
+    valuePropName: "checked",
     options: {
       defaultValue: false,
       disabled: false,
-      activeText: "",
-      inactiveText: "",
       rules,
     },
   },
   {
     label: "滑块",
-    type: "slider",
+    type: "Slider",
     options: {
       defaultValue: 0,
       width: "",
@@ -306,12 +305,16 @@ export const basicComponents = [
       step: 1,
       disabled: false,
       range: false,
-      rules,
+      rules:{
+        type: "number",
+        required: false,
+        message: "请选择",
+      },
     },
   },
   {
     label: "文字",
-    type: "text",
+    type: "Text",
     options: {
       defaultValue: "This is a text",
     },

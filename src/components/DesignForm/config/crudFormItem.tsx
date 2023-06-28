@@ -207,6 +207,37 @@ const crudFormItem: CrudFormItem[] = [
       ),
     },
   },
+  {
+    name: ["options", "defaultValue"],
+    label: "默认值-switch",
+    isHidden:
+      "{{ formData.type !== 'switch'}}",
+    options: {
+      placeholder: "请选择默认状态",
+    },
+    type: "switch",
+    valuePropName: "checked",
+  },
+  {
+    name: ["options", "defaultValue"],
+    label: "默认值-Slider",
+    isHidden:
+      "{{ formData.type !== 'Slider'}}",
+    options: {
+      placeholder: "请输入",
+    },
+    type: "InputNumber",
+  },
+  {
+    name: ["options", "defaultValue"],
+    label: "默认值-Text",
+    isHidden:
+      "{{ formData.type !== 'Text'}}",
+    options: {
+      placeholder: "请输入",
+    },
+    type: "Input.TextArea",
+  },
 ];
 
 // type AddcrudFormItemId<T extends any[]> = {
