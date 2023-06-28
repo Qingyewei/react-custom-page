@@ -20,7 +20,7 @@ export interface CrudFormItem {
           label: string;
           value: string;
         }[]);
-    mode?: string;
+    mode?: string | ((formData: any) => string);
     allowClear?: boolean;
   };
   valuePropName?: string;
@@ -159,6 +159,7 @@ const crudFormItem: CrudFormItem[] = [
     dependenciesName: ["options", "options"],
     options: {
       placeholder: "请选择默认值",
+      mode: (formData) => _.get(formData, "options.mode", ""),
       options: _.get(
         _.find(
           basicComponents,
@@ -169,7 +170,7 @@ const crudFormItem: CrudFormItem[] = [
     },
   },
   {
-    name: ["options", "modes"],
+    name: ["options", "mode"],
     label: "模式",
     type: "Select",
     isHidden: "{{ formData.type !== 'Select'}}",

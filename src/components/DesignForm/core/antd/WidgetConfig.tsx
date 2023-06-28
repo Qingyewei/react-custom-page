@@ -27,9 +27,20 @@ function WidgetConfig(props: any) {
   const onValuesChange = (changedValues: any, allValues: any) => {
     console.log("onValuesChange", changedValues, allValues);
     const newAllValues = _.cloneDeep(allValues);
-    if (_.get(newAllValues, "options.mode")) {
-      console.log("当前模式", _.get(newAllValues, "options.mode"));
+    if (
+      _.get(props, "widgetFormCurrentSelect.type") === "Select" &&
+      _.get(props, "widgetFormCurrentSelect.options.mode") !==
+        _.get(newAllValues, "options.mode")
+    ) {
+      if (_.get(newAllValues, "options.mode") === "") {
+        newAllValues!.options!.defaultValue = "";
+      } else {
+        if (!isArray(_.get(newAllValues, "options.defaultValue"))) {
+          newAllValues!.options!.defaultValue = [];
+        }
+      }
     }
+
     Store.dispatch({
       payload: newAllValues,
       type: "widgetFormCurrentSelect",
@@ -54,39 +65,48 @@ function WidgetConfig(props: any) {
         // );
         return;
       }
-      const currentItem = crudFormList?.find(
-        (c) => c.type === item.type && c.label === item.label
-      );
-      let newItem = _.cloneDeep(item);
+
+      const newItem = _.cloneDeep(item);
 
       if (_.isFunction(_.get(newItem, "options.options"))) {
         const optionsFun: any = _.get(newItem, "options.options", null);
         if (_.get(newItem, "options.options", "") && optionsFun) {
-          console.log(
-            "optionsFun",
-            newItem,
-            optionsFun?.(widgetFormCurrentSelect)
-          );
+          // console.log(
+          //   "optionsFun",
+          //   newItem,
+          //   optionsFun?.(widgetFormCurrentSelect)
+          // );
           newItem.options!.options = optionsFun?.(widgetFormCurrentSelect);
         }
       }
-
-      if (currentItem) {
-        newItem = _.cloneDeep(_.defaultsDeep(currentItem, newItem));
-        if (_.get(newItem, "dependenciesName", "")) {
-          let dependenciesName = _.get(newItem, "dependenciesName", "");
-          if (isArray(dependenciesName)) {
-            dependenciesName = dependenciesName.join(".");
-          }
-          newItem.options!.options = _.get(
-            widgetFormCurrentSelect,
-            dependenciesName
-          );
+      if (_.isFunction(_.get(newItem, "options.mode"))) {
+        const modeFun: any = _.get(newItem, "options.mode", null);
+        if (_.get(newItem, "options.mode", "") && modeFun) {
+          // console.log("modeFun", newItem, modeFun?.(widgetFormCurrentSelect));
+          newItem.options!.mode = modeFun?.(widgetFormCurrentSelect);
         }
+      }
+
+      if (_.get(newItem, "dependenciesName", "")) {
+        let dependenciesName = _.get(newItem, "dependenciesName", "");
+        if (isArray(dependenciesName)) {
+          dependenciesName = dependenciesName.join(".");
+        }
+        newItem.options!.options = _.get(
+          widgetFormCurrentSelect,
+          dependenciesName
+        );
       }
 
       if (!newItem.id) {
         newItem.id = `${newItem.type}_${uuidv4().substring(0, 8)}`;
+      } else {
+        const currentItem = crudFormList?.find(
+          (c) => c.type === item.type && c.label === item.label
+        );
+        if (currentItem) {
+          newItem.id = currentItem.id;
+        }
       }
       list.push(newItem);
     });
