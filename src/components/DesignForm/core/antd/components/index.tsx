@@ -150,11 +150,6 @@ const Index: React.FC<any> = (props: any) => {
         const options = _.get(props, "options.options", []);
         const mode = _.get(props, "options.mode", "");
         const allowClear = _.get(props, "options.allowClear", true);
-        const { formProps } = separatePropsByType(props);
-        // console.log("formProps",formProps)
-        if (formProps && formProps.label === "默认值-Select") {
-          console.log("选择控件的", props);
-        }
         return (
           <ComponentPage {...props}>
             <Select options={options} mode={mode} allowClear={allowClear} />
@@ -212,7 +207,7 @@ const Index: React.FC<any> = (props: any) => {
       }
 
       case "SelectOptions": {
-        // console.log("SelectOptions", props);
+        console.log("SelectOptions", props);
         return <RadioOptions {...props} />;
       }
       case "Slider":
