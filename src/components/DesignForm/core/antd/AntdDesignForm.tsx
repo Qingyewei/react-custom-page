@@ -71,6 +71,7 @@ export default function AntdDesignForm() {
         </Sider>
         <Layout className="c-layout">
           <Header className={styles.header}>
+            crudFormItem和basicComponents的值无法中和，目前只使用了crudFormItem
             <OperatButton />
           </Header>
           <Content>

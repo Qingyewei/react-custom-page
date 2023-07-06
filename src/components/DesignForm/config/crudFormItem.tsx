@@ -40,6 +40,7 @@ const crudFormItem: CrudFormItem[] = [
   {
     name: ["options", "placeholder"],
     label: "占位文本",
+    isHidden: "{{ formData.type === 'TimePicker'}}",
     type: "input",
     options: {
       placeholder: "请输入占位文本",

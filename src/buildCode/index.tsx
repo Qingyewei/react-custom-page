@@ -18,7 +18,7 @@ function getAntdComonpentName(list: any[]) {
   return names;
 }
 
-function getAntdComponentStr(props: any) {
+function getFormPropsStr(props: any) {
   const { name, label, options, id, type } = props;
   const formProps = {
     name: name ? name : id,
@@ -36,14 +36,31 @@ function getAntdComponentStr(props: any) {
       }
     }
   }
+  return formPropsStr;
+}
 
+function getComponentPropsStr(props: any) {
+  const { options, type } = props;
   const componentProps = {
     ...options,
   };
 
   let componentPropsStr = "";
+  const exclusionAttrs = [
+    "valuePropName",
+    "rules",
+    "defaultValue",
+    "remoteFunc",
+    "remoteOptions",
+  ];
+  if (type === "Radio") {
+    exclusionAttrs.push("options");
+  }
+  if (type === "TimePicker") {
+    exclusionAttrs.push("isRangePicker",'placeholder');
+  }
   for (const f of Object.entries(componentProps)) {
-    if (f[1] && !["valuePropName", "rules"].includes(f[0])) {
+    if (f[1] && !exclusionAttrs.includes(f[0])) {
       if (!isString(f[1])) {
         componentPropsStr += `${f[0]}={${JSON.stringify(f[1])}}`;
       } else {
@@ -51,14 +68,24 @@ function getAntdComponentStr(props: any) {
       }
     }
   }
-  const componentName = capitalizeFirstLetter(type);
 
+  return componentPropsStr;
+}
+
+function getAntdComponentStr(props: any) {
+  const { type } = props;
+  const componentName = capitalizeFirstLetter(type);
+  const formPropsStr = getFormPropsStr(props);
+  const componentPropsStr = getComponentPropsStr(props);
   if (componentName === "Radio") {
     const strs = _.get(props, "options.options", []).map(
       (item: any, index: any) => {
-        return item && `<Radio key="${index}" value="${item.value}">
+        return (
+          item &&
+          `<Radio key="${index}" value="${item.value}">
           ${item.label}
-        </Radio>`;
+        </Radio>`
+        );
       }
     );
     return `<Form.Item
@@ -67,6 +94,22 @@ function getAntdComponentStr(props: any) {
     <Radio.Group ${componentPropsStr}>
       ${strs.join("")}
     </Radio.Group>
+    </Form.Item>`;
+  } else if (componentName === "Checkbox") {
+    return `<Form.Item
+      ${formPropsStr}
+    >
+    <Checkbox.Group ${componentPropsStr} />
+    </Form.Item>`;
+  } else if (
+    componentName === "TimePicker" &&
+    _.get(props, "options.isRangePicker", false)
+  ) {
+    console.log("TimePicker时",formPropsStr,props)
+    return `<Form.Item
+      ${formPropsStr}
+    >
+      <${componentName}.RangePicker ${componentPropsStr}/>
     </Form.Item>`;
   } else {
     return `<Form.Item
