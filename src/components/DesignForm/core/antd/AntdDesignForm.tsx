@@ -15,7 +15,7 @@ import OperatButton from "./AntdOperatButton";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 
-const { Header, Sider, Content } = Layout;
+const { Header, Sider, Content, Footer } = Layout;
 
 export default function AntdDesignForm() {
   const { drawOption, openDrawer, handleClose, handleFix, antdDrawRef } =
@@ -71,12 +71,15 @@ export default function AntdDesignForm() {
         </Sider>
         <Layout className="c-layout">
           <Header className={styles.header}>
-            crudFormItem和basicComponents的值无法中和，目前只使用了crudFormItem
             <OperatButton />
           </Header>
           <Content>
             <AntdWidget />
           </Content>
+          <Footer>
+            {" "}
+            crudFormItem和basicComponents的值无法中和，目前只使用了crudFormItem
+          </Footer>
         </Layout>
         <Sider width={300}>
           <Tabs

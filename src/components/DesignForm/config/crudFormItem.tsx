@@ -113,6 +113,14 @@ const crudFormItem: CrudFormItem[] = [
     valuePropName: "checked",
   },
   {
+    name: ["options", "rules", "message"],
+    label: "必填校验提示信息",
+    type: "input",
+    options: {
+      placeholder: "请输入占位文本",
+    },
+  },
+  {
     name: ["options", "rules", "required"],
     label: "是否隐藏-hidden",
     isHidden: "{{ 1 === 0 ? true : false}}",
