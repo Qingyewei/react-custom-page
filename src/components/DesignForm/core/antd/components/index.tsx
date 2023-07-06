@@ -208,7 +208,12 @@ const Index: React.FC<any> = (props: any) => {
 
       case "SelectOptions": {
         console.log("SelectOptions", props);
-        return <RadioOptions {...props} />;
+        const mode = _.get(props, "options.mode", "");
+        return mode === "" ? (
+          <RadioOptions {...props} />
+        ) : (
+          <CheckboxOptions {...props} />
+        );
       }
       case "Slider":
         return (
@@ -218,13 +223,11 @@ const Index: React.FC<any> = (props: any) => {
         );
       case "Text": {
         const { className, options } = props;
-        console.log("默认值",props)
+        console.log("默认值", props);
         return (
           <div className={`${className} cf-input`}>
             <div className="label">{label}</div>
-            <div className="text">
-              {_.get(options, 'defaultValue', "")}
-            </div>
+            <div className="text">{_.get(options, "defaultValue", "")}</div>
           </div>
         );
       }
