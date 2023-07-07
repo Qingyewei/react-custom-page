@@ -23,8 +23,8 @@ function getFormPropsStr(props: any) {
   const formProps = {
     name: name ? name : id,
     label,
-    rules: options.rules,
-    valuePropName: options.valuePropName,
+    rules: options?.rules,
+    valuePropName: options?.valuePropName,
   };
   let formPropsStr = "";
   for (const f of Object.entries(formProps)) {

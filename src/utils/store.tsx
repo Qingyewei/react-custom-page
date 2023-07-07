@@ -75,9 +75,20 @@ function reducer(
     case "widgetFormCurrentSelect": {
       const data = { ...state };
       data["list"] = data["list"].map((item) => {
-        if (item.id === _.get(action,'payload.id')) {
-          item = _.defaults(action.payload,item)
-          data["widgetFormCurrentSelect"] = item
+        if (item.id === _.get(action, "payload.id")) {
+          item = _.defaultsDeep(action.payload,item)
+          // console.log("替换前",_.cloneDeep(item))
+          // item = _.merge(action.payload,item) // 不能全部替换，会出现无法修改的情况
+          // console.log("替换后", {
+          //   item,
+          //   payload: action.payload,
+          //   after: _.defaultsDeep(
+          //     _.cloneDeep(action.payload),
+          //     _.cloneDeep(item)
+          //   ),
+          //   // after: _.merge(_.cloneDeep(item),_.cloneDeep(action.payload)),
+          // });
+          data["widgetFormCurrentSelect"] = item;
         }
         return item;
       });

@@ -6,22 +6,44 @@ import { element } from "../../config";
 import { v4 as uuidv4 } from "uuid";
 import Card from "./AntdWidgetCard";
 import _ from "lodash";
-import { Form } from "antd";
+import { Form, Modal, message } from "antd";
 import { WidgetForm, basicComponents } from "../../config/element";
 
-function AntdWidget(props: any) {
+interface AntdWidgetProps {
+  page: any;
+  widgetFormCurrentSelect: any;
+  type: "basicComponents" | "dataDisplayComponents";
+  list: any;
+}
+
+function AntdWidget(props: AntdWidgetProps) {
   const { page, widgetFormCurrentSelect } = props;
   const [antdWidgetForm] = Form.useForm();
   const [list, setList] = useState<any[]>([]);
+  const [widgetType, setWidgetType] = useState<
+    "basicComponents" | "dataDisplayComponents"
+  >("basicComponents");
+
   const [{ isOver }, drop] = useDrop({
     accept: "List",
     drop: (item: any) => {
       let source: any[] = [];
+      if (item.source !== widgetType) {
+        Modal.warning({
+          title: "提示",
+          content: "组件不相同，将会被清空",
+        });
 
+        Store.dispatch({ type: "list", payload: [] });
+      }
+      setWidgetType(item.source);
       // 组件类型
       switch (item.source) {
         case "basicComponents":
           source = element.basicComponents;
+          break;
+        case "dataDisplayComponents":
+          source = element.dataDisplayComponents;
           break;
         default:
           break;
@@ -53,7 +75,7 @@ function AntdWidget(props: any) {
   useEffect(() => {
     const { list: targetList = [] } = props;
     // console.log("list 发生变化", targetList);
-    getInitFormValues(targetList);
+    props.type === "basicComponents" && getInitFormValues(targetList);
     setList(() => [...targetList]);
   }, [props.list]);
 
@@ -120,29 +142,38 @@ function AntdWidget(props: any) {
     console.log("onFinishFailed: ", { values, errorFields, outOfDate });
   };
 
+  const getBaseRender = () => {
+    return page.type === "detail" ? (
+      list.map((card) => renderCard(card))
+    ) : (
+      <Form
+        name="AntdWidget"
+        form={antdWidgetForm}
+        labelCol={{ span: 8 }}
+        wrapperCol={{ span: 16 }}
+        style={{ maxWidth: 600 }}
+        autoComplete="off"
+        onFinish={onFinish}
+        onFinishFailed={onFinishFailed}
+        onValuesChange={onValuesChange}
+      >
+        {list.map((card) => renderCard(card))}
+      </Form>
+    );
+  };
+
+  const widgetTypeMap = {
+    basicComponents: getBaseRender(),
+    dataDisplayComponents: "ddd",
+  };
+
   return (
     <div
       ref={drop}
       style={{ backgroundColor: isOver ? "#eee" : "#fff" }}
       className={styles.AntdWidget}
     >
-      {page.type === "detail" ? (
-        list.map((card) => renderCard(card))
-      ) : (
-        <Form
-          name="AntdWidget"
-          form={antdWidgetForm}
-          labelCol={{ span: 8 }}
-          wrapperCol={{ span: 16 }}
-          style={{ maxWidth: 600 }}
-          autoComplete="off"
-          onFinish={onFinish}
-          onFinishFailed={onFinishFailed}
-          onValuesChange={onValuesChange}
-        >
-          {list.map((card) => renderCard(card))}
-        </Form>
-      )}
+      {widgetTypeMap[widgetType]}
     </div>
   );
 }

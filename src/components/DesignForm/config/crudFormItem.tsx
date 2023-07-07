@@ -116,8 +116,9 @@ const crudFormItem: CrudFormItem[] = [
     name: ["options", "rules", "message"],
     label: "必填校验提示信息",
     type: "input",
+    isHidden: "{{!formData?.options?.rules}}",
     options: {
-      placeholder: "请输入占位文本",
+      placeholder: "请输入校验提示信息",
     },
   },
   {

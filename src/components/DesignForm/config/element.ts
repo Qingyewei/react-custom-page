@@ -396,3 +396,10 @@ export const layoutComponents = [
     },
   },
 ];
+
+export const dataDisplayComponents = [
+  {
+    label:'高级表格',
+    type:'AdvancedDataTable',
+  }
+]

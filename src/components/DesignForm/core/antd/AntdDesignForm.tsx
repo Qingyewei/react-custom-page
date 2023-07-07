@@ -62,9 +62,14 @@ export default function AntdDesignForm() {
           >
             <div ref={antdDrawRef} className="drawer-content">
               <ComponentGroup
-                title="基础组件"
+                title="数据录入"
                 type="basicComponents"
                 list={element.basicComponents}
+              />
+              <ComponentGroup
+                title="数据展示"
+                type="dataDisplayComponents"
+                list={element.dataDisplayComponents}
               />
             </div>
           </Drawer>
@@ -76,10 +81,9 @@ export default function AntdDesignForm() {
           <Content>
             <AntdWidget />
           </Content>
-          <Footer>
-            {" "}
+          {/* <Footer>
             crudFormItem和basicComponents的值无法中和，目前只使用了crudFormItem
-          </Footer>
+          </Footer> */}
         </Layout>
         <Sider width={300}>
           <Tabs
