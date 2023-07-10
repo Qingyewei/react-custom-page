@@ -1,20 +1,12 @@
-import { memo, useCallback, useEffect, useState } from "react";
-import { useDrop } from "react-dnd";
-import styles from "./AntdWidget.module.less";
-import Store, { connect } from "@/utils/store";
+import React, { memo, useCallback, useEffect, useState } from "react";
 import { element } from "../../config";
 import { v4 as uuidv4 } from "uuid";
+import { useDrop } from "react-dnd";
+import Store, { connect } from "@/utils/store";
+import { WidgetForm as StoreState } from "../../config/element";
+import { Form } from "antd";
 import Card from "./AntdWidgetCard";
 import _ from "lodash";
-import { Form, Modal, message } from "antd";
-import { WidgetForm, basicComponents } from "../../config/element";
-
-interface AntdWidgetProps {
-  page: any;
-  widgetFormCurrentSelect: any;
-  type: "basicComponents" | "dataDisplayComponents";
-  list: any;
-}
 
 function useListDrop(props: any) {
   const [list, setList] = useState<any[]>([]);
@@ -74,7 +66,6 @@ function useListDrop(props: any) {
       newList[hoverIndex] = temp;
       temp = null;
       setList(newList);
-      Store.dispatch({type:"list",payload:[...newList]});
     },
     [findCard, list]
   );
@@ -94,33 +85,29 @@ function useListDrop(props: any) {
     [findCard, moveCard]
   );
 
-  const DropRender = ({children}: any) => {
-    return (
-      <div
-        ref={drop}
-        style={{ backgroundColor: isOver ? "#eee" : "#fff" }}
-        className={styles.AntdWidget}
-      >
-        {children}
-      </div>
-    );
-  };
-
   return {
     list,
     renderCard,
-    DropRender,
+    drop,
+    isOver,
   };
 }
 
-function AntdWidget(props: AntdWidgetProps) {
-  const { page, widgetFormCurrentSelect } = props;
+function AntdWidgetForm(props: any) {
   const [antdWidgetForm] = Form.useForm();
+  const { widgetFormCurrentSelect } = props;
+  // const [list, setList] = useState<any[]>([]);
+
   const {
     list: listDrop,
-    DropRender,
+    drop,
+    isOver,
     renderCard,
   } = useListDrop({ list: props.list });
+
+  useEffect(() => {
+    getInitFormValues(listDrop);
+  }, [listDrop]);
 
   const getInitFormValues = (list: any) => {
     const data: any = {};
@@ -129,10 +116,6 @@ function AntdWidget(props: AntdWidgetProps) {
     }
     antdWidgetForm.setFieldsValue(data);
   };
-
-  useEffect(() => {
-    getInitFormValues(listDrop);
-  }, [listDrop]);
 
   const onValuesChange = (changedValues: any, allValues: any) => {
     for (const i of Object.keys(changedValues)) {
@@ -158,10 +141,8 @@ function AntdWidget(props: AntdWidgetProps) {
     console.log("onFinishFailed: ", { values, errorFields, outOfDate });
   };
 
-  const getBaseRender = () => {
-    return page.type === "detail" ? (
-      listDrop.map((card) => renderCard(card))
-    ) : (
+  return (
+    <div ref={drop} style={{ backgroundColor: isOver ? "#eee" : "#fff" }}>
       <Form
         name="AntdWidget"
         form={antdWidgetForm}
@@ -175,14 +156,12 @@ function AntdWidget(props: AntdWidgetProps) {
       >
         {listDrop.map((card) => renderCard(card))}
       </Form>
-    );
-  };
-
-  return <DropRender>{getBaseRender()}</DropRender>;
+    </div>
+  );
 }
 
-export default connect((state: WidgetForm) => ({
+export default connect((state: StoreState) => ({
   widgetFormCurrentSelect: state.widgetFormCurrentSelect,
   page: state.page,
   list: state.list,
-}))(memo(AntdWidget));
+}))(memo(AntdWidgetForm));
