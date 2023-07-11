@@ -98,7 +98,7 @@ const crudFormItem: CrudFormItem[] = [
     name: ["options", "defaultValue"],
     label: "默认值-Checkbox",
     type: "Select",
-    isHidden: "{{ formData.type !== 'Checkbox'",
+    isHidden: "{{ formData.type !== 'Checkbox'}}",
     options: {
       placeholder: "请选择默认值",
       mode: "multiple",
@@ -109,6 +109,7 @@ const crudFormItem: CrudFormItem[] = [
   {
     name: ["options", "rules", "required"],
     label: "是否为必填项",
+    isHidden: "{{ formData.type === 'Table'}}",
     type: "switch",
     valuePropName: "checked",
   },
@@ -249,6 +250,16 @@ const crudFormItem: CrudFormItem[] = [
     },
     type: "Input.TextArea",
   },
+  {
+    name: ["options", "defaultValue"],
+    label: "默认值-Text",
+    isHidden:
+      "{{ formData.type !== 'Text'}}",
+    options: {
+      placeholder: "请输入",
+    },
+    type: "Input.TextArea",
+  }
 ];
 
 // type AddcrudFormItemId<T extends any[]> = {

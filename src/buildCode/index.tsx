@@ -40,9 +40,10 @@ function getFormPropsStr(props: any) {
 }
 
 function getComponentPropsStr(props: any) {
-  const { options, type } = props;
+  const { options, type, widgetProperties } = props;
   const componentProps = {
     ...options,
+    ...widgetProperties,
   };
 
   let componentPropsStr = "";

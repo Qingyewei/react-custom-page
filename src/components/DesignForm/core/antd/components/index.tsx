@@ -12,6 +12,7 @@ import {
   Select,
   Slider,
   Switch,
+  Table,
   TimePicker,
 } from "antd";
 import _ from "lodash";
@@ -205,7 +206,6 @@ const Index: React.FC<any> = (props: any) => {
           </ComponentPage>
         );
       }
-
       case "SelectOptions": {
         console.log("SelectOptions", props);
         const mode = _.get(props, "options.mode", "");
@@ -229,6 +229,14 @@ const Index: React.FC<any> = (props: any) => {
             <div className="label">{label}</div>
             <div className="text">{_.get(options, "defaultValue", "")}</div>
           </div>
+        );
+      }
+      case "Table": {
+        const {columns,dataSource} = props.widgetProperties
+        return (
+          <ComponentPage {...props}>
+            <Table columns={columns} dataSource={dataSource}/>
+          </ComponentPage>
         );
       }
       default:
