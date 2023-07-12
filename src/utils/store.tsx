@@ -45,6 +45,8 @@ function createStore(reducer: (arg0: any, arg1: any) => any) {
   return store;
 }
 
+const notCoverStrs = ["options.defaultValue"];
+
 function reducer(
   state = element.widgetForm,
   action: { type: any; payload: any }
@@ -76,12 +78,26 @@ function reducer(
       const data = { ...state };
       data["list"] = data["list"].map((item) => {
         if (item.id === _.get(action, "payload.id")) {
-          item = _.defaultsDeep(action.payload,item)
-          // console.log("替换前",_.cloneDeep(item))
+          item = { ...item, ...action.payload };
+          if (Array.isArray(_.get(action, "options.defaultValue"))) {
+            _.set(
+              item,
+              "options.defaultValue",
+              _.get(action, "options.defaultValue", [])
+            );
+          }
+          // eslint-disable-next-line no-prototype-builtins
+          // if (action.payload.hasOwnProperty("widgetProperties")) {
+          //   item["widgetProperties"] = action.payload["widgetProperties"];
+          // }
+          // item = _.defaultsDeep(action.payload,item)
+          // debugger
+          // console.log("替换前",item)
           // item = _.merge(action.payload,item) // 不能全部替换，会出现无法修改的情况
           // console.log("替换后", {
           //   item,
           //   payload: action.payload,
+          //   after_1:_.defaultsDeep(action.payload,item),
           //   after: _.defaultsDeep(
           //     _.cloneDeep(action.payload),
           //     _.cloneDeep(item)

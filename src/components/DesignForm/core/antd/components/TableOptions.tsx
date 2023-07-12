@@ -1,21 +1,24 @@
 import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
-import { Space, Input, Button, Form, Radio, FormInstance } from "antd";
-import React, { memo, useEffect } from "react";
-import styles from "./RadioOptions.module.less";
+import {
+  Space,
+  Input,
+  Button,
+  Form,
+  FormInstance,
+  Checkbox,
+} from "antd";
 import _ from "lodash";
 
-function RadioOptions(props: any) {
-  // console.log("过滤了", props);
-  const {
-    form,
-  }:{form:FormInstance} = props;
+function TableOptions(props: any) {
+  const { form }: { form: FormInstance } = props;
+
 
   return (
     <Form.Item name={["options", "defaultValue"]} label={props.label}>
-      <Radio.Group>
+      <Checkbox.Group>
         <Form.List name={props.name}>
           {(fields, { add, remove }) => {
-            const options = form.getFieldValue(props.name)
+            const options = form.getFieldValue(props.name);
             return (
               <>
                 {fields.map((field) => {
@@ -25,17 +28,24 @@ function RadioOptions(props: any) {
                       key={"FormListRadio_" + field.key}
                       align="baseline"
                     >
-                      <Radio
-                        value={_.get(options, `${field.name}.value`, "")}
-                      ></Radio>
+                      <Checkbox
+                        value={_.get(options, `${field.name}.dataIndex`, "")}
+                      ></Checkbox>
                       <Form.Item
-                        name={[field.name, "value"]}
+                        name={[field.name, "dataIndex"]}
                         rules={[{ required: true, message: "Missing sight" }]}
                       >
                         <Input />
                       </Form.Item>
                       <Form.Item
-                        name={[field.name, "label"]}
+                        name={[field.name, "title"]}
+                        rules={[{ required: true, message: "Missing price" }]}
+                      >
+                        <Input />
+                      </Form.Item>
+                      <Form.Item
+                        name={[field.name, "key"]}
+                        hidden
                         rules={[{ required: true, message: "Missing price" }]}
                       >
                         <Input />
@@ -54,8 +64,9 @@ function RadioOptions(props: any) {
                     onClick={() =>
                       add(
                         {
-                          value: "Option " + (fields.length + 1),
-                          label: "Option " + (fields.length + 1),
+                          title: "Option" + (fields.length + 1),
+                          dataIndex: "Option" + (fields.length + 1),
+                          key: "Option" + (fields.length + 1),
                         },
                         fields.length
                       )
@@ -63,19 +74,19 @@ function RadioOptions(props: any) {
                     block
                     icon={<PlusOutlined />}
                   >
-                    增加
+                    增加选项
                   </Button>
                 </Form.Item>
               </>
             );
           }}
         </Form.List>
-      </Radio.Group>
+      </Checkbox.Group>
     </Form.Item>
   );
 }
 
-export default RadioOptions;
+export default TableOptions;
 // export default connect((state: WidgetForm) => ({
 //   widgetFormCurrentSelect: state.widgetFormCurrentSelect,
-// }))(memo(RadioOptions));
+// }))(memo(TableOptions));

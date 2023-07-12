@@ -40,7 +40,7 @@ const crudFormItem: CrudFormItem[] = [
   {
     name: ["options", "placeholder"],
     label: "占位文本",
-    isHidden: "{{ formData.type === 'TimePicker'}}",
+    isHidden: "{{ formData.type === 'TimePicker' || formData.type === 'Table'}}",
     type: "input",
     options: {
       placeholder: "请输入占位文本",
@@ -122,13 +122,13 @@ const crudFormItem: CrudFormItem[] = [
       placeholder: "请输入校验提示信息",
     },
   },
-  {
-    name: ["options", "rules", "required"],
-    label: "是否隐藏-hidden",
-    isHidden: "{{ 1 === 0 ? true : false}}",
-    type: "switch",
-    valuePropName: "checked",
-  },
+  // {
+  //   name: ["options", "rules", "required"],
+  //   label: "是否隐藏-hidden",
+  //   isHidden: "{{ 1 === 0 ? true : false}}",
+  //   type: "switch",
+  //   valuePropName: "checked",
+  // },
   {
     name: ["options", "options"],
     label: "选项设置",
@@ -261,6 +261,19 @@ const crudFormItem: CrudFormItem[] = [
     type: "Input.TextArea",
   }
 ];
+
+export const tableFormItem = [
+  {
+    name: ["widgetProperties", "columns"],
+    label: "列设置",
+    type: "TableOptions",
+  },
+  {
+    name: ["widgetProperties", "dataSource"],
+    label: "数据源",
+    type: "Text",
+  }
+]
 
 // type AddcrudFormItemId<T extends any[]> = {
 //   [K in keyof T]: T[K] & { id?: string; valuePropName?: string };

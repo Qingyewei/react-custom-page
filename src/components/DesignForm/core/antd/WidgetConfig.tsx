@@ -15,7 +15,10 @@ import { v4 as uuidv4 } from "uuid";
 import _, { isArray } from "lodash";
 import RadioOptions from "./components/RadioOptions";
 import { parseExpression } from "../../utils";
-import crudFormItem, { CrudFormItem } from "../../config/crudFormItem";
+import crudFormItem, {
+  CrudFormItem,
+  tableFormItem,
+} from "../../config/crudFormItem";
 const { Option } = Select;
 
 function WidgetConfig(props: any) {
@@ -26,7 +29,7 @@ function WidgetConfig(props: any) {
 
   const onValuesChange = (changedValues: any, allValues: any) => {
     console.log("onValuesChange", changedValues, allValues);
-    const newAllValues = _.cloneDeep(allValues);
+    const newAllValues = {...allValues};
     if (
       _.get(props, "widgetFormCurrentSelect.type") === "Select" &&
       _.get(props, "widgetFormCurrentSelect.options.mode") !==
@@ -55,7 +58,11 @@ function WidgetConfig(props: any) {
     // const initList: CrudFormItem[] = _.defaultsDeep(crudFormList, crudFormItem);
     // console.log("initList", initList)
     const list: CrudFormItem[] = [];
-    crudFormItem.forEach((item) => {
+    const formItem: CrudFormItem[] = [...crudFormItem];
+    if (widgetFormCurrentSelect.type === "Table") {
+      formItem.push(...tableFormItem);
+    }
+    formItem.forEach((item) => {
       if (parseExpression(item.isHidden, widgetFormCurrentSelect, "")) {
         // newItem.isHidden = parseExpression(newItem.isHidden,widgetFormCurrentSelect,'')
         // console.log(
@@ -110,7 +117,7 @@ function WidgetConfig(props: any) {
       }
       list.push(newItem);
     });
-    // console.log("最后输出的结果", list);
+    console.log("最后输出的结果", list);
     setCrudFormList(list);
   };
 

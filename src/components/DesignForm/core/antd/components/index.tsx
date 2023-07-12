@@ -19,6 +19,7 @@ import _ from "lodash";
 import CheckboxOptions from "./CheckboxOptions";
 import RadioOptions from "./RadioOptions";
 import "./Input.less";
+import TableOptions from "./TableOptions";
 
 function titleCase(str: string) {
   return str.slice(0, 1).toUpperCase() + str.slice(1).toLowerCase();
@@ -238,6 +239,9 @@ const Index: React.FC<any> = (props: any) => {
             <Table columns={columns} dataSource={dataSource}/>
           </ComponentPage>
         );
+      }
+      case "TableOptions": {
+        return <TableOptions {...props} />;
       }
       default:
         return (
