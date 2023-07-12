@@ -1,4 +1,4 @@
-import { memo, useCallback, useEffect, useState } from "react";
+import { memo, useCallback, useEffect, useRef, useState } from "react";
 import { useDrop } from "react-dnd";
 import styles from "./AntdWidgetForm.module.less";
 import Store, { connect } from "@/utils/store";
@@ -8,6 +8,7 @@ import Card from "./AntdWidgetCard";
 import _ from "lodash";
 import { Form } from "antd";
 import { WidgetForm } from "../../config/element";
+import { useDebounceFn } from "ahooks";
 
 interface AntdWidgetProps {
   page: any;
@@ -17,7 +18,7 @@ interface AntdWidgetProps {
 }
 
 /**
- * 
+ *
  * 拖拽入表格，会有以下几个问题
  * 1、是否需要嵌入表单中
  * 2、一般的列表页面有一个form表单和表格、操作按钮，表格是不嵌入表单内的
@@ -81,7 +82,7 @@ function useListDrop(props: any) {
       newList[hoverIndex] = temp;
       temp = null;
       setList(newList);
-      Store.dispatch({type:"list",payload:[...newList]});
+      Store.dispatch({ type: "list", payload: [...newList] });
     },
     [findCard, list]
   );
@@ -101,7 +102,7 @@ function useListDrop(props: any) {
     [findCard, moveCard]
   );
 
-  const DropRender = ({children}: any) => {
+  const DropRender = ({ children }: any) => {
     return (
       <div
         ref={drop}
@@ -120,6 +121,36 @@ function useListDrop(props: any) {
   };
 }
 
+function useDebouncedFunction<T extends (...args: any[]) => any>(
+  fn: T,
+  delay: number,
+  dep = []
+): T {
+  const { current } = useRef<any>({ fn, timer: null });
+
+  useEffect(() => {
+    current.fn = fn;
+    return () => {
+      if (current.timer) {
+        clearTimeout(current.timer);
+      }
+    };
+  }, [fn]);
+
+  return useCallback(
+    ((...args) => {
+      if (current.timer) {
+        clearTimeout(current.timer);
+      }
+
+      current.timer = setTimeout(() => {
+        current.fn(...args);
+      }, delay);
+    }) as T,
+    [dep]
+  );
+}
+
 function AntdWidgetForm(props: AntdWidgetProps) {
   const { page, widgetFormCurrentSelect } = props;
   const [antdWidgetForm] = Form.useForm();
@@ -135,29 +166,41 @@ function AntdWidgetForm(props: AntdWidgetProps) {
       data[i.name || i.id] = _.get(i, "options.defaultValue");
     }
     antdWidgetForm.setFieldsValue(data);
+    if(widgetFormCurrentSelect?.type === "input"){
+      antdWidgetForm.getFieldInstance(widgetFormCurrentSelect.name)?.focus();
+    }
   };
 
   useEffect(() => {
-    console.log("重新渲染")
+    console.log("重新渲染");
     getInitFormValues(listDrop);
   }, [listDrop]);
 
-  const onValuesChange = (changedValues: any, allValues: any) => {
-    for (const i of Object.keys(changedValues)) {
-      if (i === widgetFormCurrentSelect.name) {
-        console.log("onValuesChange", {
-          changedValues,
-          allValues,
-          widgetFormCurrentSelect,
-        });
-        const newWidgetFormCurrentSelect = _.cloneDeep(widgetFormCurrentSelect);
-        newWidgetFormCurrentSelect.options.defaultValue = changedValues[i];
-        Store.dispatch({
-          payload: newWidgetFormCurrentSelect,
-          type: "widgetFormCurrentSelect",
-        });
+  const updateStore = useDebouncedFunction(
+    (changedValues: any, allValues: any) => {
+      for (const i of Object.keys(changedValues)) {
+        if (i === widgetFormCurrentSelect.name) {
+          console.log("onValuesChange", {
+            changedValues,
+            allValues,
+            widgetFormCurrentSelect,
+          });
+          const newWidgetFormCurrentSelect = _.cloneDeep(
+            widgetFormCurrentSelect
+          );
+          newWidgetFormCurrentSelect.options.defaultValue = changedValues[i];
+          Store.dispatch({
+            payload: newWidgetFormCurrentSelect,
+            type: "widgetFormCurrentSelect",
+          });
+        }
       }
-    }
+    },
+    1000
+  );
+
+  const onValuesChange = (changedValues: any, allValues: any) => {
+    updateStore(changedValues, allValues);
   };
   const onFinish = (fieldsValue: any) => {
     console.log("Received values of form: ", fieldsValue);
