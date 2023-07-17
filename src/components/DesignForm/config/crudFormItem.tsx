@@ -271,7 +271,7 @@ export const tableFormItem = [
   {
     name: ["widgetProperties", "dataSource"],
     label: "数据源",
-    type: "Text",
+    type: "DataSourceOptions",
   }
 ]
 

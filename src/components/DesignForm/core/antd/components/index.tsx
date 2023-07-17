@@ -20,6 +20,7 @@ import CheckboxOptions from "./CheckboxOptions";
 import RadioOptions from "./RadioOptions";
 import "./Input.less";
 import TableOptions from "./TableOptions";
+import DataSourceOptions from "./DataSourceOptions";
 
 function titleCase(str: string) {
   return str.slice(0, 1).toUpperCase() + str.slice(1).toLowerCase();
@@ -233,15 +234,18 @@ const Index: React.FC<any> = (props: any) => {
         );
       }
       case "Table": {
-        const {columns,dataSource} = props.widgetProperties
+        const { columns, dataSource } = props.widgetProperties;
         return (
           <ComponentPage {...props}>
-            <Table columns={columns} dataSource={dataSource}/>
+            <Table columns={columns} dataSource={dataSource} />
           </ComponentPage>
         );
       }
       case "TableOptions": {
         return <TableOptions {...props} />;
+      }
+      case "DataSourceOptions": {
+        return <DataSourceOptions {...props} />;
       }
       default:
         return (

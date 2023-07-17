@@ -117,7 +117,7 @@ function WidgetConfig(props: any) {
       }
       list.push(newItem);
     });
-    console.log("最后输出的结果", list);
+    // console.log("最后输出的结果", list);
     setCrudFormList(list);
   };
 

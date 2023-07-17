@@ -39,15 +39,18 @@ export const widgetForm: WidgetForm = {
     type: "crud",
     method: "POST",
     // api_url: location.href,
-    url: "https://times-crmtest.timesgroup.cn:28080/CRMAPIBeta/api/Delivery/GetDeliveryCacheInfo",
+    url: "https://times-crmtest.timesgroup.cn:38080/api/Appt/GetApptListInfos",
+    // url: "https://times-crmtest.timesgroup.cn:28080/CRMAPIBeta/api/Delivery/GetDeliveryCacheInfo",
     api_options: {
       headers: {
         Account: "beibei",
         "Content-Type": "application/json;charset=UTF-8",
       },
       paramsOrPayload: {
-        StepId: 524496,
-        TaskId: 69000,
+        // StepId: 524496,
+        // TaskId: 69000,
+        pageIndex: 1,
+        pageSize: 10,
       },
     },
   },
