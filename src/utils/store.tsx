@@ -79,11 +79,24 @@ function reducer(
       data["list"] = data["list"].map((item) => {
         if (item.id === _.get(action, "payload.id")) {
           item = { ...item, ...action.payload };
-          if (Array.isArray(_.get(action, "options.defaultValue"))) {
+          if (
+            _.get(action, "options.defaultValue") &&
+            Array.isArray(_.get(action, "options.defaultValue"))
+          ) {
             _.set(
               item,
               "options.defaultValue",
               _.get(action, "options.defaultValue", [])
+            );
+          }
+          if (
+            _.get(action, "widgetProperties.dataSource") &&
+            Array.isArray(_.get(action, "widgetProperties.dataSource"))
+          ) {
+            _.set(
+              item,
+              "widgetProperties.dataSource",
+              _.get(action, "widgetProperties.dataSource", [])
             );
           }
           // eslint-disable-next-line no-prototype-builtins

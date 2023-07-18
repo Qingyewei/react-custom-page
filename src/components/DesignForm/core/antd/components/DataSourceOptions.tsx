@@ -2,6 +2,8 @@ import { Button, Cascader, Drawer, Form, Input, Select, Space } from "antd";
 import React, { useEffect, useState } from "react";
 import AceEditorPage from "../AceEditorPage";
 import _ from "lodash";
+import Store from "@/utils/store";
+import { dataDisplayComponents } from "@/components/DesignForm/config/element";
 
 function transform(obj: any) {
   const result: any[] = [];
@@ -35,7 +37,9 @@ function DataSourceOptions(props: any) {
     isDrawerStatus: false,
   });
   const { form: widgetForm } = props;
-
+  const defaultDataSource = dataDisplayComponents.find(
+    (item) => item.type === "Table"
+  )?.widgetProperties.dataSource;
   useEffect(() => {
     let transformData = {};
     if (props.dataSource) {
@@ -87,6 +91,44 @@ function DataSourceOptions(props: any) {
     }
     return <>{COM}</>;
   };
+
+  const onValueTypeChange = (type: string, ...args: any) => {
+    const widgetFormCurrentSelect = Store.getState("widgetFormCurrentSelect");
+    const newAllValues = { ...widgetFormCurrentSelect };
+    if (type === "custom") {
+      _.set(newAllValues, "widgetProperties.dataSource", defaultDataSource);
+    } else if (type === "dataSource") {
+      const valueStr = widgetForm.getFieldValue("value-str");
+      if (valueStr) {
+        let currentData = _.get(props, valueStr.join("."), []);
+        currentData = currentData.map((item: any, index: any) => {
+          item.key = index;
+          return item;
+        });
+        _.set(newAllValues, "widgetProperties.dataSource", currentData);
+      } else {
+        _.set(newAllValues, "widgetProperties.dataSource", []);
+      }
+    }
+    Store.dispatch({
+      payload: newAllValues,
+      type: "widgetFormCurrentSelect",
+    });
+  };
+  const onAceEditorPageChange = (value: string) => {
+    const widgetFormCurrentSelect = Store.getState("widgetFormCurrentSelect");
+    const newAllValues = { ...widgetFormCurrentSelect };
+    // _.set(newAllValues, "widgetProperties.dataSource", JSON.parse(value));
+    console.log("onAceEditorPageChange", {
+      newAllValues,
+      value: JSON.parse(JSON.stringify(value)),
+      type: typeof value,
+    });
+    // Store.dispatch({
+    //   payload: JSON.parse(value),
+    //   type: "widgetFormCurrentSelect",
+    // });
+  };
   return (
     <>
       <Form.Item label={props.label}>
@@ -96,6 +138,7 @@ function DataSourceOptions(props: any) {
               placeholder="请选择默认方式"
               allowClear
               style={{ width: "35%" }}
+              onChange={onValueTypeChange}
             >
               <Select.Option value="dataSource">数据源</Select.Option>
               <Select.Option value="custom">自定义</Select.Option>
@@ -141,9 +184,9 @@ function DataSourceOptions(props: any) {
           name={"DataSourceOptions"}
           mode="json"
           readOnly={false}
-          defaultValue={JSON.stringify({
-            a: "ddd",
-          })}
+          height="100%"
+          onChange={onAceEditorPageChange}
+          defaultValue={JSON.stringify(defaultDataSource)}
         />
       </Drawer>
     </>

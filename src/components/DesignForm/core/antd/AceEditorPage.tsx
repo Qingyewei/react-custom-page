@@ -39,6 +39,7 @@ interface jsonInputType {
   theme?: "monokai" | "github";
   getRef?: (ref: any) => void;
   onFocus?: (event: any) => void;
+  onChange?: (event: any) => void;
 }
 const AceEditorPage = (props: jsonInputType) => {
   const {
@@ -70,7 +71,7 @@ const AceEditorPage = (props: jsonInputType) => {
   });
   const aceEditorRef = useRef<AceEditor>(null);
   useEffect(() => {
-    if (mode !== "tsx" && mode !== "jsx") {
+    if (!["tsx", "jsx", "json"].includes(mode)) {
       window.ace
         .require("ace/ext/beautify")
         .beautify(aceEditorRef.current?.editor.session);
@@ -80,7 +81,7 @@ const AceEditorPage = (props: jsonInputType) => {
   useEffect(() => {
     if (state.value !== defaultValue) {
       let formattedCode = defaultValue;
-      if (mode === "tsx" || mode === "jsx") {
+      if (["tsx", "jsx", "json"].includes(mode)) {
         formattedCode = prettier.format(defaultValue, {
           parser: "babel",
           plugins: [parserBabel],
@@ -106,7 +107,15 @@ const AceEditorPage = (props: jsonInputType) => {
     // console.log("i've loaded");
   }
   function onChange(newValue: any) {
-    // console.log("change", newValue);
+    let str =''
+    // 找到最后一个分号的索引
+    const lastSemicolonIndex = newValue.lastIndexOf(";");
+
+    // 使用 slice() 方法裁剪分号之后的部分
+    str = newValue.slice(0, lastSemicolonIndex);
+    console.log("change", str);
+    // console.log("change", {newValue,b:JSON.parse(newValue),type:typeof newValue,a:eval(newValue)});
+    // props.onChange && props.onChange(newValue);
   }
   function onSelectionChange(newValue: any, event: any) {
     // console.log("select-change", newValue);
