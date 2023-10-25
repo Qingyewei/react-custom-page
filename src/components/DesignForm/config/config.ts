@@ -48,7 +48,7 @@ export const advancedConfig = [
         },
         {
           label: "CRUD表单",
-          value: "crud",
+          value: "form",
         },
       ],
     },

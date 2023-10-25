@@ -181,7 +181,3 @@ function buildCode() {
 }
 
 export default buildCode;
-
-// Store.subscribe(() => {
-//   buildCode();
-// });

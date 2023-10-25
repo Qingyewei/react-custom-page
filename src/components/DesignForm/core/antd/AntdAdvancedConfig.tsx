@@ -62,7 +62,8 @@ export default function AntdAdvancedConfig() {
       <Form.Item name="type" label="页面类型">
         <Select placeholder="请选择页面类型" allowClear>
           <Option value="detail">详情</Option>
-          <Option value="curd">CRUD表单</Option>
+          <Option value="form">表单</Option>
+          <Option value="page">页面</Option>
         </Select>
       </Form.Item>
       <Form.Item label="请求接口">

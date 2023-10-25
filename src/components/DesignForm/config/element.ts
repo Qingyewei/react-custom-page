@@ -10,7 +10,7 @@ export interface WidgetForm {
   };
   page: {
     showType: "page" | "model" | "tab";
-    type: "detail" | "crud";
+    type: "detail" | "form" | 'page';
     method: "POST" | "GET";
     url: string;
     api_options: {
@@ -36,7 +36,7 @@ export const widgetForm: WidgetForm = {
   },
   page: {
     showType: "page",
-    type: "crud",
+    type: "form",
     method: "POST",
     // api_url: location.href,
     url: "https://times-crmtest.timesgroup.cn:38080/api/Appt/GetApptListInfos",

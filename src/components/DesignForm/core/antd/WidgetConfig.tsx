@@ -124,7 +124,7 @@ function WidgetConfig(props: any) {
   useEffect(() => {
     const { widgetFormCurrentSelect, page } = props;
     if (
-      page.type === "crud" &&
+      page.type === "form" &&
       widgetFormCurrentSelect &&
       !widgetFormCurrentSelect.name
     ) {
