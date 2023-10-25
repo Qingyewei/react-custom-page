@@ -3,6 +3,7 @@ import { Button, Drawer, Form, Modal, Space } from "antd";
 import { memo, useState } from "react";
 import { WidgetForm } from "../../config/element";
 import Components from "./components";
+import _ from "lodash";
 
 function PreviewMode({ page, list }: Pick<WidgetForm, "page" | "list">) {
   const [isOpen, setIsOpen] = useState(false);
@@ -29,6 +30,12 @@ function PreviewMode({ page, list }: Pick<WidgetForm, "page" | "list">) {
   };
 
   const getViewFormRender = () => {
+    const initialValues: any = {}
+    list.forEach((item) => {
+      if(_.get(item,'options.defaultValue')){
+        initialValues[item.name] = _.get(item,'options.defaultValue')
+      }
+    });
     return (
       <Form
         name="viewForm"
@@ -36,6 +43,7 @@ function PreviewMode({ page, list }: Pick<WidgetForm, "page" | "list">) {
         labelCol={{ span: 8 }}
         wrapperCol={{ span: 16 }}
         style={{ maxWidth: 600 }}
+        initialValues={initialValues}
         onFinish={onFinish}
         autoComplete="off"
       >
@@ -78,7 +86,7 @@ function PreviewMode({ page, list }: Pick<WidgetForm, "page" | "list">) {
   const getViewDrawPage = () => {
     return (
       <Drawer
-        title="Basic Drawer"
+        title="预览"
         placement="bottom"
         height="100%"
         closable={false}

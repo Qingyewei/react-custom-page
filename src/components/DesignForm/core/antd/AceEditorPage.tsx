@@ -81,7 +81,6 @@ const AceEditorPage = (props: jsonInputType) => {
   useEffect(() => {
     if (state.value !== defaultValue) {
       let formattedCode = defaultValue;
-      console.log("defaultValue", defaultValue)
       if(mode === 'json'){
         formattedCode = prettier.format(defaultValue, {
           parser: mode,

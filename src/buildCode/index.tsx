@@ -121,13 +121,19 @@ function getAntdComponentStr(props: any) {
   }
 }
 
+
 function buildCode() {
   const { list } = Store.getStateAll();
   const componentNames = getAntdComonpentName(list);
   let listStr = "";
+  const initialValues: any = {}
   list.forEach((item) => {
     listStr += getAntdComponentStr(item);
+    if(_.get(item,'options.defaultValue')){
+      initialValues[item.name] = _.get(item,'options.defaultValue')
+    }
   });
+  
 
   return `import { Button, Form, Space, ${componentNames.join(
     ", "
@@ -152,6 +158,7 @@ function buildCode() {
           labelCol={{ span: 8 }}
           wrapperCol={{ span: 16 }}
           style={{ maxWidth: 600 }}
+          ${Reflect.ownKeys(initialValues).length !== 0 && `initialValues={${JSON.stringify(initialValues)}}`}
           onFinish={onFinish}
           autoComplete="off"
         >

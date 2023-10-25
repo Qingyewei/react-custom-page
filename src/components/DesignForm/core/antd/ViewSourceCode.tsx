@@ -32,7 +32,7 @@ const ViewSourceCode = () => {
   const getViewPage = () => {
     return (
       <Drawer
-        title="Basic Drawer"
+        title="查看源代码"
         placement="bottom"
         height="100%"
         closable={false}
