@@ -16,7 +16,6 @@ export default () => {
     if (_.get(item, "options.defaultValue")) {
       initialValues[item.name] = _.get(item, "options.defaultValue");
     }
-    console.log("Setting", item);
     if (item.type === "Select") {
       const valueEnum: any = [];
       _.get(item, "options.options", []).forEach((item: any) => {
@@ -33,7 +32,7 @@ export default () => {
       );
     } else if (item.type === "DatePicker") {
       columns.push(
-        `{dataIndex: "${item.name}", key: "${item.name}", title: "${item.label}", align: "center", valueType: "dateTime",}`
+        `{dataIndex: "${item.name}", key: "${item.name}", title: "${item.label}", align: "center", valueType: "dateTime", hideInSearch: true,}`
       );
       columns.push(
         `{dataIndex: "${item.name}", key: "${item.name}", title: "${item.label}", align: "center", valueType: "dateTimeRange", hideInTable: true, search: {
@@ -47,7 +46,7 @@ export default () => {
       );
     }else if(item.type === 'TimePicker'){
       columns.push(
-        `{dataIndex: "${item.name}", key: "${item.name}", title: "${item.label}", align: "center", valueType: "time",}`
+        `{dataIndex: "${item.name}", key: "${item.name}", title: "${item.label}", align: "center", valueType: "time", hideInSearch: true,}`
       );
       columns.push(
         `{dataIndex: "${item.name}", key: "${item.name}", title: "${item.label}", align: "center", valueType: "timeRange", hideInTable: true, search: {

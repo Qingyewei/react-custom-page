@@ -4,6 +4,7 @@ import { memo, useState } from "react";
 import { WidgetForm } from "../../config/element";
 import Components from "./components";
 import _ from "lodash";
+import PageMode from "./PageMode";
 
 function PreviewMode({ page, list }: Pick<WidgetForm, "page" | "list">) {
   const [isOpen, setIsOpen] = useState(false);
@@ -30,10 +31,10 @@ function PreviewMode({ page, list }: Pick<WidgetForm, "page" | "list">) {
   };
 
   const getViewFormRender = () => {
-    const initialValues: any = {}
+    const initialValues: any = {};
     list.forEach((item) => {
-      if(_.get(item,'options.defaultValue')){
-        initialValues[item.name] = _.get(item,'options.defaultValue')
+      if (_.get(item, "options.defaultValue")) {
+        initialValues[item.name] = _.get(item, "options.defaultValue");
       }
     });
     return (
@@ -101,7 +102,7 @@ function PreviewMode({ page, list }: Pick<WidgetForm, "page" | "list">) {
           </Space>
         }
       >
-        {getViewFormRender()}
+        {page.type === "page" ? <PageMode></PageMode> : getViewFormRender()}
       </Drawer>
     );
   };
@@ -116,7 +117,7 @@ function PreviewMode({ page, list }: Pick<WidgetForm, "page" | "list">) {
         break;
     }
   };
-  
+
   return (
     <>
       <Button type="primary" onClick={showModal}>
