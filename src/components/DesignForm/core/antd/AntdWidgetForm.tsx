@@ -42,9 +42,11 @@ function useListDrop(props: any) {
           break;
       }
       const draggedCard = source.find((s) => s.type === item.id);
+      const id = `${item.id}_${uuidv4().substring(0, 8)}`;
       const newCard = {
         ...draggedCard,
-        id: `${item.id}_${uuidv4().substring(0, 8)}`,
+        id,
+        name: id, // 设置控件的name属性
       };
       Store.dispatch({ type: "listItem", payload: newCard });
       Store.dispatch({
@@ -166,7 +168,7 @@ function AntdWidgetForm(props: AntdWidgetProps) {
       data[i.name || i.id] = _.get(i, "options.defaultValue");
     }
     antdWidgetForm.setFieldsValue(data);
-    if(widgetFormCurrentSelect?.type === "input"){
+    if (widgetFormCurrentSelect?.type === "input") {
       antdWidgetForm.getFieldInstance(widgetFormCurrentSelect.name)?.focus();
     }
   };

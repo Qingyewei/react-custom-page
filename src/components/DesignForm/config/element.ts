@@ -36,7 +36,7 @@ export const widgetForm: WidgetForm = {
   },
   page: {
     showType: "page",
-    type: "form",
+    type: "page",
     method: "POST",
     // api_url: location.href,
     url: "https://times-crmtest.timesgroup.cn:38080/api/Appt/GetApptListInfos",

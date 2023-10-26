@@ -128,6 +128,7 @@ function WidgetConfig(props: any) {
       widgetFormCurrentSelect &&
       !widgetFormCurrentSelect.name
     ) {
+      // 设置控件的name属性
       widgetFormCurrentSelect.name = widgetFormCurrentSelect.id;
     }
     if (widgetFormRef.current) {

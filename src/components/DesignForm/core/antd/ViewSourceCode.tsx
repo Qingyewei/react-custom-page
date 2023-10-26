@@ -52,7 +52,7 @@ const ViewSourceCode = () => {
       >
         <AceEditorPage
           name="ViewSourceCode"
-          mode="jsx"
+          mode="tsx"
           height="100%"
           theme="monokai"
           defaultValue={`${code}`}

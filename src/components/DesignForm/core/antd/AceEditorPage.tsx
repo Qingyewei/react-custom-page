@@ -88,7 +88,14 @@ const AceEditorPage = (props: jsonInputType) => {
           plugins: [parserBabel],
         });
       }
-      if (["tsx", "jsx"].includes(mode)) {
+      if(mode === 'tsx'){
+        formattedCode = prettier.format(defaultValue, {
+          parser: 'babel-ts',
+          "printWidth": 60,
+          plugins: [parserBabel],
+        });
+      }
+      if (["jsx"].includes(mode)) {
         formattedCode = prettier.format(defaultValue, {
           parser: 'babel',
           "printWidth": 60,
