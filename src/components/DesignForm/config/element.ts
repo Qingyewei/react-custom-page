@@ -96,7 +96,7 @@ export const basicComponents = [
     options: {
       width: "100%",
       defaultValue: "",
-      placeholder: "",
+      placeholder: "请输入",
       maxlength: null,
       prefix: "",
       suffix: "",
@@ -114,7 +114,7 @@ export const basicComponents = [
     options: {
       width: "100%",
       defaultValue: "",
-      placeholder: "",
+      placeholder: "请输入",
       maxlength: null,
       prefix: "",
       suffix: "",
@@ -133,7 +133,7 @@ export const basicComponents = [
     options: {
       width: "100%",
       defaultValue: "",
-      placeholder: "",
+      placeholder: "请输入",
       maxlength: null,
       // rows: 4,
       autosize: false,

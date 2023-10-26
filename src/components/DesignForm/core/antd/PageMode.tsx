@@ -192,6 +192,23 @@ export default () => {
     }
   });
 
+  columns.push({
+    title: "操作",
+    valueType: "option",
+    key: "option",
+    fixed: "right",
+    width: 100,
+    align: "center",
+    render: (text, record, rowKey, action) => [
+      <AddAndEditBtn
+        key="1"
+        type="edit"
+        dataSource={record}
+        tableRef={actionRef}
+      />,
+    ],
+  });
+
   const [dataSource, setDataSource] = useState<any[]>([]);
   const [pagination, setPagination] = useState<TablePaginationConfig>({
     current: 1,

@@ -51,7 +51,7 @@ function PreviewMode({ page, list }: Pick<WidgetForm, "page" | "list">) {
         {list.map((content, index) => (
           <Components
             key={content.id || index}
-            className="viewForm-c"
+            className="previewForm-c"
             {...content}
           />
         ))}

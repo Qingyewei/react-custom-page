@@ -96,14 +96,16 @@ const Index: React.FC<any> = (props: any) => {
   }
   const getComponentsItem = () => {
     switch (type) {
-      case "input":
+      case "input": {
+        const placeholder = _.get(props, "options.placeholder", "请输入") || "请输入"
         return (
           <ComponentPage {...props}>
             <Input
-              placeholder={_.get(props, "options.placeholder", "请输入")}
+              placeholder={placeholder}
             />
           </ComponentPage>
         );
+      }
       case "switch":
         return (
           <ComponentPage {...props}>
@@ -153,9 +155,15 @@ const Index: React.FC<any> = (props: any) => {
         const options = _.get(props, "options.options", []);
         const mode = _.get(props, "options.mode", "");
         const allowClear = _.get(props, "options.allowClear", true);
+        console.log("Select", props);
         return (
           <ComponentPage {...props}>
-            <Select options={options} mode={mode} allowClear={allowClear} />
+            <Select
+              options={options}
+              mode={mode}
+              allowClear={allowClear}
+              placeholder={_.get(props, "options.placeholder", "请选择")}
+            />
           </ComponentPage>
         );
       }
@@ -209,7 +217,6 @@ const Index: React.FC<any> = (props: any) => {
         );
       }
       case "SelectOptions": {
-        console.log("SelectOptions", props);
         const mode = _.get(props, "options.mode", "");
         return mode === "" ? (
           <RadioOptions {...props} />
@@ -225,7 +232,6 @@ const Index: React.FC<any> = (props: any) => {
         );
       case "Text": {
         const { className, options } = props;
-        console.log("默认值", props);
         return (
           <div className={`${className} cf-input`}>
             <div className="label">{label}</div>
