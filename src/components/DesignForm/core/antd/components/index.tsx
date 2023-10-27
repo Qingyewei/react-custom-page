@@ -96,7 +96,7 @@ const Index: React.FC<any> = (props: any) => {
   }
   const getComponentsItem = () => {
     switch (type) {
-      case "input": {
+      case "Input": {
         const placeholder = _.get(props, "options.placeholder", "请输入") || "请输入"
         return (
           <ComponentPage {...props}>
@@ -106,7 +106,7 @@ const Index: React.FC<any> = (props: any) => {
           </ComponentPage>
         );
       }
-      case "switch":
+      case "Switch":
         return (
           <ComponentPage {...props}>
             <Switch />

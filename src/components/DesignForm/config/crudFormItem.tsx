@@ -32,7 +32,7 @@ const crudFormItem: CrudFormItem[] = [
   {
     name: "name",
     label: "字段名",
-    type: "input",
+    type: "Input",
     options: {
       placeholder: "请输入字段名",
     },
@@ -41,7 +41,7 @@ const crudFormItem: CrudFormItem[] = [
     name: ["options", "placeholder"],
     label: "占位文本",
     isHidden: "{{ formData.type === 'TimePicker' || formData.type === 'Table'}}",
-    type: "input",
+    type: "Input",
     options: {
       placeholder: "请输入占位文本",
     },
@@ -49,8 +49,8 @@ const crudFormItem: CrudFormItem[] = [
   {
     name: ["options", "defaultValue"],
     label: "默认值",
-    type: "input",
-    isHidden: "{{ formData.type !== 'input'}}",
+    type: "Input",
+    isHidden: "{{ formData.type !== 'Input'}}",
     options: {
       placeholder: "请输入默认值",
     },
@@ -81,7 +81,7 @@ const crudFormItem: CrudFormItem[] = [
     options: {
       placeholder: "请选择默认时间范围",
     },
-    type: "switch",
+    type: "Switch",
     valuePropName: "checked",
   },
   {
@@ -110,13 +110,13 @@ const crudFormItem: CrudFormItem[] = [
     name: ["options", "rules", "required"],
     label: "是否为必填项",
     isHidden: "{{ formData.type === 'Table'}}",
-    type: "switch",
+    type: "Switch",
     valuePropName: "checked",
   },
   {
     name: ["options", "rules", "message"],
     label: "必填校验提示信息",
-    type: "input",
+    type: "Input",
     isHidden: "{{!formData?.options?.rules}}",
     options: {
       placeholder: "请输入校验提示信息",
@@ -221,13 +221,13 @@ const crudFormItem: CrudFormItem[] = [
   },
   {
     name: ["options", "defaultValue"],
-    label: "默认值-switch",
+    label: "默认值-Switch",
     isHidden:
-      "{{ formData.type !== 'switch'}}",
+      "{{ formData.type !== 'Switch'}}",
     options: {
       placeholder: "请选择默认状态",
     },
-    type: "switch",
+    type: "Switch",
     valuePropName: "checked",
   },
   {

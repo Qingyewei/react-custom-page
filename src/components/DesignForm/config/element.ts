@@ -84,7 +84,7 @@ interface basicComponentsOptions {
 }
 export interface basicComponents {
   label: string;
-  type: "input" | "Radio" | "Checkbox" | "Select";
+  type: "Input" | "Radio" | "Checkbox" | "Select";
   name: string;
   options: basicComponentsOptions;
 }
@@ -92,7 +92,7 @@ export interface basicComponents {
 export const basicComponents = [
   {
     label: "单行文本",
-    type: "input",
+    type: "Input",
     options: {
       width: "100%",
       defaultValue: "",
@@ -289,7 +289,7 @@ export const basicComponents = [
   },
   {
     label: "开关",
-    type: "switch",
+    type: "Switch",
     valuePropName: "checked",
     options: {
       defaultValue: false,
