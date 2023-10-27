@@ -1,9 +1,18 @@
-import { Button, Cascader, Drawer, Form, Input, Select, Space } from "antd";
-import React, { useEffect, useState } from "react";
+import {
+  Button,
+  Cascader,
+  Drawer,
+  Form,
+  FormInstance,
+  Input,
+  Select,
+  Space,
+} from "antd";
+import { useEffect, useState } from "react";
 import AceEditorPage from "../AceEditorPage";
 import _ from "lodash";
 import Store from "@/utils/store";
-import { dataDisplayComponents } from "@/components/DesignForm/config/element";
+import { NamePath } from "antd/es/form/interface";
 
 function transform(obj: any) {
   const result: any[] = [];
@@ -26,7 +35,15 @@ function transform(obj: any) {
   return result;
 }
 
-function DataSourceOptions(props: any) {
+type DataSourceOptions = {
+  form: FormInstance;
+  name: NamePath;
+  label: string;
+  dataSource: any[];
+  widgetFormCurrentSelect: any;
+};
+
+function DataSourceOptions(props: DataSourceOptions) {
   const [dataSource, setDataSource] = useState<{
     loading: boolean;
     data: any;
@@ -37,23 +54,39 @@ function DataSourceOptions(props: any) {
     isDrawerStatus: false,
   });
   const { form: widgetForm } = props;
-  const defaultDataSource = dataDisplayComponents.find(
-    (item) => item.type === "Table"
-  )?.widgetProperties.dataSource;
+  const widgetPropertiesDataSource = Form.useWatch(props.name, widgetForm);
+
   useEffect(() => {
-    let transformData = {};
-    if (props.dataSource) {
-      transformData = {
-        dataSource: props.dataSource,
-      };
+    const type = widgetForm.getFieldValue("value-type");
+    if (type === "custom") {
+      setDataSource({
+        ...dataSource,
+        data:
+          _.get(
+            props,
+            "widgetFormCurrentSelect.widgetProperties.dataSource",
+            []
+          ) || [],
+      });
+    } else if (type === "dataSource") {
+      let transformData = {};
+      if (props.dataSource) {
+        transformData = {
+          dataSource: props.dataSource,
+        };
+      }
+      const options = transform(transformData);
+      window.dataSourcePageValue = options;
+      setDataSource({
+        ...dataSource,
+        data: options,
+      });
     }
-    const options = transform(transformData);
-    window.dataSourcePageValue = options;
-    setDataSource({
-      ...dataSource,
-      data: options,
-    });
   }, [props]);
+
+  // useEffect(() => {
+
+  // }, [widgetPropertiesDataSource]);
 
   const ValueTypePage = (valueProps: any) => {
     const type = widgetForm.getFieldValue("value-type");
@@ -92,11 +125,9 @@ function DataSourceOptions(props: any) {
     return <>{COM}</>;
   };
 
-  const onValueTypeChange = (type: string, ...args: any) => {
-    const widgetFormCurrentSelect = Store.getState("widgetFormCurrentSelect");
-    const newAllValues = { ...widgetFormCurrentSelect };
+  const onValueTypeChange = (type: string) => {
     if (type === "custom") {
-      _.set(newAllValues, "widgetProperties.dataSource", defaultDataSource);
+      widgetForm.setFieldValue(props.name, dataSource.data);
     } else if (type === "dataSource") {
       const valueStr = widgetForm.getFieldValue("value-str");
       if (valueStr) {
@@ -105,30 +136,42 @@ function DataSourceOptions(props: any) {
           item.key = index;
           return item;
         });
-        _.set(newAllValues, "widgetProperties.dataSource", currentData);
+        widgetForm.setFieldValue(props.name, currentData);
       } else {
-        _.set(newAllValues, "widgetProperties.dataSource", []);
+        widgetForm.setFieldValue(props.name, dataSource.data);
       }
     }
+  };
+  const onAceEditorPageChange = (value: string) => {
+    widgetForm.setFieldValue(props.name, JSON.parse(value));
+    setDataSource((state) => ({
+      ...state,
+      data: JSON.parse(value),
+    }));
+  };
+
+  const handleOnClose = () => {
+    setDataSource((state) => ({ ...state, isDrawerStatus: false }));
+  };
+  const handleOnConfirm = () => {
+    const widgetFormCurrentSelect = _.get(props, "widgetFormCurrentSelect");
+    const newAllValues = { ...widgetFormCurrentSelect };
+    _.set(
+      newAllValues,
+      "widgetProperties.dataSource",
+      widgetPropertiesDataSource
+    );
     Store.dispatch({
       payload: newAllValues,
       type: "widgetFormCurrentSelect",
     });
+    setDataSource((state) => ({
+      ...state,
+      data: widgetPropertiesDataSource,
+      isDrawerStatus: false,
+    }));
   };
-  const onAceEditorPageChange = (value: string) => {
-    const widgetFormCurrentSelect = Store.getState("widgetFormCurrentSelect");
-    const newAllValues = { ...widgetFormCurrentSelect };
-    // _.set(newAllValues, "widgetProperties.dataSource", JSON.parse(value));
-    console.log("onAceEditorPageChange", {
-      newAllValues,
-      value: JSON.parse(JSON.stringify(value)),
-      type: typeof value,
-    });
-    // Store.dispatch({
-    //   payload: JSON.parse(value),
-    //   type: "widgetFormCurrentSelect",
-    // });
-  };
+
   return (
     <>
       <Form.Item label={props.label}>
@@ -156,26 +199,13 @@ function DataSourceOptions(props: any) {
         title="Drawer with extra actions"
         placement="right"
         width={500}
-        onClose={() =>
-          setDataSource((state) => ({ ...state, isDrawerStatus: false }))
-        }
+        onClose={handleOnClose}
         open={dataSource.isDrawerStatus}
         extra={
           <Space>
-            <Button
-              onClick={() =>
-                setDataSource((state) => ({ ...state, isDrawerStatus: false }))
-              }
-            >
-              Cancel
-            </Button>
-            <Button
-              type="primary"
-              onClick={() =>
-                setDataSource((state) => ({ ...state, isDrawerStatus: false }))
-              }
-            >
-              OK
+            <Button onClick={handleOnClose}>取消</Button>
+            <Button type="primary" onClick={handleOnConfirm}>
+              确定
             </Button>
           </Space>
         }
@@ -186,7 +216,7 @@ function DataSourceOptions(props: any) {
           readOnly={false}
           height="100%"
           onChange={onAceEditorPageChange}
-          defaultValue={JSON.stringify(defaultDataSource)}
+          defaultValue={dataSource.data}
         />
       </Drawer>
     </>

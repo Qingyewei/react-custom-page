@@ -311,11 +311,11 @@ const APIParamsCom: React.FC<APIParamsComProps> = ({
                 key={item}
                 name={item}
                 mode="json"
-                defaultValue={JSON.stringify(
+                defaultValue={
                   item === "Header"
                     ? dataSource.headers
                     : dataSource.paramsOrPayload
-                )}
+                }
               />
             ),
           };

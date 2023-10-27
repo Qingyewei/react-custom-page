@@ -12,9 +12,7 @@ import _ from "lodash";
 
 function RadioOptions(props: any) {
   // console.log("过滤了", props);
-  const {
-    form,
-  }:{form:FormInstance} = props;
+  const { form }: { form: FormInstance } = props;
 
   const onRemove = (event: any, index: number) => {
     event.stopPropagation();
@@ -30,7 +28,7 @@ function RadioOptions(props: any) {
       <Radio.Group>
         <Form.List name={props.name}>
           {(fields, { add, remove }) => {
-            const options = form.getFieldValue(props.name)
+            const options = form.getFieldValue(props.name);
             return (
               <>
                 {fields.map((field) => {
@@ -41,21 +39,8 @@ function RadioOptions(props: any) {
                       align="baseline"
                     >
                       <Radio
-                        // className={styles.formListRadio}
                         value={_.get(options, `${field.name}.value`, "")}
                       ></Radio>
-                      {/* <Button>
-                        {"ss" + _.get(options, `${field.name}.value`, "")}
-                      </Button> */}
-
-                      {/* <Radio
-                        // className={styles.formListRadio}
-                        value={_.get(
-                          props,
-                          `widgetFormCurrentSelect.options.options.${field.name}.value`,
-                          ""
-                        )}
-                      ></Radio> */}
                       <Form.Item
                         name={[field.name, "value"]}
                         rules={[{ required: true, message: "Missing sight" }]}

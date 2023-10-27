@@ -85,6 +85,3 @@ function CheckboxOptions(props: any) {
 }
 
 export default CheckboxOptions;
-// export default connect((state: WidgetForm) => ({
-//   widgetFormCurrentSelect: state.widgetFormCurrentSelect,
-// }))(memo(CheckboxOptions));

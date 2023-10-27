@@ -79,39 +79,45 @@ const AceEditorPage = (props: jsonInputType) => {
   }, [state.value]);
 
   useEffect(() => {
-    if (state.value !== defaultValue) {
-      let formattedCode = defaultValue;
-      if(mode === 'json'){
-        formattedCode = prettier.format(defaultValue, {
-          parser: mode,
-          "printWidth": 60,
-          plugins: [parserBabel],
-        });
+    if (defaultValue) {
+      const currentValue =
+        typeof defaultValue === "string"
+          ? defaultValue
+          : JSON.stringify(defaultValue);
+      if (state.value !== currentValue) {
+        let formattedCode = currentValue;
+        if (mode === "json") {
+          formattedCode = prettier.format(currentValue, {
+            parser: mode,
+            printWidth: 60,
+            plugins: [parserBabel],
+          });
+        }
+        if (mode === "tsx") {
+          formattedCode = prettier.format(currentValue, {
+            parser: "babel-ts",
+            printWidth: 60,
+            plugins: [parserBabel],
+          });
+        }
+        if (["jsx"].includes(mode)) {
+          formattedCode = prettier.format(currentValue, {
+            parser: "babel",
+            printWidth: 60,
+            plugins: [parserBabel],
+          });
+        }
+        setState((state) => ({
+          ...state,
+          value: formattedCode,
+        }));
       }
-      if(mode === 'tsx'){
-        formattedCode = prettier.format(defaultValue, {
-          parser: 'babel-ts',
-          "printWidth": 60,
-          plugins: [parserBabel],
-        });
+      if (state.theme !== theme) {
+        setState((state) => ({
+          ...state,
+          theme: theme,
+        }));
       }
-      if (["jsx"].includes(mode)) {
-        formattedCode = prettier.format(defaultValue, {
-          parser: 'babel',
-          "printWidth": 60,
-          plugins: [parserBabel],
-        });
-      }
-      setState((state) => ({
-        ...state,
-        value: formattedCode,
-      }));
-    }
-    if (state.theme !== theme) {
-      setState((state) => ({
-        ...state,
-        theme: theme,
-      }));
     }
   }, [defaultValue, theme]);
 
@@ -122,15 +128,15 @@ const AceEditorPage = (props: jsonInputType) => {
     // console.log("i've loaded");
   }
   function onChange(newValue: any) {
-    let str =''
+    let str = "";
     // 找到最后一个分号的索引
     const lastSemicolonIndex = newValue.lastIndexOf(";");
 
     // 使用 slice() 方法裁剪分号之后的部分
     str = newValue.slice(0, lastSemicolonIndex);
-    console.log("change", str);
+    // console.log("change", str);
     // console.log("change", {newValue,b:JSON.parse(newValue),type:typeof newValue,a:eval(newValue)});
-    // props.onChange && props.onChange(newValue);
+    props.onChange && props.onChange(newValue);
   }
   function onSelectionChange(newValue: any, event: any) {
     // console.log("select-change", newValue);

@@ -22,7 +22,7 @@ import crudFormItem, {
 const { Option } = Select;
 
 function WidgetConfig(props: any) {
-  const [widgetForm] = Form.useForm<any>();
+  const [widgetForm] = Form.useForm<FormInstance>();
   const widgetFormRef = useRef<FormInstance>(null);
 
   const [crudFormList, setCrudFormList] = useState<CrudFormItem[]>();
