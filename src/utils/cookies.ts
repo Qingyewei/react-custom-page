@@ -1,9 +1,7 @@
 import { Cookies as tsCookies } from 'typescript-cookie';
 
-const loadEnv = (): ViteEnv => import.meta.env;
-
 class Cookies {
-  private static env = loadEnv();
+  private static env = import.meta.env;
 
   // eslint-disable-next-line @typescript-eslint/no-empty-function, no-useless-constructor, no-empty-function
   constructor() {}

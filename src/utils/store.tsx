@@ -45,7 +45,7 @@ function createStore(reducer: (arg0: any, arg1: any) => any) {
   return store;
 }
 
-const notCoverStrs = ["options.defaultValue"];
+// const notCoverStrs = ["options.defaultValue"];
 
 function reducer(
   state = element.widgetForm,

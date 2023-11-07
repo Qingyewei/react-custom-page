@@ -11,7 +11,7 @@ export function getDataType(value: any) {
 }
 
 // 参考lodash库实现的set
-function setObjMapValue(object: any, path: string, value: any) {
+export function setObjMapValue(object: any, path: string, value: any) {
   if (!object || !path) {
     return;
   }

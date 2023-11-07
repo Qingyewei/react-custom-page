@@ -10,7 +10,7 @@ class FullScreenLoading {
   static needLoadingRequestCount = 0;
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  static service(options?: any) {
+  static service(_options?: any) {
     if (this.needLoadingRequestCount === 0) {
       const dom = document.createElement("div");
       dom.setAttribute("id", "loading");

@@ -2,7 +2,7 @@
 
 declare module "*.svg";
 
-yardeclare interface ViteEnv {
+declare interface ViteEnv {
   VITE_TITLE: string;
   VITE_VERSION: string;
   VITE_PUBLIC_PATH: string;

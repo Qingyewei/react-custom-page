@@ -15,7 +15,8 @@ import dayjs from "dayjs";
 import weekday from "dayjs/plugin/weekday";
 import localeData from "dayjs/plugin/localeData";
 import _ from "lodash";
-import { warehouseAdd, warehouseEdit, warehouseQueryPage } from "@/api";
+// import { warehouseAdd, warehouseEdit, warehouseQueryPage } from "@/api";
+const { warehouseAdd, warehouseEdit, warehouseQueryPage } = {} as any
 
 dayjs.extend(weekday);
 dayjs.extend(localeData);

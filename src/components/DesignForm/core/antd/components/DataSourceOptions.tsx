@@ -54,6 +54,9 @@ function DataSourceOptions(props: DataSourceOptions) {
     isDrawerStatus: false,
   });
   const { form: widgetForm } = props;
+  const defaultValue =
+    _.get(props, "widgetFormCurrentSelect.widgetProperties.dataSource", []) ||
+    [];
   const widgetPropertiesDataSource = Form.useWatch(props.name, widgetForm);
 
   useEffect(() => {
@@ -151,7 +154,11 @@ function DataSourceOptions(props: DataSourceOptions) {
   };
 
   const handleOnClose = () => {
-    setDataSource((state) => ({ ...state, isDrawerStatus: false }));
+    setDataSource((state) => ({
+      ...state,
+      data: defaultValue,
+      isDrawerStatus: false,
+    }));
   };
   const handleOnConfirm = () => {
     const widgetFormCurrentSelect = _.get(props, "widgetFormCurrentSelect");
