@@ -15,7 +15,7 @@ export interface WidgetForm {
     url: string;
     api_options: {
       headers: {
-        Account: string;
+        Account?: string;
         "Content-Type": string;
       };
       paramsOrPayload: any;
@@ -39,11 +39,12 @@ export const widgetForm: WidgetForm = {
     type: "page",
     method: "POST",
     // api_url: location.href,
-    url: "https://times-crmtest.timesgroup.cn:38080/api/Appt/GetApptListInfos",
+    url:"",
+    // url: "https://times-crmtest.timesgroup.cn:38080/api/Appt/GetApptListInfos",
     // url: "https://times-crmtest.timesgroup.cn:28080/CRMAPIBeta/api/Delivery/GetDeliveryCacheInfo",
     api_options: {
       headers: {
-        Account: "beibei",
+        // Account: "beibei",
         "Content-Type": "application/json;charset=UTF-8",
       },
       paramsOrPayload: {
