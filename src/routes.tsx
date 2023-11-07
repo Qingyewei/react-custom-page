@@ -5,11 +5,11 @@ const PreviewMode = lazyLoad(React.lazy(() => import('@@/core/antd/PreviewMode')
 const AntdDesignForm = lazyLoad(React.lazy(() => import('@@/core/antd/AntdDesignForm')))
 const Routes: RouteObject[] = [
   {
-    path: "/",
+    path: "/react-custom-page/",
     element: <AntdDesignForm />,
   },
   {
-    path: "/preview-model",
+    path: "/react-custom-page/preview-model",
     element: <PreviewMode />,
   },
 ];
