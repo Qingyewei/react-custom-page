@@ -10,5 +10,40 @@
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
+    <script>
+      const observer = new PerformanceObserver((list) => {
+        for (const entry of list.getEntries()) {
+          // if (entry.name === "first-paint") {
+          //   console.groupCollapsed(entry.name);
+          //   console.log(entry.entryType);
+          //   console.log(entry.startTime);
+          //   console.log(entry.duration);
+          //   console.groupEnd(entry.name);
+          // } else if (entry.name === "first-contentful-paint") {
+          //   console.groupCollapsed(entry.name);
+          //   console.log(entry.entryType);
+          //   console.log(entry.startTime);
+          //   console.log(entry.duration);
+          //   console.groupEnd(entry.name);
+          // }
+          // console.groupCollapsed(entry.name);
+          // console.log(entry.entryType);
+          // console.log(entry.startTime);
+          // console.log(entry.duration);
+          // console.groupEnd(entry.name);
+        }
+      });
+      observer.observe({
+        entryTypes: [
+          "longtask",
+          "frame",
+          "navigation",
+          "resource",
+          "mark",
+          "measure",
+          "paint",
+        ],
+      });
+    </script>
   </body>
 </html>
