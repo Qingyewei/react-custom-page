@@ -3,11 +3,21 @@
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <link rel="stylesheet" href="/default.css" />
+    <link rel="dns-prefetch" href="https://preview.pro.ant.design" />
+    <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com" />
+    <link rel="dns-prefetch" href="https://unpkg.com" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>React 自定义页面</title>
     <script src="https://at.alicdn.com/t/c/font_4304260_11obdpzph86p.js"></script>
+    <script async src="/loading.js"></script>
+    <!-- <script
+      async
+      src="https://preview.pro.ant.design/scripts/loading.js"
+    ></script> -->
   </head>
   <body>
+    <!-- <div id="loading" style="height: 100%"></div> -->
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
     <script>
@@ -31,19 +41,26 @@
           // console.log(entry.startTime);
           // console.log(entry.duration);
           // console.groupEnd(entry.name);
+          if (entry.name === 'first-contentful-paint') {
+            console.log('首屏时间为', Math.round(entry.startTime), 'ms')
+
+            // 结束观测器
+            observer.disconnect()
+          }
         }
-      });
-      observer.observe({
-        entryTypes: [
-          "longtask",
-          "frame",
-          "navigation",
-          "resource",
-          "mark",
-          "measure",
-          "paint",
-        ],
-      });
+      })
+      // observer.observe({
+      //   entryTypes: [
+      //     'longtask',
+      //     'frame',
+      //     'navigation',
+      //     'resource',
+      //     'mark',
+      //     'measure',
+      //     'paint',
+      //   ],
+      // })
+      observer.observe({ type: 'paint', buffered: true })
     </script>
   </body>
 </html>
